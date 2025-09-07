@@ -10,7 +10,7 @@ import { LottieComponent, AnimationOptions } from 'ngx-lottie';
 })
 export class ResumeComponent {
   options: AnimationOptions = {
-    path: '/assets/animations/map.json',
+    path: 'assets/animations/map.json',
   };
 
   animationCreated(animationItem: AnimationItem): void {
