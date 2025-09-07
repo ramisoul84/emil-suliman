@@ -1,9 +1,14 @@
 <section id="resume">
     <div class="title">cv timeline.</div>
     <div class="wrapper">
+            <div class="map-wrapper">
         <div class="map">
-            <ng-lottie class="lott" [options]="options" (animationCreated)="animationCreated($event)" />
+            <ng-lottie  [options]="map" (animationCreated)="animationCreated($event)" />
         </div>
+    </div>
+    <div class="timeline-wrapper">
+        <ng-lottie  [options]="timeLine" (animationCreated)="animationCreated($event)" />
+    </div>
     </div>
 
 

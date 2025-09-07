@@ -9,8 +9,12 @@ import { LottieComponent, AnimationOptions } from 'ngx-lottie';
   styleUrl: './resume.component.scss'
 })
 export class ResumeComponent {
-  options: AnimationOptions = {
+  map: AnimationOptions = {
     path: 'assets/animations/map.json',
+  };
+
+  timeLine: AnimationOptions = {
+    path: 'assets/animations/timeline.json',
   };
 
   animationCreated(animationItem: AnimationItem): void {

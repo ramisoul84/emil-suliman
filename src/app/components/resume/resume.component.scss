@@ -2,12 +2,27 @@
 
 #resume {
     padding-top: calc($grid-width * 4);
-    .wrapper{
-        width: 30rem;
-        border: 4px solid wheat;
-        overflow: hidden;
-        .map{  
-            scale: 2;
+
+    .wrapper {
+        display: grid;
+        grid-template-columns: 3fr 2fr;
+        gap: 36px;
+
+        .map-wrapper {
+            position: sticky;
+            top: 100px;
+            border: 4px solid wheat;
+            overflow: hidden;
+            height: fit-content;
+
+            .map {
+                scale: 2;
+            }
+        }
+
+        .timeline-wrapper {
+            border: 4px solid wheat;
         }
     }
+
 }

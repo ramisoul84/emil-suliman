@@ -26,10 +26,7 @@ export class HeaderComponent {
   toggleMenu(): void {
     this.sideNav = !this.sideNav
     this.blurSections()
-
   }
-
-
 
   blurSections(): void {
     const sections = document.querySelectorAll("section");
@@ -38,5 +35,12 @@ export class HeaderComponent {
     } else {
       sections.forEach((e) => (e.style.filter = "blur(0rem)"))
     }
+  }
+
+  goTop(): void {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   }
 }
