@@ -1,0 +1,9 @@
+@use '../../../vars' as *;
+
+#main {
+    margin-left: -1px;
+    background-image:
+        linear-gradient($grid-color$grid-stroke-width, transparent $grid-stroke-width),
+        linear-gradient(90deg, $grid-color$grid-stroke-width, transparent $grid-stroke-width);
+    background-size: $grid-width $grid-width;
+}

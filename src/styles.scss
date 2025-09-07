@@ -1,1 +1,42 @@
-/* You can add global styles to this file, and also import other style files */
+@use 'vars' as *;
+
+
+::-webkit-scrollbar {
+  width: $grid-width;
+  background-color: black;
+}
+
+::-webkit-scrollbar-track {
+  background: green;
+}
+
+::-webkit-scrollbar-thumb {
+  background: white;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: red;
+  /* Thumb color on hover */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: $font-lcd;
+  color: $color-font;
+
+
+  @include gradient-background;
+}
+
+section {
+  min-height: 100vh;
+}

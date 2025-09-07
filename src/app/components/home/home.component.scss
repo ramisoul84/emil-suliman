@@ -1,0 +1,5 @@
+@use '../../../vars' as *;
+
+#home {
+    padding-top: calc(6 * $grid-width);
+}

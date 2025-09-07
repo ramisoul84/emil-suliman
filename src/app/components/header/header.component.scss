@@ -1,0 +1,340 @@
+@use '../../../vars' as *;
+
+@mixin gradient($layer, $opacity) {
+  position: absolute;
+  top: calc($layer * $grid-width);
+  left: 0;
+  right: 0;
+  opacity: $opacity;
+  background: linear-gradient(90deg, $color1, $color2);
+}
+
+@mixin slide-down($layer, $duration, $delay) {
+  animation: slide-down-animation $duration cubic-bezier(0.08, 0.42, 0, 0.79) calc($layer * $delay) both;
+}
+
+@mixin slide-up($duration, $delay) {
+  animation: slide-up-animation $duration cubic-bezier(0.08, 0.42, 0, 0.79) $delay both;
+}
+
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: calc(5 * $grid-width);
+  z-index: 99;
+
+  .line {
+    height: $grid-width;
+  }
+
+  .gr1 {
+    z-index: 6;
+    @include gradient(0, 1)
+  }
+
+  .gr2 {
+    z-index: 5;
+    @include gradient(1, 0.85)
+  }
+
+  .gr3 {
+    @include gradient(2, 0.55)
+  }
+
+  .gr4 {
+    @include gradient(3, 0.4)
+  }
+
+  .gr5 {
+    @include gradient(4, 0.25)
+  }
+
+  .gr6 {
+    @include gradient(5, 0.17)
+  }
+
+  .menu {
+    position: absolute;
+    top: 0;
+    left: calc(3 * $grid-width);
+    width: calc(3 * $grid-width);
+    height: calc(3 * $grid-width);
+    background-color: #151717;
+    color: white;
+    padding: 0.5rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+
+    .line {
+      width: 100%;
+      background-color: wheat;
+      height: 3px;
+    }
+  }
+}
+
+.sideNav{
+  position: absolute;
+  left: 0;
+  top: calc(4 * $grid-width);
+  width: calc(6 * $grid-width);
+  height: calc(8 * $grid-width);
+  background-color: #151717;
+  transform: translateX(-100%);
+}
+
+.showSide{
+transform: translateX(0);
+}
+
+.hideSide{
+transform: translateX(-100%);
+}
+
+.showMenu {
+  -webkit-animation: slide-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s both;
+  animation: slide-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s both;
+}
+
+.hideMenu {
+  -webkit-animation: slide-up 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+  animation: slide-up 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 24px;
+  gap: 24px;
+  opacity: 0;
+
+  a {
+    text-decoration: none;
+    color: black;
+    height: $grid-width;
+    align-content: center;
+    position: relative;
+    padding: 0 0.5rem;
+
+    &:hover::before {
+      position: absolute;
+      content: "";
+      background-color: white;
+      height: 0.2rem;
+      width: 100%;
+      top: 50%;
+      z-index: -1;
+      margin-left: -0.5rem;
+      animation: blink 0.2s ease-in both;
+    }
+  }
+}
+
+// Sliding DOWN
+.down1 {
+  @include slide-down(0, $slide-down-duration, $slide-down-delay);
+}
+
+.down2 {
+  @include slide-down(1, $slide-down-duration, $slide-down-delay);
+}
+
+.down3 {
+  @include slide-down(2, $slide-down-duration, $slide-down-delay);
+}
+
+.down4 {
+  @include slide-down(3, $slide-down-duration, $slide-down-delay);
+}
+
+.down5 {
+  @include slide-down(4, $slide-down-duration, $slide-down-delay);
+}
+
+.down6 {
+  @include slide-down(5, $slide-down-duration, $slide-down-delay);
+}
+
+.show {
+  animation: show 2s 0.4s ease forwards;
+}
+
+// Sliding UP
+.up4 {
+  @include slide-up(0.3s, 0.2s);
+}
+
+.up5 {
+  @include slide-up(0.3s, 0.1s);
+}
+
+.up6 {
+  @include slide-up(0.3s, 0s);
+}
+
+.left1 {
+  animation: slide-left-animation-1 0.4s cubic-bezier(0.09, 0.96, 0.78, 0.92) 0.5s both,
+}
+
+.left23 {
+  animation: slide-left-animation-2-3 0.4s cubic-bezier(0.09, 0.96, 0.78, 0.92) 0.5s both;
+}
+
+.right {
+  animation: slide-right-animation 0.24s ease-in both;
+}
+
+.slideDown {
+  -webkit-animation: slide-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+  animation: slide-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+.slideUp {
+  -webkit-animation: slide-up 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+  animation: slide-up 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+
+@keyframes slide-down-animation {
+  0% {
+    height: 0;
+  }
+
+  100% {
+    height: $grid-width;
+  }
+}
+
+@keyframes slide-up-animation {
+  0% {
+    height: $grid-width;
+  }
+
+  100% {
+    height: 0;
+  }
+}
+
+@keyframes slide-left-animation-1 {
+  0% {
+    height: $grid-width;
+    width: 100%;
+    z-index: 3;
+  }
+
+  50% {
+    height: calc(3 * $grid-width);
+  }
+
+  100% {
+    height: calc(3 * $grid-width);
+    width: calc(3 * $grid-width);
+    z-index: 3;
+  }
+}
+
+@keyframes slide-left-animation-2-3 {
+  0% {
+    width: 100%;
+  }
+
+  100% {
+    width: calc(3 * $grid-width);
+  }
+}
+
+@keyframes show {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-right-animation {
+  0% {
+    width: calc(3 * $grid-width);
+  }
+
+  100% {
+    width: 100%;
+  }
+}
+
+
+@-webkit-keyframes slide-in-top {
+  0% {
+    -webkit-transform: translateY(-1000px);
+    transform: translateY(-1000px);
+    opacity: 0;
+  }
+
+  100% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-top {
+  0% {
+    -webkit-transform: translateY(-1000px);
+    transform: translateY(-1000px);
+    opacity: 0;
+  }
+
+  100% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  0% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  100% {
+    -webkit-transform: translateY(-1000px);
+    transform: translateY(-1000px);
+    opacity: 0;
+  }
+
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  15% {
+    opacity: 0;
+  }
+
+  85% {
+    opacity: 0;
+  }
+
+  90% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}

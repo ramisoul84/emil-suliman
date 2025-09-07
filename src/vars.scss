@@ -1,0 +1,29 @@
+@font-face {
+    font-family: "lcd_solidregular";
+    src: url("assets/fonts/lcdsolid/lcdsolid-vpzb-webfont.woff2") format("woff2"),
+        url("assets/fonts/lcdsolid/lcdsolid-vpzb-webfont.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+
+$font-lcd: "lcd_solidregular";
+
+// Colors
+$color-bg-top: #000000;
+$color-bg-bottom: #1f2935;
+$color-font: #f1f1f1; 
+$color1:#73c046;
+$color2: #cb866d;
+
+// Grid
+$grid-color :rgba(196, 202, 196, 0.1);
+$grid-width: 20px;
+$grid-stroke-width: 1px;
+
+$slide-down-duration: 0.6s;
+$slide-down-delay: 0.08s;
+
+
+@mixin gradient-background {
+  background: linear-gradient(to bottom, $color-bg-top, $color-bg-bottom);
+}

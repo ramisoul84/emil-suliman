@@ -1,0 +1,26 @@
+<header>
+    <div class="line gr1"
+        [ngClass]="{down1:scrollY < 180 && firstLoad,right:scrollY < 180 && !firstLoad,left1:scrollY > 180}"></div>
+    <div class="line gr2"
+        [ngClass]="{down2:scrollY < 180 && firstLoad,right:scrollY < 180 && !firstLoad,left23:scrollY > 180}">
+        <nav [ngClass]="{slideDown:scrollY < 180 ,slideUp:scrollY > 180}">
+            <a href="#about">ABOUT</a>
+            <a href="#resume">RESUME</a>
+            <a href="#cases">CASES</a>
+            <a href="#contact">CONTACT</a>
+        </nav>
+    </div>
+    <div class="line gr3"
+        [ngClass]="{down3:scrollY < 180 && firstLoad,right:scrollY < 180 && !firstLoad,left23:scrollY > 180}"></div>
+    <div class="line gr4 down4" [ngClass]="{down4:scrollY < 180 ,up4:scrollY > 180}"></div>
+    <div class="line gr5 down5" [ngClass]="{down5:scrollY < 180 ,up5:scrollY > 180}"></div>
+    <div class="line gr6 down6" [ngClass]="{down6:scrollY < 180 ,up6:scrollY > 180}"></div>
+    <div class="menu" [ngClass]="{hideMenu:scrollY < 180 ,showMenu:scrollY > 180}" (click)="toggleMenu()">
+        <span class="line line1"></span>
+        <span class="line line2"></span>
+        <span class="line line3"></span>
+    </div>
+    <div class="sideNav">
+
+    </div>
+</header>
