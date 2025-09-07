@@ -1,0 +1,5 @@
+@use '../../../vars' as *;
+
+#cases {
+    padding-top: calc($grid-width * 4);
+}

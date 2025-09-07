@@ -10,7 +10,7 @@ import { Component, HostListener } from '@angular/core';
 export class HeaderComponent {
   scrollY: number = 0
   firstLoad: boolean = true;
-
+  sideNav: boolean = false;
   constructor() {
 
   }
@@ -24,7 +24,19 @@ export class HeaderComponent {
   }
 
   toggleMenu(): void {
-    const list = document.querySelector(".sideNav");
-    list!.classList.add("showSide");
+    this.sideNav = !this.sideNav
+    this.blurSections()
+
+  }
+
+
+
+  blurSections(): void {
+    const sections = document.querySelectorAll("section");
+    if (this.sideNav) {
+      sections.forEach((e) => (e.style.filter = "blur(0.5rem)"))
+    } else {
+      sections.forEach((e) => (e.style.filter = "blur(0rem)"))
+    }
   }
 }
