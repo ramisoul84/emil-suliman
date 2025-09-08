@@ -26,3 +26,73 @@
     }
 
 }
+
+
+
+.scroll-animation-container {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
+}
+
+.animation-container {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  perspective: 1000px;
+  contain: content;
+}
+
+ng-lottie {
+  display: block;
+  margin: 0 auto;
+  transform: translate3d(0, 0, 0);
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+.animation-section {
+  transform: translateZ(0);
+  isolation: isolate;
+}
+
+.header, .footer {
+  text-align: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.footer {
+  background: #333;
+  font-size: 0.9rem;
+}
+
+.content-section {
+  padding: 4rem 2rem;
+  text-align: center;
+  background: #f8f9fa;
+}
+
+.spacer {
+  height: 100vh;
+  background: linear-gradient(to bottom, transparent, #f0f0f0, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spacer::before {
+  content: "↓ Scroll Down ↓";
+  color: #666;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.animation-info {
+  text-align: center;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #e3f2fd;
+  border-radius: 8px;
+  font-weight: 500;
+}
