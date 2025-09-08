@@ -2,4 +2,9 @@
 
 #cases {
     padding-top: calc($grid-width * 4);
+    .cases{
+        background-color: white;
+        width: 100%;
+        height: 20rem;
+    }
 }

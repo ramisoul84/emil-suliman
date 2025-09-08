@@ -15,12 +15,13 @@
     <div class="line gr4 down4" [ngClass]="{down4:scrollY < 180 ,up4:scrollY > 180}"></div>
     <div class="line gr5 down5" [ngClass]="{down5:scrollY < 180 ,up5:scrollY > 180}"></div>
     <div class="line gr6 down6" [ngClass]="{down6:scrollY < 180 ,up6:scrollY > 180}"></div>
-    <div class="menu" [ngClass]="{hideMenu:scrollY < 180 ,showMenu:scrollY > 180,close:sideNav,open:!sideNav}" (click)="toggleMenu()">
+    <div class="menu" [ngClass]="{hideMenu:scrollY < 180 ,showMenu:scrollY > 180,close:sideNav,open:!sideNav}"
+        (click)="toggleMenu()">
         <span class="line line1"></span>
         <span class="line line2"></span>
         <span class="line line3"></span>
     </div>
-    <div class="logo" [ngClass]="{scaleLeft:scrollY > 180}" (click)="goTop()" >
+    <div class="logo" [ngClass]="{scaleLeft:scrollY > 180}" (click)="goTop()">
         E.S
     </div>
     <div class="sideNav" [ngClass]="{showSide:sideNav ,hideSide:!sideNav}">

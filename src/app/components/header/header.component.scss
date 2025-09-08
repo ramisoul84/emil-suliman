@@ -455,8 +455,18 @@ nav {
   }
 }
 
-@media only screen and (max-width: 600px) {
-  nav {
-    gap: 2px;
+
+
+@media only screen and (max-width: $small) {
+  nav{
+    gap: 0;
+      padding-right: 4px;
+    a{
+      font-size: 14px;
+      padding: 0 0.2rem;
+       &:hover::before {
+      margin-left: -0.2rem;
+    }
+    }
   }
 }

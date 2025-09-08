@@ -26,8 +26,6 @@
   scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
 
-
-
 * {
   margin: 0;
   padding: 0;
@@ -46,7 +44,6 @@ body {
 
 section {
   padding: 0 calc(3 * $grid-width);
-  min-height: calc(100 * $grid-width);
 }
 
 .title{

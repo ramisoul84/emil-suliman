@@ -5,20 +5,32 @@
             <img src="assets/images/emil.png" alt="emil">
         </div>
         <div class="about-right">
-            <div class="about2">Emil Suliman</div>
-            <div class="about3">3</div>
+            <div class="about-name">Emil Suliman</div>
+            <div class="about-info">
+                <p *ngIf="selectedField=='arch'">
+                    Architecture >> 
+                </p>
+                <p *ngIf="selectedField=='visual'">
+                    Visual >>
+                </p>
+                <p *ngIf="selectedField=='personal'">
+                   Personal >> 
+                </p>
+                <div class="info-img">
+                    Arch
+                </div>
+            </div>
         </div>
     </div>
     <div class="about-btns">
-        <div class="about-btn">
+        <div class="about-btn" [ngClass]="{active:selectedField=='arch'}" (click)="selectField('arch')">
             architecture
         </div>
-        <div class="about-btn">
+        <div class="about-btn" [ngClass]="{active:selectedField=='visual'}" (click)="selectField('visual')">
             visual storytelling
         </div>
-        <div class="about-btn">
+        <div class="about-btn" [ngClass]="{active:selectedField=='personal'}" (click)="selectField('personal')">
             personal
         </div>
-
     </div>
 </section>

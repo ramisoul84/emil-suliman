@@ -12,19 +12,26 @@ $font-lcd: "lcd_solidregular";
 $color-bg-top: #000000;
 $color-bg-bottom: #1f2935;
 $color-font: #f1f1f1; 
+$color-border:#f5deb3;
 $color1:#73c046;
 $color2: #cb866d;
 $color3:#1c4703;
 
 // Grid
 $grid-color :rgba(196, 202, 196, 0.1);
-$grid-width: 20px;
+$grid-width: 18px;
 $grid-stroke-width: 1px;
 
 $slide-down-duration: 0.6s;
 $slide-down-delay: 0.08s;
 
+$small:576px;
+
 
 @mixin gradient-background {
   background: linear-gradient(to bottom, $color-bg-top, $color-bg-bottom);
+}
+
+@mixin gradient-title {
+  background: linear-gradient(135deg, $color3, $color1);
 }
