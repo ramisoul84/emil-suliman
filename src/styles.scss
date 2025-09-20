@@ -1,31 +1,5 @@
 @use 'vars' as *;
 
-::-webkit-scrollbar {
-  width: $grid-width;
-}
-
-::-webkit-scrollbar-track {
-  background: linear-gradient(180deg,$color-bg-top,$color-bg-bottom);
-}
-
-::-webkit-scrollbar-thumb {
-  background: $color2;
-  border: 3px solid transparent;  
-  background-clip: padding-box;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: $color1;
-  border: 2px solid transparent;
-  background-clip: padding-box;
-}
-
-/* Firefox compatible scrollbar */
-.firefox-scrollbar {
-  scrollbar-width: auto;
-  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
-}
-
 * {
   margin: 0;
   padding: 0;
@@ -39,25 +13,61 @@ html {
 body {
   font-family: $font-lcd;
   color: $color-font;
-  @include gradient-background;
+  background: linear-gradient(to bottom, $color-bg-top, $color-bg-bottom);
 }
 
 section {
   padding: 0 calc(3 * $grid-width);
 }
 
-.title{
+
+
+
+
+/*  change */
+.title {
   display: flex;
   align-items: center;
   justify-content: center;
   height: calc(3 * $grid-width + 1px);
   width: calc(10 * $grid-width + 1px);
-  background: linear-gradient(135deg,$color3,$color1);
+  background: linear-gradient(135deg, $color-title-left, $color-title-right);
   margin-bottom: calc(2 * $grid-width);
 }
+
 
 @media only screen and (max-width: 600px) {
   section {
     padding: 0 $grid-width;
   }
+}
+
+
+
+
+
+::-webkit-scrollbar {
+  width: $grid-width;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(180deg, $color-bg-top, $color-bg-bottom);
+}
+
+::-webkit-scrollbar-thumb {
+  background: $color-title-left;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: $color-title-right;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Firefox compatible scrollbar */
+.firefox-scrollbar {
+  scrollbar-width: auto;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }

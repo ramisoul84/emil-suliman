@@ -1,60 +1,8 @@
 @use '../../../vars' as *;
 
-@mixin span($left, $top) {
-    position: absolute;
-    top: calc($top * $grid-width);
-    left: calc($left * $grid-width);
-    width: $grid-width;
-    height: $grid-width;
-    background-color: lightcoral;
-}
-
-#home {
+#home{
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 100vh;
-    padding-top: calc(6 * $grid-width);
-    position: relative;
-    .span1 {
-        @include span(3, 8)
-    }
-
-    .span2 {
-        @include span(5, 8)
-    }
-
-    .span3 {
-        @include span(7, 8)
-    }
-
-    .span4 {
-        @include span(3, 10)
-    }
-
-    .span5 {
-        @include span(3, 12)
-    }
-
-    .span6 {
-        @include span(5, 12)
-    }
-
-    .span7 {
-        @include span(7, 12)
-    }
-
-    .span8 {
-        @include span(3, 14)
-    }
-
-    .span9 {
-        @include span(3, 16)
-    }
-
-    .span10 {
-        @include span(5, 16)
-    }
-
-    .span11 {
-        @include span(7, 16)
-    }
-
 }

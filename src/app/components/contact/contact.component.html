@@ -2,4 +2,90 @@
     <div class="title">
         contact.
     </div>
+    <div class="vh100 contact grey-dark-gradient">
+        <div class="container">
+            <div id="contact-us">
+                <div class="contact-title text-center section-title">
+                    <video class="async-video" data-src="/video/contact.webm" title="CONTACT US" width="100%"
+                        height="100%" autoplay loop muted playsinline>
+                    </video>
+                </div>
+
+                <form id="contact-form" class="contact-form">
+                    <div class="grid__col s-padding-r grid__col--m-1-of-1 grid__col--6-of-12">
+                        <div class="rvr-form-group">
+                            <label id="label-name" for="input-name">Name</label>
+                            <input id="input-name" name="name" placeholder="John Doe" type="text" class=""
+                                aria-labelledby="label-name">
+                        </div>
+
+                        <div class="rvr-form-group">
+                            <label id="label-email" for="input-email">E-Mail</label>
+                            <input id="input-email" name="email" placeholder="John@doe.com" required type="email"
+                                class="" aria-labelledby="label-email">
+                        </div>
+
+                        <div class="rvr-form-group">
+                            <label id="label-company" for="input-company">Company</label>
+                            <input id="input-company" name="company" placeholder="Home Builder Company" type="text"
+                                class="" aria-labelledby="label-company">
+                        </div>
+
+                        <div class="rvr-form-group">
+                            <label class="plans" id="label-plans" for="input-plans">Number of floor
+                                plans</label>
+                            <div class="select">
+                                <select name="plans" id="input-plans">
+                                    <option value="10-20">10-20</option>
+                                    <option value="20-30">20-30</option>
+                                    <option value="30-40">30-40</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid">
+
+                            <div class="grid__col grid__col--5-of-12">
+                                <div class="rvr-form-group">
+                                    <label>Product type</label>
+                                </div>
+                            </div>
+
+                            <div class="grid__col grid__col--7-of-12">
+                                <div class="rvr-form-group checkbox-group">
+                                    <input type="checkbox" id="single_family" name="single_family">
+                                    <label for="single_family">Single family</label>
+                                </div>
+
+                                <div class="rvr-form-group checkbox-group">
+                                    <input type="checkbox" id="duplex" name="duplex">
+                                    <label for="duplex">Duplex</label>
+                                </div>
+
+                                <div class="rvr-form-group checkbox-group">
+                                    <input type="checkbox" id="town_home" name="townhome">
+                                    <label for="town_home">Townhome</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right-col grid__col s-padding-r grid__col--m-1-of-1 grid__col--6-of-12">
+                        <div class="rvr-form-group textarea">
+                            <label id="label-message" for="input-message">Short description</label>
+                            <span>(Optional)</span>
+                            <textarea name="message" required placeholder="A short description of your project"
+                                id="input-message" cols="30" rows="10" aria-labelledby="label-message"></textarea>
+                        </div>
+
+                        <div class="grid__col grid__col--12-of-12 submit-col">
+                            <button type="submit">
+                                <span>SEND</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </section>

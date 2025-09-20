@@ -1,4 +1,113 @@
 <header>
+    <div class="line gr1" [ngClass]="{ 'down1': !sideNav && firstLoad,
+            'right': !sideNav && !firstLoad,
+            'left1': sideNav}">
+    </div>
+    <div class="line gr2" [ngClass]="{ 'down2': !sideNav && firstLoad,
+            'right': !sideNav && !firstLoad,
+            'left23': sideNav}">
+    </div>
+    <div class="line gr3" [ngClass]="{ 'down3': !sideNav && firstLoad,
+            'right': !sideNav && !firstLoad,
+            'left23': sideNav}">
+    </div>
+    <div class="line gr4" [ngClass]="{'down4': !sideNav, 'up4': sideNav}"></div>
+    <div class="line gr5" [ngClass]="{'down5': !sideNav, 'up5': sideNav}"></div>
+    <div class="line gr6" [ngClass]="{'down6': !sideNav, 'up6': sideNav}"></div>
+    <div class="hamburger-menu" [ngClass]="{
+            'hide-hamburger-menu': !sideNav,
+            'show-hamburger-menu': sideNav,
+            'close': showMenu,
+            'open': !showMenu
+        }" (click)="toggleMenu()">
+        <span class="line line1" aria-hidden="true"></span>
+        <span class="line line2" aria-hidden="true"></span>
+        <span class="line line3" aria-hidden="true"></span>
+    </div>
+    <div class="logo" [ngClass]="{'hide-logo': !sideNav,'show-logo':sideNav}" (click)="goToSection('home')">
+        E.S
+    </div>
+    <div class="nav">
+        <p [ngClass]="{'hide-nav': sideNav,'show-nav1':!sideNav}" (click)="goToSection('about')">ABOUT</p>
+        <p [ngClass]="{'hide-nav': sideNav,'show-nav2':!sideNav}" (click)="goToSection('resume')">RESUME</p>
+        <p [ngClass]="{'hide-nav': sideNav,'show-nav3':!sideNav}" (click)="goToSection('cases')">CASES</p>
+        <p [ngClass]="{'hide-nav': sideNav,'show-nav4':!sideNav}" (click)="goToSection('contact')">CONTACT</p>
+    </div>
+    <div class="side-menu" [ngClass]="{'hide-side-menu': !showMenu,'show-side-menu':showMenu}">
+        <p (click)="goToSection('about')">ABOUT</p>
+        <p (click)="goToSection('resume')">RESUME</p>
+        <p (click)="goToSection('cases')">CASES</p>
+        <p (click)="goToSection('contact')">CONTACT</p>
+    </div>
+</header>
+<!--
+<header>
+    <div class="line gr1"
+        [ngClass]="{
+            'down1': scrollY < 180 && firstLoad,
+            'right': scrollY < 180 && !firstLoad,
+            'left1': scrollY > 180
+        }"></div>
+    
+    <div class="line gr2"
+        [ngClass]="{
+            'down2': scrollY < 180 && firstLoad,
+            'right': scrollY < 180 && !firstLoad,
+            'left23': scrollY > 180
+        }">
+        <nav [ngClass]="{'slideDown': scrollY < 180, 'slideUp': scrollY > 180}">
+            <a href="#about" (click)="closeMenu()">ABOUT</a>
+            <a href="#resume" (click)="closeMenu()">RESUME</a>
+            <a href="#cases" (click)="closeMenu()">CASES</a>
+            <a href="#contact" (click)="closeMenu()">CONTACT</a>
+        </nav>
+    </div>
+    
+    <div class="line gr3"
+        [ngClass]="{
+            'down3': scrollY < 180 && firstLoad,
+            'right': scrollY < 180 && !firstLoad,
+            'left23': scrollY > 180
+        }"></div>
+    
+    <div class="line gr4" [ngClass]="{'down4': scrollY < 180, 'up4': scrollY > 180}"></div>
+    <div class="line gr5" [ngClass]="{'down5': scrollY < 180, 'up5': scrollY > 180}"></div>
+    <div class="line gr6" [ngClass]="{'down6': scrollY < 180, 'up6': scrollY > 180}"></div>
+
+    <button class="menu" 
+        [ngClass]="{
+            'hideMenu': scrollY < 180,
+            'showMenu': scrollY > 180,
+            'close': sideNav,
+            'open': !sideNav
+        }"
+        (click)="toggleMenu()"
+        [attr.aria-expanded]="sideNav"
+        aria-label="Toggle navigation menu">
+        <span class="line line1" aria-hidden="true"></span>
+        <span class="line line2" aria-hidden="true"></span>
+        <span class="line line3" aria-hidden="true"></span>
+    </button>
+
+    <button class="logo" 
+        [ngClass]="{'scaleLeft': scrollY > 180}" 
+        (click)="goTop()"
+        aria-label="Scroll to top">
+        E.S
+    </button>
+
+    <nav class="sideNav" 
+        [ngClass]="{'showSide': sideNav, 'hideSide': !sideNav}"
+        [attr.aria-hidden]="!sideNav">
+        <a href="#about" class="sideNav-link" (click)="closeMenu()">ABOUT</a>
+        <a href="#resume" class="sideNav-link" (click)="closeMenu()">RESUME</a>
+        <a href="#cases" class="sideNav-link" (click)="closeMenu()">CASES</a>
+        <a href="#contact" class="sideNav-link" (click)="closeMenu()">CONTACT</a>
+    </nav>
+</header>
+-->
+<!--
+<header>
     <div class="line gr1"
         [ngClass]="{down1:scrollY < 180 && firstLoad,right:scrollY < 180 && !firstLoad,left1:scrollY > 180}"></div>
     <div class="line gr2"
@@ -31,3 +140,4 @@
         <a href="#contact" class="sideNav-link" (click)="toggleMenu()">CONTACT</a>
     </div>
 </header>
+-->

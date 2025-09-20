@@ -1,12 +1,13 @@
 @use '../../../vars' as *;
 
-@mixin gradient($layer, $opacity) {
+// Mixins
+@mixin header-gradient($layer, $opacity) {
   position: absolute;
   top: calc($layer * $grid-width);
   left: 0;
   right: 0;
   opacity: $opacity;
-  background: linear-gradient(90deg, $color1, $color2);
+  background: linear-gradient(90deg, $color-header-left, $color-header-right);
 }
 
 @mixin slide-down($layer, $duration, $delay) {
@@ -14,9 +15,13 @@
 }
 
 @mixin slide-up($duration, $delay) {
-  animation: slide-up-animation $duration cubic-bezier(0.08, 0.42, 0, 0.79) $delay both;
+  animation: slide-up-animation $duration ease-in-out $delay both;
 }
 
+@mixin slide-in-top($duration, $delay) {
+  -webkit-animation: slide-in-top $duration cubic-bezier(0.250, 0.460, 0.450, 0.940) $delay both;
+  animation: slide-in-top $duration cubic-bezier(0.250, 0.460, 0.450, 0.940) $delay both;
+}
 
 header {
   position: fixed;
@@ -24,37 +29,388 @@ header {
   left: 0;
   right: 0;
   height: calc(5 * $grid-width);
-  z-index: 99;
 
   .line {
     height: $grid-width;
   }
 
-  .gr1 {
-    z-index: 6;
-    @include gradient(0, 1)
+  @for $i from 1 through 6 {
+    .gr#{$i} {
+      z-index: #{7 - $i};
+      @include header-gradient($i - 1, 1 - (($i - 1) * 0.15));
+    }
   }
 
-  .gr2 {
-    z-index: 5;
-    @include gradient(1, 0.85)
+  .hamburger-menu {
+    position: absolute;
+    top: 0;
+    left: calc(3 * $grid-width);
+    width: calc(3 * $grid-width);
+    height: calc(3 * $grid-width);
+    background-color: #151717;
+    cursor: pointer;
+
+    .line {
+      position: absolute;
+      top: 50%;
+      left: calc(0.5 * $grid-width);
+      ;
+      width: calc(2 * $grid-width);
+      height: 3px;
+      background-color: white;
+      transition: all 400ms cubic-bezier(.84, .06, .52, 1.8);
+    }
   }
 
-  .gr3 {
-    @include gradient(2, 0.55)
+  .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(3 * $grid-width);
+    height: calc(3 * $grid-width);
+    z-index: 8;
+    font-size: 1.4rem;
+    cursor: pointer;
   }
 
-  .gr4 {
-    @include gradient(3, 0.4)
+  .nav {
+    display: flex;
+    gap: $grid-width;
+    position: absolute;
+    top: $grid-width;
+    right: $grid-width;
+    height: $grid-width;
+    z-index: 9;
+
+    p {
+      display: flex;
+      align-items: center;
+      height: $grid-width;
+      cursor: pointer;
+      color: black;
+      width: 100%;
+      position: relative;
+      padding: 0 0.5rem;
+      font-weight: 700;
+      font-size: 1.2rem;
+
+      &:hover::before {
+        position: absolute;
+        content: "";
+        background-color: white;
+        height: 0.2rem;
+        width: 100%;
+        top: 50%;
+        z-index: -1;
+        margin-left: -0.5rem;
+        animation: blink 0.2s ease-in both;
+      }
+    }
   }
 
-  .gr5 {
-    @include gradient(4, 0.25)
+  .side-menu {
+    position: absolute;
+    top: calc(4 * $grid-width);
+    width: calc(6 * $grid-width);
+    height: calc(10 * $grid-width);
+    background-color: #151717;
+    padding: $grid-width;
+    transition: all 400ms cubic-bezier(.84, .06, .52, 1.8);
+    p {
+      display: flex;
+      align-items: center;
+      justify-content: end;
+      height: calc(2 * $grid-width);
+      cursor: pointer;
+
+      &:hover {
+        color: blue;
+      }
+    }
+  }
+}
+
+@for $i from 1 through 6 {
+  .down#{$i} {
+    @include slide-down($i, $slide-down-duration, $slide-down-delay);
+  }
+}
+
+
+@for $i from 4 through 6 {
+  .up#{$i} {
+    @include slide-up(0.3s, $slide-down-delay*2*(6-$i));
+  }
+}
+
+.left1 {
+  animation: slide-left-animation-1 0.4s cubic-bezier(0.09, 0.96, 0.78, 0.92) 0.6s both,
+}
+
+.left23 {
+  animation: slide-left-animation-2-3 0.4s cubic-bezier(0.09, 0.96, 0.78, 0.92) 0.6s both;
+}
+
+.right {
+  animation: slide-right-animation 0.24s ease-in both;
+}
+
+.show-hamburger-menu {
+  -webkit-animation: scale-in-tl 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 1s both;
+  animation: scale-in-tl 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 1s both;
+}
+
+.hide-hamburger-menu {
+  opacity: 0;
+}
+
+.open {
+  .line1 {
+    transform: translateY(-8px);
   }
 
-  .gr6 {
-    @include gradient(5, 0.17)
+  .line3 {
+    transform: translateY(8px);
   }
+}
+
+.close {
+  .line1 {
+    transform: rotate(45deg) translateY(0);
+  }
+
+  .line2 {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  .line3 {
+    transform: rotate(-45deg) translateY(0);
+  }
+}
+
+.show-logo {
+  -webkit-animation: scale-in-tr 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 1s both;
+  animation: scale-in-tr 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 1s both;
+}
+
+.hide-logo {
+  opacity: 0;
+}
+
+@for $i from 1 through 6 {
+  .show-nav#{$i} {
+    @include slide-in-top($slide-down-duration, $slide-down-delay * $i);
+  }
+}
+
+.show-nav {
+  -webkit-animation: slide-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.2 both;
+  animation: slide-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.2s both;
+}
+
+.hide-nav {
+  opacity: 0;
+}
+
+.show-side-menu {
+  left: 0;
+}
+
+.hide-side-menu {
+  left: calc(-6 * $grid-width);
+}
+
+
+
+// Animations
+@keyframes slide-down-animation {
+  from {
+    height: 0;
+  }
+
+  to {
+    height: $grid-width;
+  }
+}
+
+@keyframes slide-up-animation {
+  0% {
+    height: $grid-width;
+  }
+
+  100% {
+    height: 0;
+  }
+}
+
+@keyframes slide-left-animation-1 {
+  0% {
+    height: $grid-width;
+    width: 100%;
+    z-index: 3;
+  }
+
+  50% {
+    height: calc(3 * $grid-width);
+  }
+
+  100% {
+    height: calc(3 * $grid-width);
+    width: calc(3 * $grid-width);
+    z-index: 3;
+  }
+}
+
+@keyframes slide-left-animation-2-3 {
+  0% {
+    width: 100%;
+  }
+
+  100% {
+    width: calc(3 * $grid-width);
+  }
+}
+
+@keyframes slide-right-animation {
+  0% {
+    width: calc(3 * $grid-width);
+  }
+
+  100% {
+    width: 100%;
+  }
+}
+
+@-webkit-keyframes scale-in-tl {
+  0% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+    -webkit-transform-origin: 0% 0%;
+    transform-origin: 0% 0%;
+    opacity: 1;
+  }
+
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    -webkit-transform-origin: 0% 0%;
+    transform-origin: 0% 0%;
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in-tl {
+  0% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+    -webkit-transform-origin: 0% 0%;
+    transform-origin: 0% 0%;
+    opacity: 1;
+  }
+
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    -webkit-transform-origin: 0% 0%;
+    transform-origin: 0% 0%;
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes scale-in-tr {
+  0% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+    -webkit-transform-origin: 100% 0%;
+    transform-origin: 100% 0%;
+    opacity: 1;
+  }
+
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    -webkit-transform-origin: 100% 0%;
+    transform-origin: 100% 0%;
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in-tr {
+  0% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+    -webkit-transform-origin: 100% 0%;
+    transform-origin: 100% 0%;
+    opacity: 1;
+  }
+
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    -webkit-transform-origin: 100% 0%;
+    transform-origin: 100% 0%;
+    opacity: 1;
+  }
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  15% {
+    opacity: 0;
+  }
+
+  85% {
+    opacity: 0;
+  }
+
+  90% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+
+@keyframes slide-in-top {
+  0% {
+    -webkit-transform: translateY(-1000px);
+    transform: translateY(-1000px);
+    opacity: 0;
+  }
+
+  100% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+
+
+
+
+
+
+
+/*
+// Base styles
+
+/*
+header {
+
 
   .menu {
     position: absolute;
@@ -127,7 +483,7 @@ header {
 
   a {
     text-decoration: none;
-    color: $color1;
+    color: $color-font;
   }
 }
 
@@ -200,63 +556,18 @@ nav {
 
 
 .scaleLeft {
-  -webkit-animation: scale-in-left 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 1s  both;
+  -webkit-animation: scale-in-left 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 1s both;
   animation: scale-in-left 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 1s both;
 }
 
-// Sliding DOWN
-.down1 {
-  @include slide-down(0, $slide-down-duration, $slide-down-delay);
-}
-
-.down2 {
-  @include slide-down(1, $slide-down-duration, $slide-down-delay);
-}
-
-.down3 {
-  @include slide-down(2, $slide-down-duration, $slide-down-delay);
-}
-
-.down4 {
-  @include slide-down(3, $slide-down-duration, $slide-down-delay);
-}
-
-.down5 {
-  @include slide-down(4, $slide-down-duration, $slide-down-delay);
-}
-
-.down6 {
-  @include slide-down(5, $slide-down-duration, $slide-down-delay);
-}
 
 .show {
   animation: show 2s 0.4s ease forwards;
 }
 
-// Sliding UP
-.up4 {
-  @include slide-up(0.3s, 0.2s);
-}
 
-.up5 {
-  @include slide-up(0.3s, 0.1s);
-}
 
-.up6 {
-  @include slide-up(0.3s, 0s);
-}
 
-.left1 {
-  animation: slide-left-animation-1 0.4s cubic-bezier(0.09, 0.96, 0.78, 0.92) 0.5s both,
-}
-
-.left23 {
-  animation: slide-left-animation-2-3 0.4s cubic-bezier(0.09, 0.96, 0.78, 0.92) 0.5s both;
-}
-
-.right {
-  animation: slide-right-animation 0.24s ease-in both;
-}
 
 .slideDown {
   -webkit-animation: slide-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
@@ -269,25 +580,345 @@ nav {
 }
 
 
-@keyframes slide-down-animation {
+
+
+
+
+@keyframes show {
   0% {
-    height: 0;
+    opacity: 0;
   }
 
   100% {
-    height: $grid-width;
+    opacity: 1;
   }
+}
+
+
+
+
+@-webkit-keyframes slide-in-top {
+  0% {
+    -webkit-transform: translateY(-1000px);
+    transform: translateY(-1000px);
+    opacity: 0;
+  }
+
+  100% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-top {
+  0% {
+    -webkit-transform: translateY(-1000px);
+    transform: translateY(-1000px);
+    opacity: 0;
+  }
+
+  100% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  0% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  100% {
+    -webkit-transform: translateY(-1000px);
+    transform: translateY(-1000px);
+    opacity: 0;
+  }
+
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  15% {
+    opacity: 0;
+  }
+
+  85% {
+    opacity: 0;
+  }
+
+  90% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+
+@-webkit-keyframes scale-in-left {
+  0% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+    -webkit-transform-origin: 0% 50%;
+    transform-origin: 0% 50%;
+    opacity: 1;
+  }
+
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    -webkit-transform-origin: 0% 50%;
+    transform-origin: 0% 50%;
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in-left {
+  0% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+    -webkit-transform-origin: 0% 50%;
+    transform-origin: 0% 50%;
+    opacity: 1;
+  }
+
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    -webkit-transform-origin: 0% 50%;
+    transform-origin: 0% 50%;
+    opacity: 1;
+  }
+}
+
+
+
+@media only screen and (max-width: $small) {
+  nav {
+    gap: 0;
+    padding-right: 4px;
+
+    a {
+      font-size: 14px;
+      padding: 0 0.2rem;
+
+      &:hover::before {
+        margin-left: -0.2rem;
+      }
+    }
+  }
+}
+
+/*
+
+
+@mixin slide-down($layer, $duration, $delay) {
+  animation: slide-down-animation $duration cubic-bezier(0.08, 0.42, 0, 0.79) calc($layer * $delay) both;
+}
+
+@mixin slide-up($duration, $delay) {
+  animation: slide-up-animation $duration cubic-bezier(0.08, 0.42, 0, 0.79) $delay both;
+}
+
+
+// Hamb Menu states
+.menu {
+  position: absolute;
+  top: 0;
+  left: calc(3 * $grid-width);
+  width: calc(3 * $grid-width);
+  height: calc(3 * $grid-width);
+  background-color: #151717;
+  color: white;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  transition: all 0.3s ease;
+  z-index: 1001;
+
+  &:focus {
+    outline: 2px solid $color1;
+    outline-offset: 2px;
+  }
+
+  .line {
+    position: absolute;
+    left: 25%;
+    top: 50%;
+    width: 32px;
+    height: 3px;
+    background-color: white;
+    transition: all 0.4s cubic-bezier(.84, .06, .52, 1.8);
+  }
+}
+
+
+
+/*
+
+.showMenu {
+  -webkit-animation: slide-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s both;
+  animation: slide-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s both;
+}
+
+.hideMenu {
+  -webkit-animation: slide-up 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+  animation: slide-up 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+
+
+
+
+
+
+
+
+
+
+// Menu button
+
+
+
+// Side navigation
+.sideNav {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem;
+  position: fixed;
+  left: 0;
+  top: calc(3 * $grid-width);
+  width: calc(12 * $grid-width);
+  height: calc(100vh - 3 * $grid-width);
+  background-color: #151717;
+  transform: translateX(-100%);
+  transition: transform 0.4s ease;
+  z-index: 999;
+
+  &.showSide {
+    transform: translateX(0);
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .sideNav-link {
+    text-decoration: none;
+    color: $color1;
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease;
+    display: block;
+
+    &:hover {
+      color: lighten($color1, 20%);
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    &:focus {
+      outline: 2px solid $color1;
+      outline-offset: 2px;
+    }
+  }
+}
+
+// Main navigation
+nav:not(.sideNav) {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 1.5rem;
+  gap: 1.5rem;
+  height: 100%;
+  opacity: 0;
+
+  a {
+    text-decoration: none;
+    color: black;
+    padding: 0.5rem;
+    position: relative;
+    font-weight: 500;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: $color1;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 0.2rem;
+        background-color: white;
+        z-index: -1;
+        animation: blink 0.2s ease-in both;
+      }
+    }
+
+    &:focus {
+      outline: 2px solid $color1;
+      outline-offset: 4px;
+    }
+  }
+}
+
+// Logo
+.logo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1010;
+  width: calc(3 * $grid-width);
+  height: calc(3 * $grid-width);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  color: black;
+  cursor: pointer;
+  background: none;
+  border: none;
+  transform: scale(0);
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &:focus {
+    outline: 2px solid $color1;
+    outline-offset: 2px;
+  }
+}
+
+// Animations
+@keyframes slide-down-animation {
+  from { height: 0; }
+  to { height: $grid-width; }
 }
 
 @keyframes slide-up-animation {
-  0% {
-    height: $grid-width;
-  }
-
-  100% {
-    height: 0;
-  }
+  from { height: $grid-width; }
+  to { height: 0; }
 }
+
+
+
+
+
 
 @keyframes slide-left-animation-1 {
   0% {
@@ -381,44 +1012,9 @@ nav {
 
 }
 
-@keyframes blink {
-  0% {
-    opacity: 1;
-  }
 
-  10% {
-    opacity: 1;
-  }
 
-  15% {
-    opacity: 0;
-  }
 
-  85% {
-    opacity: 0;
-  }
-
-  90% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-
-/* ----------------------------------------------
- * Generated by Animista on 2025-9-7 21:7:28
- * Licensed under FreeBSD License.
- * See http://animista.net/license for more info. 
- * w: http://animista.net, t: @cssanimista
- * ---------------------------------------------- */
-
-/**
- * ----------------------------------------
- * animation scale-in-left
- * ----------------------------------------
- */
 @-webkit-keyframes scale-in-left {
   0% {
     -webkit-transform: scale(0);
@@ -456,17 +1052,45 @@ nav {
 }
 
 
+// ... (keep your existing animations but add will-change for performance)
 
+// Responsive
 @media only screen and (max-width: $small) {
-  nav{
-    gap: 0;
-      padding-right: 4px;
-    a{
-      font-size: 14px;
-      padding: 0 0.2rem;
-       &:hover::before {
-      margin-left: -0.2rem;
+  header {
+    nav:not(.sideNav) {
+      gap: 0.5rem;
+      padding-right: 0.5rem;
+      
+      a {
+        font-size: 0.875rem;
+        padding: 0.25rem;
+        
+        &:hover::before {
+          margin-left: -0.25rem;
+        }
+      }
     }
+  }
+
+  .sideNav {
+    width: 100vw;
+    padding: 1rem;
+    
+    .sideNav-link {
+      font-size: 1.1rem;
+      text-align: center;
     }
   }
 }
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+*/
