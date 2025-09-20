@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
-
 @Component({
   selector: 'app-about',
   imports: [CommonModule],
@@ -9,10 +8,10 @@ import { Component } from '@angular/core';
   styleUrl: './about.component.scss'
 })
 export class AboutComponent {
-  selectedField:string="arch"
+  selectedField: string = "arch"
 
-  selectField(field:string):void{
+  selectField(field: string): void {
     this.selectedField = field;
   }
-  
+
 }

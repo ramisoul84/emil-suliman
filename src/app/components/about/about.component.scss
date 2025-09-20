@@ -1,15 +1,104 @@
 @use '../../../vars' as *;
 
 #about {
-    height: 100vh;
     padding-top: calc($grid-width * 4);
 
-    img {
-        max-width: calc(18 * $grid-width);
+    .about {
+        display: flex;
+        gap: $grid-width;
+        position: relative;
+
+        .about-left {
+            .about-img {
+                width: 100%;
+                max-width: calc(18 * $grid-width);
+                margin-bottom: $grid-width;
+            }
+
+            .about-btns {
+                display: flex;
+                flex-direction: column;
+                gap: $grid-width;
+
+                .about-btn {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border: 2px solid $color-border;
+                    height: calc(3 * $grid-width);
+                    cursor: pointer;
+                }
+
+                .active {
+                    background: linear-gradient(135deg, $color-title-left, $color-title-right);
+                }
+            }
+        }
+
+        .about-right {
+            display: flex;
+            flex-direction: column;
+            gap: $grid-width;
+            width: 100%;
+
+            .about-name {
+                width: 100%;
+                font-size: 1.8rem;
+            }
+
+            .about-info {
+                width: 100%;
+                height: 100%;
+                background-color: white;
+                position: relative;
+
+                .about-info-text {
+                    text-align: justify;
+                    line-height: 1.4rem;
+                    padding: $grid-width;
+                    font-size: 1.2rem;
+                    font-weight: 100;
+                    color: black;
+                }
+
+                .about-info-img {
+                    position: absolute;
+                    bottom: $grid-width;
+                    right: $grid-width;
+                    width: calc(8 * $grid-width);
+                    height: calc(8 * $grid-width);
+                    background-color: tomato;
+                }
+            }
+        }
     }
-    .name{
-        margin-top: $grid-width;
-        width: calc(18 * $grid-width);
+}
+
+@media only screen and (max-width: $sm) {
+    #about {
+        .about {
+            flex-direction: column;
+
+            .about-left {
+                .about-img {
+                    max-width: 100%;
+                }
+            }
+
+            .about-right {
+
+                .about-name {
+                    display: none;
+                }
+
+                .about-info {
+                    .about-info-text {
+                        font-size: 1rem;
+                    }
+                }
+
+            }
+        }
     }
 }
 

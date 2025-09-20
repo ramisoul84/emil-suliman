@@ -27,11 +27,11 @@
     <div class="logo" [ngClass]="{'hide-logo': !sideNav,'show-logo':sideNav}" (click)="goToSection('home')">
         E.S
     </div>
-    <div class="nav">
-        <p [ngClass]="{'hide-nav': sideNav,'show-nav1':!sideNav}" (click)="goToSection('about')">ABOUT</p>
-        <p [ngClass]="{'hide-nav': sideNav,'show-nav2':!sideNav}" (click)="goToSection('resume')">RESUME</p>
-        <p [ngClass]="{'hide-nav': sideNav,'show-nav3':!sideNav}" (click)="goToSection('cases')">CASES</p>
-        <p [ngClass]="{'hide-nav': sideNav,'show-nav4':!sideNav}" (click)="goToSection('contact')">CONTACT</p>
+    <div  [ngClass]="{'nav': !sideNav,'hide-nav':sideNav}">
+        <p [ngClass]="{'show-nav1':!sideNav}" (click)="goToSection('about')">ABOUT</p>
+        <p [ngClass]="{'show-nav2':!sideNav}" (click)="goToSection('resume')">RESUME</p>
+        <p [ngClass]="{'show-nav3':!sideNav}" (click)="goToSection('cases')">CASES</p>
+        <p [ngClass]="{'show-nav4':!sideNav}" (click)="goToSection('contact')">CONTACT</p>
     </div>
     <div class="side-menu" [ngClass]="{'hide-side-menu': !showMenu,'show-side-menu':showMenu}">
         <p (click)="goToSection('about')">ABOUT</p>

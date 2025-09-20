@@ -1,10 +1,130 @@
 @use '../../../vars' as *;
 
 #cases {
-    padding-top: calc($grid-width * 4);
-    .cases{
+    padding: calc($grid-width * 4);
+    width: 100%;
+    height: 100vh;
+
+    .cases {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         background-color: white;
         width: 100%;
-        height: 20rem;
+        height: 100%;
+        color: black;
+        padding: calc(2 * $grid-width);
+        position: relative;
+
+        .cases-prev {
+            position: absolute;
+            left: 0;
+        }
+
+        .cases-next {
+            position: absolute;
+            right: 0;
+        }
+
+        .icon {
+            fill: black;
+            height: 2.2rem;
+            cursor: pointer;
+        }
+
+        .prev {
+            transform: rotate(180deg);
+        }
+
+        .disable {
+            fill: gray;
+            cursor: default;
+        }
+
+        .cases-main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            width: 100%;
+            height: 100%;
+
+            .cases-main-left {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                position: relative;
+
+                .cases-title {
+                    display: flex;
+                    align-items: center;
+                    height: calc($grid-width * 3);
+                    width: fit-content;
+                    padding: 0 $grid-width;
+                    margin-bottom: $grid-width;
+                }
+
+                .project-name {
+                    margin-bottom: $grid-width;
+                    font-weight: 700;
+                    font-size: 1.2rem;
+                }
+
+                .project-info {
+                    font-size: 1rem;
+                    font-weight: 200;
+
+                }
+
+
+                .more {
+                    position: absolute;
+                    right: 0;
+                    bottom: 0;
+                    cursor: pointer;
+                }
+            }
+
+            .cases-main-right {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                img {
+                    width: auto;
+                    max-height: 20rem;
+                    object-fit: contain;
+                }
+            }
+        }
+
+        .projects {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0.4rem;
+
+            .circle {
+                width: 0.8rem;
+                height: 0.8rem;
+                border-radius: 50%;
+                background-color: gray;
+                cursor: pointer;
+
+                &:hover {
+                    transform: scale(1.2);
+                    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+                }
+            }
+
+            .active {
+                background: linear-gradient(to right, #02771c, #39a81e);
+                color: white;
+                transform: scale(1.1);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            }
+        }
+
     }
 }

@@ -3,6 +3,7 @@ import { Component, HostListener, Inject, OnInit, OnDestroy, PLATFORM_ID } from 
 import { isPlatformBrowser } from '@angular/common';
 import { Subject } from 'rxjs';
 import { takeUntil, debounceTime } from 'rxjs/operators';
+import { BlurService } from '../../services/blur.service';
 
 @Component({
   selector: 'app-header',
@@ -17,6 +18,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   sideNav: boolean = false;
   showMenu: boolean = false;
 
+  constructor(private blurService: BlurService) { }
+
   @HostListener('window:scroll')
   onWindowScroll() {
     this.scrollY = window.scrollY;
@@ -26,6 +29,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (this.scrollY < this.animatedY) {
       this.sideNav = false;
       this.showMenu = false;
+      this.blurService.setBlur(false)
     } else {
       this.sideNav = true;
     }
@@ -37,17 +41,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   toggleMenu(): void {
     this.showMenu = !this.showMenu;
+    this.blurService.setBlur(this.showMenu)
   }
 
- goToSection(section: string) {
-  const element = document.getElementById(section);
-  if (element) {
-    element.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start' // or 'center', 'end', 'nearest'
-    });
+  goToSection(section: string) {
+    const element = document.getElementById(section);
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start' // or 'center', 'end', 'nearest'
+      });
+      this.blurService.setBlur(false)
+      this.showMenu = false;
+    }
   }
-}
 
 
   ngOnDestroy() {

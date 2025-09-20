@@ -7,3 +7,7 @@
         linear-gradient(90deg, $grid-stroke-color $grid-stroke-width, transparent $grid-stroke-width);
     background-size: $grid-width $grid-width;
 }
+
+.blur{
+    filter: blur(10px);
+}

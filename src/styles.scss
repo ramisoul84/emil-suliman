@@ -4,6 +4,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  user-select: none;
 }
 
 html {
@@ -14,15 +15,30 @@ body {
   font-family: $font-lcd;
   color: $color-font;
   background: linear-gradient(to bottom, $color-bg-top, $color-bg-bottom);
+  overflow-x: hidden;
 }
 
 section {
   padding: 0 calc(3 * $grid-width);
 }
 
+img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
 
 
 
+   .ios-fix {
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Prevent white gaps on swipe */
+        body {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
 
 /*  change */
 .title {
@@ -32,7 +48,7 @@ section {
   height: calc(3 * $grid-width + 1px);
   width: calc(10 * $grid-width + 1px);
   background: linear-gradient(135deg, $color-title-left, $color-title-right);
-  margin-bottom: calc(2 * $grid-width);
+  pointer-events: none;
 }
 
 

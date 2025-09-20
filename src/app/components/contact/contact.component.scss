@@ -1,10 +1,54 @@
 @use '../../../vars' as *;
 
 #contact {
-    padding-top: calc($grid-width * 4);
+  padding-top: calc($grid-width * 4);
+  height: 100vh;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: $grid-width;
+    margin-top: calc($grid-width * 2);
+
+    .form-group {
+      display: grid;
+      grid-template-columns: 1fr 4fr;
+      height: calc($grid-width * 2);
+      align-items: center;
+
+      input {
+        height: 100%;
+        background-color: transparent;
+        border: 2px solid $color-border;
+        outline: 0;
+        padding-left: $grid-width;
+        color: $color-font;
+        font-size: 1.2rem;
+      }
+    }
+
+    textarea {
+      background-color: transparent;
+      border: 2px solid $color-border;
+      padding: $grid-width;
+      color: $color-font;
+      font-size: 1.2rem;
+    }
+
+    .submit {
+      width: calc($grid-width * 6);;
+      height: calc($grid-width * 2);
+      background-color: transparent;
+      border: 2px solid $color-border;
+       color: $color-font;
+      font-size: 1.2rem;
+      cursor: pointer;
+      align-self: end;
+    }
+  }
 }
 
-
+/*
 #contact-us {
   scroll-margin-top: 3rem;
 
@@ -82,11 +126,11 @@
   }
 
   select {
-    /* Reset Select */
+
     appearance: none;
     outline: 0;
     box-shadow: none;
-    /* Personalize */
+
     flex: 1;
     color: #fff;
     background-color: #3a4e67;
@@ -107,13 +151,13 @@
       pointer-events: none;
     }
 
-    /* Remove IE arrow */
+
     &::-ms-expand {
       display: none;
     }
   }
 
-  /* Custom Select wrapper */
+
   .select {
     position: relative;
     display: flex;
@@ -272,3 +316,4 @@
     padding-left: 100px;
   }
 }
+*/

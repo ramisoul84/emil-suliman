@@ -29,6 +29,7 @@ header {
   left: 0;
   right: 0;
   height: calc(5 * $grid-width);
+  z-index: 9;
 
   .line {
     height: $grid-width;
@@ -54,7 +55,6 @@ header {
       position: absolute;
       top: 50%;
       left: calc(0.5 * $grid-width);
-      ;
       width: calc(2 * $grid-width);
       height: 3px;
       background-color: white;
@@ -117,17 +117,20 @@ header {
     width: calc(6 * $grid-width);
     height: calc(10 * $grid-width);
     background-color: #151717;
-    padding: $grid-width;
+    padding: $grid-width 0;
     transition: all 400ms cubic-bezier(.84, .06, .52, 1.8);
+
     p {
       display: flex;
       align-items: center;
       justify-content: end;
       height: calc(2 * $grid-width);
+      padding-right: $grid-width;
       cursor: pointer;
 
       &:hover {
-        color: blue;
+        background-color: white;
+        color: #151717;
       }
     }
   }
@@ -213,7 +216,7 @@ header {
 }
 
 .hide-nav {
-  opacity: 0;
+  display: none;
 }
 
 .show-side-menu {

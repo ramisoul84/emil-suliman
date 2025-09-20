@@ -1,4 +1,36 @@
 <section id="cases">
-    <div class="title">cases.</div>
-    <div class="cases"></div>
+    <div class="cases">
+        <div class="cases-prev">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon prev"
+                [ngClass]="{'disable':selectedproject==0}" viewBox="0 0 42 42" (click)="prev()">
+                <path d="M13.933 1L34 21.068L14.431 40.637l-4.933-4.933l14.638-14.636L9 5.933z" />
+            </svg>
+        </div>
+        <div class="cases-main">
+            <div class="cases-main-left">
+                <div class="title cases-title">Cases</div>
+                <div class="project-name">{{projects[selectedproject].name}}</div>
+                <div class="project-info">
+                    {{projects[selectedproject].info}}
+                </div>
+                <div class="more">
+                    read more ..
+                </div>
+            </div>
+            <div class="cases-main-right">
+                <img [src]="projects[selectedproject].img" alt="">
+            </div>
+        </div>
+        <div class="cases-next">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon"
+                [ngClass]="{'disable':selectedproject==projects.length-1}" viewBox="0 0 42 42" (click)="next()">
+                <path d="M13.933 1L34 21.068L14.431 40.637l-4.933-4.933l14.638-14.636L9 5.933z" />
+            </svg>
+        </div>
+        <div class="projects">
+            <div *ngFor="let p of projects, let i = index" class="circle" [ngClass]="{'active':selectedproject==i}"
+                (click)="select(i)">
+            </div>
+        </div>
+    </div>
 </section>

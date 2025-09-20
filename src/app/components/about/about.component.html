@@ -1,44 +1,36 @@
 <section id="about">
-    <div>
-        <img src="assets/images/emil.png" alt="emil picture">
-        <div class="title name">EMIL SULIMAN</div>
-    </div>
-</section>
-
-<!--
-
-    <div class="title">about.</div>
     <div class="about">
         <div class="about-left">
-            <img src="assets/images/emil.png" alt="emil">
+            <div class="about-img">
+                <img src="assets/images/emil.png" alt="emil picture">
+            </div>
+            <div class="about-btns">
+                <div class="about-btn" [ngClass]="{active:selectedField=='arch'}" (click)="selectField('arch')">
+                    architecture</div>
+                <div class="about-btn" [ngClass]="{active:selectedField=='visual'}" (click)="selectField('visual')">
+                    visual
+                    storytelling</div>
+                <div class="about-btn" [ngClass]="{active:selectedField=='personal'}" (click)="selectField('personal')">
+                    personal</div>
+            </div>
         </div>
         <div class="about-right">
-            <div class="about-name">Emil Suliman</div>
+            <div class="about-name title">Emil Suliman</div>
             <div class="about-info">
-                <p *ngIf="selectedField=='arch'">
-                    Architecture >> 
-                </p>
-                <p *ngIf="selectedField=='visual'">
-                    Visual >>
-                </p>
-                <p *ngIf="selectedField=='personal'">
-                   Personal >> 
-                </p>
-                <div class="info-img">
-                    Arch
+                <div class="about-info-text">
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+                    industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type
+                    and scrambled it to make a type specimen book. It has survived not only five centuries, but also the
+                    leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s
+                    with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop
+                    publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                </div>
+                <div class="about-info-img">
+
                 </div>
             </div>
         </div>
+
+
     </div>
-    <div class="about-btns">
-        <div class="about-btn" [ngClass]="{active:selectedField=='arch'}" (click)="selectField('arch')">
-            architecture
-        </div>
-        <div class="about-btn" [ngClass]="{active:selectedField=='visual'}" (click)="selectField('visual')">
-            visual storytelling
-        </div>
-        <div class="about-btn" [ngClass]="{active:selectedField=='personal'}" (click)="selectField('personal')">
-            personal
-        </div>
-    </div>
--->
+</section>
