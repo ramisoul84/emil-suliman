@@ -1,212 +1,166 @@
-@use '../../../vars' as *;
-
 #about {
-    padding-top: calc($grid-width * 4);
-
     .about {
         display: flex;
-        gap: $grid-width;
-        position: relative;
+        flex-direction: column;
+        gap: var(--dynamic-grid-size);
 
-        .about-left {
-            .about-img {
-                width: 100%;
-                max-width: calc(18 * $grid-width);
-                margin-bottom: $grid-width;
-            }
-
-            .about-btns {
-                display: flex;
-                flex-direction: column;
-                gap: $grid-width;
-
-                .about-btn {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    border: 2px solid $color-border;
-                    height: calc(3 * $grid-width);
-                    cursor: pointer;
-                }
-
-                .active {
-                    background: linear-gradient(135deg, $color-title-left, $color-title-right);
-                }
-            }
-        }
-
-        .about-right {
-            display: flex;
-            flex-direction: column;
-            gap: $grid-width;
-            width: 100%;
-
-            .about-name {
-                width: 100%;
-                font-size: 1.8rem;
-            }
-
-            .about-info {
-                width: 100%;
-                height: 100%;
-                background-color: white;
-                position: relative;
-
-                .about-info-text {
-                    text-align: justify;
-                    line-height: 1.4rem;
-                    padding: $grid-width;
-                    font-size: 1.2rem;
-                    font-weight: 100;
-                    color: black;
-                }
-
-                .about-info-img {
-                    position: absolute;
-                    bottom: $grid-width;
-                    right: $grid-width;
-                    width: calc(8 * $grid-width);
-                    height: calc(8 * $grid-width);
-                    background-color: tomato;
-                }
-            }
-        }
-    }
-}
-
-@media only screen and (max-width: $sm) {
-    #about {
-        .about {
-            flex-direction: column;
-
-            .about-left {
-                .about-img {
-                    max-width: 100%;
-                }
-            }
-
-            .about-right {
-
-                .about-name {
-                    display: none;
-                }
-
-                .about-info {
-                    .about-info-text {
-                        font-size: 1rem;
-                    }
-                }
-
-            }
-        }
-    }
-}
-
-/*
-#about {
-    padding-top: calc($grid-width * 4);
-
-    .about {
-        display: flex;
-        gap: $grid-width;
-
-        .about-left {
-            width: 100%;
-            max-width: calc(20 * $grid-width);
-            max-height: calc(20 * $grid-width);
-
-            img {
-                width: 100%;
-                height: 100%;
-            }
-        }
-
-        .about-right {
-            width: 100%;
-
-            .about-name {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 1.6rem;
-                width: 100%;
-                height: calc(2 * $grid-width);
-                @include gradient-title;
-                margin-bottom: $grid-width;
-            }
-
-            .about-info {
-                width: 100%;
-                height: calc(100% - 3 * $grid-width);
-                background-color: white;
-                color: black;
-                padding: $grid-width;
-                position: relative;
-                .info-img{
-                    position: absolute;
-                    width: calc(6* $grid-width);
-                    height:  calc(6* $grid-width);
-                    right: 10px;
-                    bottom: 10px;
-                    background-color: lightcoral;
-                }
-            }
-        }
-    }
-
-    .about-btns {
-        display: flex;
-        gap: $grid-width;
-        margin-top: $grid-width;
-
-        .about-btn {
+        .about-name {
             display: flex;
             align-items: center;
             justify-content: center;
-            height: calc(2 * $grid-width);
-            width: calc(12 * $grid-width);
-            border: 2px solid $color-border;
-            cursor: pointer;
+            font-family: var(--font-title);
+            font-size: 1.2rem;
+            height: calc(2 * var(--dynamic-grid-size));
+            background: linear-gradient(135deg, var(--color-header-left), var(--color-header-right));
         }
 
-        .active {
-            background: linear-gradient(135deg, $color3, $color1);
-        }
-    }
-}
-
-@media only screen and (max-width: $small) {
-    #about {
-        .about {
-            display: block;
-
-            .about-left {
-                width: 100%;
-                max-width: 100%;
-                max-height: 100%;
-                margin-bottom: $grid-width;
-            }
-
-            .about-right {
-                width: 100%;
-
-                .about-info {
-                    height: calc(20 * $grid-width);
-                }
-            }
+        .about-img {
+            width: 100%;
         }
 
         .about-btns {
+            display: flex;
             flex-direction: column;
+            gap: var(--dynamic-grid-size);
 
             .about-btn {
-                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: calc(2 * var(--dynamic-grid-size));
+                border: 2px solid white;
+                font-family: var(--font-title);
+                font-size: 1rem;
+                cursor: pointer;
             }
 
-            .active {
-                background: linear-gradient(135deg, $color3, $color1);
+            .btn-active {
+                background: linear-gradient(135deg, var(--color-header-left), var(--color-header-right));
+                border: 0;
+            }
+        }
+
+        .about-info {
+            display: flex;
+            flex-direction: column;
+            padding: var(--dynamic-grid-size);
+            background-color: white;
+            color: black;
+
+            .info-img {
+                width: calc(16 * var(--dynamic-grid-size));
+                aspect-ratio: 1 / 1;
+                margin-bottom: var(--dynamic-grid-size);
+            }
+
+            .info-text {
+                line-height: var(--dynamic-grid-size);
+                font-size: 0.8rem;
+                overflow: auto;
             }
         }
     }
 }
-    */
+
+@media (min-width: 576px) {
+    #about {
+        .about {
+            position: relative;
+
+            .about-img {
+                width: calc(11 * var(--dynamic-grid-size));
+            }
+
+            .about-info {
+                width: calc(22 * var(--dynamic-grid-size));
+
+                .info-img {
+                    width: 100%;
+                }
+            }
+
+            .about-name {
+                position: absolute;
+                top: 0;
+                left: calc(12 * var(--dynamic-grid-size));
+                width: calc(10 * var(--dynamic-grid-size));
+            }
+
+            .about-btns {
+                position: absolute;
+                top: calc(3 * var(--dynamic-grid-size));
+                left: calc(12 * var(--dynamic-grid-size));
+                width: calc(10 * var(--dynamic-grid-size));
+            }
+
+
+
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    #about {
+        .about {
+            .about-info {
+                width: calc(28 * var(--dynamic-grid-size));
+            }
+
+            .about-name {
+                width: calc(16 * var(--dynamic-grid-size));
+            }
+
+            .about-btns {
+                width: calc(16 * var(--dynamic-grid-size));
+            }
+        }
+    }
+}
+
+// 992
+
+
+@media (min-width: 1200px) {
+    #about {
+        .about {
+            .about-img {
+                width: calc(18 * var(--dynamic-grid-size));
+            }
+
+            .about-name {
+                left: calc(19 * var(--dynamic-grid-size));
+                width: calc(29 * var(--dynamic-grid-size));
+            }
+
+            .about-btns {
+                position: static;
+            }
+
+            .about-info {
+                position: absolute;
+                top: calc(3 * var(--dynamic-grid-size));
+                left: calc(19 * var(--dynamic-grid-size));
+                width: calc(29 * var(--dynamic-grid-size));
+                height: calc(15 * var(--dynamic-grid-size));
+
+                .info-img {
+                    width: calc(7 * var(--dynamic-grid-size));
+                    float: right;
+                }
+
+                .info-text {
+                    font-size: 1.2rem;
+                }
+            }
+
+            .about-btns {
+                flex-direction: row;
+                width: auto;
+
+                .about-btn {
+                    width: calc(9 * var(--dynamic-grid-size));
+                }
+            }
+        }
+    }
+}

@@ -1,11 +1,11 @@
-footer{
-    height: 40vh;
+footer {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 32px 0;
-    .whale{
+    height: calc(8 * var(--dynamic-grid-size));
+    .whale {
         width: 6rem;
     }
 }
+

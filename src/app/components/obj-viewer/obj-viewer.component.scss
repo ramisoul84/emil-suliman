@@ -1,0 +1,107 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.renderer-container {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.renderer-container canvas {
+  cursor: grab;
+}
+
+.renderer-container canvas:active {
+  cursor: grabbing;
+}
+
+.status {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px 20px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border-radius: 4px;
+  z-index: 10;
+}
+
+/* Zoom controls */
+.zoom-controls {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.zoom-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.zoom-btn:hover {
+  background: rgba(0, 0, 0, 0.9);
+  transform: scale(1.1);
+}
+
+.zoom-btn:active {
+  transform: scale(0.95);
+}
+
+.zoom-btn span {
+  line-height: 1;
+}
+
+/* Hide zoom buttons on desktop if not needed */
+@media (min-width: 768px) {
+  .zoom-controls {
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+  }
+  
+  .zoom-controls:hover {
+    opacity: 1;
+  }
+}
+
+/* Mobile-specific styles */
+@media (max-width: 767px) {
+  .zoom-controls {
+    right: 15px;
+    bottom: 15px;
+  }
+  
+  .zoom-btn {
+    width: 60px;
+    height: 60px;
+    font-size: 28px;
+    background: rgba(0, 0, 0, 0.8);
+  }
+}
+
+/* Optional: Hide zoom buttons when not needed */
+.zoom-controls.hidden {
+  display: none;
+}

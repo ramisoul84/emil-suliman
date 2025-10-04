@@ -1,0 +1,15 @@
+<section id="resume">
+    <div class="title">cv timeline.</div>
+    <div class="resume">
+        <div class="map-wrapper">
+            <div class="map" #mapSection>
+                <ng-lottie [options]="mapOptions" (animationCreated)="onMapAnimationCreated($event)" />
+            </div>
+
+        </div>
+        <div class="timeline" #timelineSection >
+            <ng-lottie [options]="timeLineOptions"  (animationCreated)="onTimelineAnimationCreated($event)"/>
+        </div>
+
+    </div>
+</section>

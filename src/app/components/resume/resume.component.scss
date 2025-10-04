@@ -1,43 +1,235 @@
+#resume {
+    .resume-title {
+        display: flex;
+        align-items: center;
+        padding-left: var(--dynamic-grid-size);
+        font-family: var(--font-title);
+        font-size: 1rem;
+        height: calc(2 * var(--dynamic-grid-size));
+        width: calc(10 * var(--dynamic-grid-size));
+        background: linear-gradient(135deg, var(--color-header-left), var(--color-header-right));
+        margin-bottom: var(--dynamic-grid-size);
+    }
+
+    .resume {
+        .map-wrapper {
+            width: 100%;
+            height: calc(10 * var(--dynamic-grid-size));
+            overflow: hidden;
+            border: 2px solid white;
+            position: sticky;
+            top: calc(4 * var(--dynamic-grid-size));
+            z-index: 3;
+
+            .map {
+                background-color: rgb(3, 3, 44);
+                transform: scale(2);
+            }
+
+            .animation-info-map {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                background-color: rgba(255, 0, 0, 0.363);
+                height: calc(2 * var(--dynamic-grid-size));
+                padding: 0.2rem;
+
+                p {
+                    line-height: var(--dynamic-grid-size);
+                }
+            }
+
+            .animation-info-timeline {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                background-color: rgba(255, 0, 0, 0.363);
+                height: calc(2 * var(--dynamic-grid-size));
+                padding: 0.2rem;
+
+                p {
+                    line-height: var(--dynamic-grid-size);
+                }
+            }
+        }
+
+        .timeline-wrapper {
+            width: 100%;
+            height: calc(44 * var(--dynamic-grid-size));
+            border: 2px solid white;
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    #resume {
+        .resume {
+            display: grid;
+            grid-template-columns: calc(10 * var(--dynamic-grid-size)) calc(17 * var(--dynamic-grid-size));
+            gap: var(--dynamic-grid-size);
+
+            .map-wrapper {
+                height: calc(6 * var(--dynamic-grid-size));
+            }
+
+            .timeline-wrapper {
+                height: calc(46 * var(--dynamic-grid-size));
+            }
+        }
+    }
+}
+
+@media (min-width: 992px) {
+    #resume {
+        .resume {
+            grid-template-columns: calc(19 * var(--dynamic-grid-size)) calc(28 * var(--dynamic-grid-size));
+
+            .map-wrapper {
+                height: calc(10 * var(--dynamic-grid-size));
+            }
+
+            .timeline-wrapper {
+                height: calc(66 * var(--dynamic-grid-size));
+            }
+        }
+    }
+}
+
+/*
+#resume {
+    padding-top: calc(4 * var(--dynamic-grid-size));
+
+    .resume-title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.6rem;
+        height: calc(2 * var(--dynamic-grid-size));
+        width: calc(8 * var(--dynamic-grid-size));
+    }
+
+    .resume {
+        margin-top: var(--dynamic-grid-size);
+        display: grid;
+        grid-template-columns: calc(20 * var(--dynamic-grid-size)) calc(22 * var(--dynamic-grid-size));
+        gap: var(--dynamic-grid-size);
+
+        .map-wrapper {
+            width: 100%;
+            height: calc(10 * var(--dynamic-grid-size));
+            overflow: hidden;
+            border: 2px solid white;
+            position: sticky;
+            top: calc(4 * var(--dynamic-grid-size));
+            z-index: 3;
+
+            .map {
+                background-color: rgb(3, 3, 44);
+                transform: scale(2);
+            }
+
+            .animation-info-map {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                background-color: rgba(255, 0, 0, 0.363);
+                height: calc(2 * var(--dynamic-grid-size));
+                padding: 0.2rem;
+
+                p {
+                    line-height: var(--dynamic-grid-size);
+                }
+            }
+
+            .animation-info-timeline {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                background-color: rgba(255, 0, 0, 0.363);
+                height: calc(2 * var(--dynamic-grid-size));
+                padding: 0.2rem;
+
+                p {
+                    line-height: var(--dynamic-grid-size);
+                }
+            }
+        }
+
+        .timeline-wrapper {
+            width: 100%;
+            height: calc(44 * var(--dynamic-grid-size));
+            border: 2px solid white;
+        }
+    }
+}
+
+@media (max-width:576px) {
+    #resume {
+        .resume {
+            grid-template-columns: auto;
+
+            .map-wrapper {
+                position: sticky;
+                height: calc(10 * var(--dynamic-grid-size));
+            }
+
+        }
+    }
+}
+
+@media (min-width:576px) and (max-width:992px) {
+    #resume {
+        .resume {
+            grid-template-columns: auto;
+
+            .map-wrapper {
+                height: calc(10 * var(--dynamic-grid-size));
+            }
+
+        }
+    }
+}
+
+
+/*
 @use '../../../vars' as *;
 
 #resume {
-    padding-top: calc($grid-width * 4);
-
     .resume {
         display: grid;
         grid-template-columns: 2fr 3fr;
         gap: $grid-width;
-
+        margin-top:$grid-width ;
         .map-wrapper {
             position: sticky;
             top: calc($grid-width * 4);
-            border: 2px solid $color-border;
             height: fit-content;
             overflow: hidden;
         }
 
         .map {
             transform: scale(2.4);
-
         }
 
-        .timeline {
+         .timeline {
             border: 2px solid $color-border;
         }
     }
 }
 
-@media only screen and (max-width: $small) {
+@media (max-width:$sm) {
     #resume {
         .resume {
             grid-template-columns: 1fr;
+            .map{
+                background-color: rgb(1, 39, 82);
+            }
              .map-wrapper {
                 bottom: 0;
                 z-index: 4;
-              
              }
         }
     }
-
-
 }
+
+*/

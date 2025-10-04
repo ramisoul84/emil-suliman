@@ -1,36 +1,24 @@
 <section id="about">
     <div class="about">
-        <div class="about-left">
-            <div class="about-img">
-                <img src="assets/images/emil.png" alt="emil picture">
-            </div>
-            <div class="about-btns">
-                <div class="about-btn" [ngClass]="{active:selectedField=='arch'}" (click)="selectField('arch')">
-                    architecture</div>
-                <div class="about-btn" [ngClass]="{active:selectedField=='visual'}" (click)="selectField('visual')">
-                    visual
-                    storytelling</div>
-                <div class="about-btn" [ngClass]="{active:selectedField=='personal'}" (click)="selectField('personal')">
-                    personal</div>
-            </div>
+        <div class="about-name">Emil Suliman</div>
+        <video #emilVideo muted playsinline class="about-img">
+            <source src="assets/images/emil.webm" type="video/webm">
+            Your browser does not support the video tag.
+        </video>
+        <div class="about-btns">
+            <div class="about-btn" [ngClass]="{'btn-active':selectedField==0}" (click)="onFieldChange(0)">
+                architecture</div>
+            <div class="about-btn" [ngClass]="{'btn-active':selectedField==1}" (click)="onFieldChange(1)">
+                visual storytelling</div>
+            <div class="about-btn" [ngClass]="{'btn-active':selectedField==2}" (click)="onFieldChange(2)">
+                personal</div>
         </div>
-        <div class="about-right">
-            <div class="about-name title">Emil Suliman</div>
-            <div class="about-info">
-                <div class="about-info-text">
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-                    industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type
-                    and scrambled it to make a type specimen book. It has survived not only five centuries, but also the
-                    leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s
-                    with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop
-                    publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                </div>
-                <div class="about-info-img">
-
-                </div>
-            </div>
+        <div class="about-info">
+            <video #aboutVideo autoplay loop muted class="info-img">
+                <source [src]="about[selectedField].img" type="video/webm">
+                Your browser does not support the video tag.
+            </video>
+            <p class="info-text"> {{about[selectedField].info}}</p>
         </div>
-
-
     </div>
 </section>

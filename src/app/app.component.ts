@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { GlobalGridService } from './services/global-grid.service';
 
 @Component({
   selector: 'app-root',
@@ -9,5 +10,8 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   title = 'emil';
+   constructor(private globalGridService: GlobalGridService) {
+    // Service is automatically instantiated here
+  }
   
 }

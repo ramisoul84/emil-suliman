@@ -28,10 +28,11 @@
         E.S
     </div>
     <div  [ngClass]="{'nav': !sideNav,'hide-nav':sideNav}">
-        <p [ngClass]="{'show-nav1':!sideNav}" (click)="goToSection('about')">ABOUT</p>
-        <p [ngClass]="{'show-nav2':!sideNav}" (click)="goToSection('resume')">RESUME</p>
-        <p [ngClass]="{'show-nav3':!sideNav}" (click)="goToSection('cases')">CASES</p>
-        <p [ngClass]="{'show-nav4':!sideNav}" (click)="goToSection('contact')">CONTACT</p>
+        <p [ngClass]="{'show-nav1':!sideNav}" (click)="goToSection('about')">about</p>
+        <p [ngClass]="{'show-nav2':!sideNav}" (click)="goToSection('resume')">resume</p>
+        <p [ngClass]="{'show-nav3':!sideNav}" (click)="goToSection('cases')">cases</p>
+        <p [ngClass]="{'show-nav4':!sideNav}" (click)="goToSection('cases')">solidarity</p>
+        <p [ngClass]="{'show-nav5':!sideNav}" (click)="goToSection('contact')">contact</p>
     </div>
     <div class="side-menu" [ngClass]="{'hide-side-menu': !showMenu,'show-side-menu':showMenu}">
         <p (click)="goToSection('about')">ABOUT</p>

@@ -1,11 +1,88 @@
 @use '../../../vars' as *;
 
-#home{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    img{
-        width: 24rem;
+#home {
+    height: calc(24 * var(--dynamic-grid-size));
+    position: relative;
+    .home {
+        position: absolute;
+        top: calc(9 * var(--dynamic-grid-size));
+        bottom: calc(3 * var(--dynamic-grid-size));
+        left: calc(3 * var(--dynamic-grid-size));
+        right: calc(3 * var(--dynamic-grid-size));
+
+        .home-hello {
+            font-size: 1rem;
+            font-family: var(--font-title);
+            line-height: var(--dynamic-grid-size);
+            &::before {
+                content: "";
+                position: absolute;
+                margin: calc(-1 * var(--dynamic-grid-size));
+                width: var(--dynamic-grid-size);
+                height: var(--dynamic-grid-size);
+                background: linear-gradient(135deg, var(--color-header-left), var(--color-header-right));
+                animation: heartbeat 1500ms ease-in-out infinite both;
+            }
+        }
+
+        .info{
+            margin-top: 50px;
+        }
     }
 }
+
+@keyframes heartbeat {
+    from {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        -webkit-transform-origin: center center;
+        transform-origin: center center;
+        -webkit-animation-timing-function: ease-out;
+        animation-timing-function: ease-out;
+    }
+
+    10% {
+        -webkit-transform: scale(0.91);
+        transform: scale(0.91);
+        -webkit-animation-timing-function: ease-in;
+        animation-timing-function: ease-in;
+    }
+
+    17% {
+        -webkit-transform: scale(0.98);
+        transform: scale(0.98);
+        -webkit-animation-timing-function: ease-out;
+        animation-timing-function: ease-out;
+    }
+
+    33% {
+        -webkit-transform: scale(0.87);
+        transform: scale(0.87);
+        -webkit-animation-timing-function: ease-in;
+        animation-timing-function: ease-in;
+    }
+
+    45% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        -webkit-animation-timing-function: ease-out;
+        animation-timing-function: ease-out;
+    }
+}
+
+@keyframes blink-1 {
+
+    0%,
+    50%,
+    100% {
+        opacity: 1;
+    }
+
+    25%,
+    75% {
+        opacity: 0;
+    }
+}
+
+
+@media (max-width:576px) {}

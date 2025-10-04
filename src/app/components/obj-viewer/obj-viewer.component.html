@@ -1,0 +1,18 @@
+  <div #rendererContainer class="renderer-container"></div>
+    
+    <!-- Zoom buttons for mobile -->
+    <div class="zoom-controls" *ngIf="isLoaded">
+      <div *ngIf="showZoomButtons">
+   <button class="zoom-btn zoom-in" (click)="zoomIn()" (touchstart)="zoomIn(); $event.preventDefault()">
+        <span>+</span>
+      </button>
+      <button class="zoom-btn zoom-out" (click)="zoomOut()" (touchstart)="zoomOut(); $event.preventDefault()">
+        <span>-</span>
+      </button>
+      </div>
+   
+    </div>
+    
+    <div *ngIf="!isLoaded" class="status">
+      {{ statusMessage }}
+    </div>

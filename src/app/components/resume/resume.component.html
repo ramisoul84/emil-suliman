@@ -1,15 +1,58 @@
 <section id="resume">
-    <div class="title">cv timeline.</div>
+    <div class="resume-title">
+        cv timeline.
+    </div>
+    <div class="resume">
+        <div class="map-wrapper" #mapSection>
+            <div class="map">
+                <ng-lottie [options]="mapOptions" (animationCreated)="onMapAnimationCreated($event)"></ng-lottie>
+            </div>
+            <div class="animation-info-map">
+                <p>Frames: {{ currentMapFrame }}/{{ mapTotalFrames }}</p>
+                <p>Progress: {{ (mapProgress * 100).toFixed(1) }}%</p>
+            </div>
+            <div class="animation-info-timeline">
+                <p>Frames: {{ currentTimelineFrame }}/{{ timelineTotalFrames }}</p>
+                <p>Progress: {{ (timelineProgress * 100).toFixed(1) }}%</p>
+            </div>
+        </div>
+        <div class="timeline-wrapper" #timelineSection>
+            <ng-lottie [options]="timeLineOptions" (animationCreated)="onTimelineAnimationCreated($event)"></ng-lottie>
+        </div>
+    </div>
+
+
+</section>
+<!--
+    <div class="title gradient resume-title">cv timeline.</div>
+    <div class="resume">
+        <div class="map-wrapper" #mapSection>
+            <div class="map">
+                <ng-lottie [options]="mapOptions" (animationCreated)="onMapAnimationCreated($event)"></ng-lottie>
+            </div>
+            <div class="animation-info-map">
+                <p>Frames: {{ currentMapFrame }}/{{ mapTotalFrames }}</p>
+                <p>Progress: {{ (mapProgress * 100).toFixed(1) }}%</p>
+            </div>
+            <div class="animation-info-timeline">
+                <p>Frames: {{ currentTimelineFrame }}/{{ timelineTotalFrames }}</p>
+                <p>Progress: {{ (timelineProgress * 100).toFixed(1) }}%</p>
+            </div>
+        </div>
+        <div class="timeline-wrapper" #timelineSection>
+            <ng-lottie [options]="timeLineOptions" (animationCreated)="onTimelineAnimationCreated($event)"></ng-lottie>
+
+        </div>
+    </div>
     <div class="resume">
         <div class="map-wrapper">
-            <div class="map" #mapSection>
-                <ng-lottie [options]="mapOptions" (animationCreated)="onMapAnimationCreated($event)" />
+            <div class="map">
+                <ng-lottie [options]="mapOptions"></ng-lottie>
             </div>
 
         </div>
-        <div class="timeline" #timelineSection >
-            <ng-lottie [options]="timeLineOptions"  (animationCreated)="onTimelineAnimationCreated($event)"/>
+        <div class="timeline-wrapper">
+            <ng-lottie [options]="timeLineOptions"></ng-lottie>
         </div>
-
     </div>
-</section>
+-->

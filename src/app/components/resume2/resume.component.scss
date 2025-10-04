@@ -1,0 +1,28 @@
+@use '../../../vars' as *;
+
+#resume {
+    padding-top: calc($grid-width * 4);
+
+    .resume {
+        display: grid;
+        grid-template-columns: 2fr 3fr;
+        gap: $grid-width;
+
+        .map-wrapper {
+            position: sticky;
+            top: calc($grid-width * 4);
+            border: 2px solid $color-border;
+            height: fit-content;
+            overflow: hidden;
+        }
+
+        .map {
+            transform: scale(2.4);
+        }
+
+        .timeline {
+            border: 2px solid $color-border;
+        }
+    }
+}
+

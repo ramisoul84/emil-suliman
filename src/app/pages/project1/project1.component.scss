@@ -1,0 +1,12 @@
+
+$grid-stroke-color:rgba(168, 142, 142, 0.534);
+.container {
+    height: 100vh;
+    background:
+        linear-gradient(to right, $grid-stroke-color 1px, transparent 1px),
+        linear-gradient(to bottom, $grid-stroke-color 1px, transparent 1px);
+    background-size: var(--dynamic-grid-size) var(--dynamic-grid-size);
+    -webkit-background-size: var(--dynamic-grid-size) var(--dynamic-grid-size);
+    /* iOS specific */
+}
+

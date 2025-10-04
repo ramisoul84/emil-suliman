@@ -1,5 +1,22 @@
 @use 'vars' as *;
 
+:root {
+  // Color
+  --color-font: #ffffff;
+  --color-bg-top: #171717;
+  --color-bg-bottom: #111623;
+  --color-header-left: #226B22;
+  --color-header-right: #ACC424;
+  // Grid
+  --dynamic-grid-size: 20px;
+  --grid-stroke-color: rgba(196, 202, 196, 0.1);
+  --grid-stroke-width: 1px;
+  --margin: 0;
+  // Font
+  --font-main: "League Spartan", sans-serif;
+  --font-title: "lcd_solidregular", sans-serif;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -9,17 +26,20 @@
 
 html {
   scroll-behavior: smooth;
-}
-
-body {
-  font-family: $font-lcd;
-  color: $color-font;
-  background: linear-gradient(to bottom, $color-bg-top, $color-bg-bottom);
+  scrollbar-width: none;
   overflow-x: hidden;
 }
 
+body {
+  font-family: var(--font-main);
+  color: var(--color-font);
+  background: linear-gradient(to bottom, var(--color-bg-top), var(--color-bg-bottom));
+  overflow: hidden;
+  margin: 0 var(--margin);
+}
+
 section {
-  padding: 0 calc(3 * $grid-width);
+  padding: calc(4 * var(--dynamic-grid-size)) var(--dynamic-grid-size) 0 var(--dynamic-grid-size);
 }
 
 img {
@@ -30,41 +50,36 @@ img {
 
 
 
-   .ios-fix {
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        /* Prevent white gaps on swipe */
-        body {
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-        }
-
-/*  change */
-.title {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: calc(3 * $grid-width + 1px);
-  width: calc(10 * $grid-width + 1px);
-  background: linear-gradient(135deg, $color-title-left, $color-title-right);
-  pointer-events: none;
-}
-
-
-@media only screen and (max-width: 600px) {
+@media (min-width:576px) {
   section {
-    padding: 0 $grid-width;
+    padding: calc(4 * var(--dynamic-grid-size)) var(--dynamic-grid-size) 0 var(--dynamic-grid-size);
   }
 }
 
-
-
-
-
 ::-webkit-scrollbar {
-  width: $grid-width;
+  width: 0px;
+  display: none;
 }
+
+
+/*
+
+
+// Prevent white gaps on swipe
+body {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+
+
+
+
+
+
+
+
+
 
 ::-webkit-scrollbar-track {
   background: linear-gradient(180deg, $color-bg-top, $color-bg-bottom);
@@ -82,8 +97,9 @@ img {
   background-clip: padding-box;
 }
 
-/* Firefox compatible scrollbar */
+//Firefox compatible scrollbar
 .firefox-scrollbar {
   scrollbar-width: auto;
   scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
+  */

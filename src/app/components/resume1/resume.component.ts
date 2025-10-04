@@ -3,12 +3,12 @@ import { AnimationItem } from 'lottie-web';
 import { LottieComponent, AnimationOptions } from 'ngx-lottie';
 
 @Component({
-  selector: 'app-resume',
+  selector: 'app-resume1',
   imports: [LottieComponent],
   templateUrl: './resume.component.html',
   styleUrl: './resume.component.scss'
 })
-export class Resume1Component implements OnInit, OnDestroy, AfterViewInit {
+export class Resume1Component1 implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('mapSection') mapSectionRef!: ElementRef;
   @ViewChild('timelineSection') timelineSectionRef!: ElementRef;
 

@@ -1,13 +1,10 @@
-@use '../../../vars' as *;
-
 #main {
-    margin-left: -1px;
     background-image:
-        linear-gradient($grid-stroke-color $grid-stroke-width, transparent $grid-stroke-width),
-        linear-gradient(90deg, $grid-stroke-color $grid-stroke-width, transparent $grid-stroke-width);
-    background-size: $grid-width $grid-width;
+        linear-gradient(var(--grid-stroke-color) var(--grid-stroke-width), transparent var(--grid-stroke-width)),
+        linear-gradient(90deg, var(--grid-stroke-color) var(--grid-stroke-width), transparent var(--grid-stroke-width));
+    background-size: var(--dynamic-grid-size) var(--dynamic-grid-size);
 }
 
-.blur{
-    filter: blur(10px);
+.blur {
+    filter: blur(16px);
 }

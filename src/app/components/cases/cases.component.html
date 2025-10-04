@@ -1,7 +1,78 @@
 <section id="cases">
     <div class="cases">
+        <div class="cases-title">
+            cases.
+        </div>
+        <div class="cases-btns">
+            <div class="prev">
+                <svg xmlns="http://www.w3.org/2000/svg" class="prev-icon" [ngClass]="{'disable':selectedproject==0}"
+                    viewBox="0 0 42 42" (click)="prev()">
+                    <path d="M13.933 1L34 21.068L14.431 40.637l-4.933-4.933l14.638-14.636L9 5.933z" />
+                </svg>
+            </div>
+            <div class="next">
+                <svg xmlns="http://www.w3.org/2000/svg" class="next-icon"
+                    [ngClass]="{'disable':selectedproject==projects.length-1}" viewBox="0 0 42 42" (click)="next()">
+                    <path d="M13.933 1L34 21.068L14.431 40.637l-4.933-4.933l14.638-14.636L9 5.933z" />
+                </svg>
+            </div>
+        </div>
+        <div class="cases-img">
+            <app-obj-viewer [objPath]="'assets/3d/house.obj'" [backgroundColor]="'#1a1a1a'" [autoRotate]="true"
+                [showZoomButtons]="true">
+            </app-obj-viewer>
+        </div>
+        <div class="cases-info">
+            <div class="project-name">{{projects[selectedproject].name}}</div>
+            <p class="project-info">{{projects[selectedproject].info}}</p>
+            <p routerLink="/project1" class="more"> read more ..</p>
+        </div>
+    </div>
+</section>
+
+<!--
+
+    <div class="cases">
+        <div class="prev">
+            <svg xmlns="http://www.w3.org/2000/svg" class="prev-icon" [ngClass]="{'disable':selectedproject==0}"
+                viewBox="0 0 42 42" (click)="prev()">
+                <path d="M13.933 1L34 21.068L14.431 40.637l-4.933-4.933l14.638-14.636L9 5.933z" />
+            </svg>
+        </div>
+        <div class="next">
+            <svg xmlns="http://www.w3.org/2000/svg" class="next-icon"
+                [ngClass]="{'disable':selectedproject==projects.length-1}" viewBox="0 0 42 42" (click)="next()">
+                <path d="M13.933 1L34 21.068L14.431 40.637l-4.933-4.933l14.638-14.636L9 5.933z" />
+            </svg>
+        </div>
+        <div class="main">
+            <div class="main-left">
+                <div class="title gradient cases-title">cases.</div>
+                <div class="title project-name">{{projects[selectedproject].name}}</div>
+                <div class="project-info">
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+                    industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type
+                    and scrambled it to make a type specimen book. It has survived not only five centuries, but also the
+                    leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s
+                    with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop
+                    publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                </div>
+                <div class="more title">
+                    read more &gt;
+                </div>
+            </div>
+            <div class="main-right">
+                <app-obj-viewer [objPath]="'assets/3d/house.obj'" [backgroundColor]="'#1a1a1a'" [autoRotate]="true"
+                    [showZoomButtons]="true">
+                </app-obj-viewer>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="cases">
         <div class="cases-prev">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon prev"
+            <svg xmlns="http://www.w3.org/2000/svg" class="prev"
                 [ngClass]="{'disable':selectedproject==0}" viewBox="0 0 42 42" (click)="prev()">
                 <path d="M13.933 1L34 21.068L14.431 40.637l-4.933-4.933l14.638-14.636L9 5.933z" />
             </svg>
@@ -22,7 +93,7 @@
             </div>
         </div>
         <div class="cases-next">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon"
+            <svg xmlns="http://www.w3.org/2000/svg" class="next"
                 [ngClass]="{'disable':selectedproject==projects.length-1}" viewBox="0 0 42 42" (click)="next()">
                 <path d="M13.933 1L34 21.068L14.431 40.637l-4.933-4.933l14.638-14.636L9 5.933z" />
             </svg>
@@ -33,4 +104,4 @@
             </div>
         </div>
     </div>
-</section>
+-->

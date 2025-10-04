@@ -3,7 +3,7 @@
 // Mixins
 @mixin header-gradient($layer, $opacity) {
   position: absolute;
-  top: calc($layer * $grid-width);
+  top: calc($layer * var(--dynamic-grid-size));
   left: 0;
   right: 0;
   opacity: $opacity;
@@ -23,16 +23,20 @@
   animation: slide-in-top $duration cubic-bezier(0.250, 0.460, 0.450, 0.940) $delay both;
 }
 
+@mixin show-in($duration, $delay) {
+  -webkit-animation: show-in $duration cubic-bezier(0.250, 0.460, 0.450, 0.940) $delay both;
+  animation: show-in $duration cubic-bezier(0.250, 0.460, 0.450, 0.940) $delay both;
+}
+
 header {
   position: fixed;
   top: 0;
-  left: 0;
-  right: 0;
-  height: calc(5 * $grid-width);
+  left: var(--margin);
+  right: var(--margin);
+  height: calc(3 * var(--dynamic-grid-size));
   z-index: 9;
-
   .line {
-    height: $grid-width;
+    height: var(--dynamic-grid-size);
   }
 
   @for $i from 1 through 6 {
@@ -45,20 +49,20 @@ header {
   .hamburger-menu {
     position: absolute;
     top: 0;
-    left: calc(3 * $grid-width);
-    width: calc(3 * $grid-width);
-    height: calc(3 * $grid-width);
-    background-color: #151717;
+    left: calc(3 * var(--dynamic-grid-size));
+    width: calc(3 * var(--dynamic-grid-size));
+    height: calc(3 * var(--dynamic-grid-size));
+    background-color: #242424;
     cursor: pointer;
 
     .line {
       position: absolute;
       top: 50%;
-      left: calc(0.5 * $grid-width);
-      width: calc(2 * $grid-width);
-      height: 3px;
+      left: calc(0.75 * var(--dynamic-grid-size));
+      width: calc(1.5 * var(--dynamic-grid-size));
+      height: 2px;
       background-color: white;
-      transition: all 400ms cubic-bezier(.84, .06, .52, 1.8);
+      transition: all 200ms ease-out;
     }
   }
 
@@ -69,39 +73,40 @@ header {
     position: absolute;
     top: 0;
     left: 0;
-    width: calc(3 * $grid-width);
-    height: calc(3 * $grid-width);
-    z-index: 8;
+    width: calc(3 * var(--dynamic-grid-size));
+    height: calc(3 * var(--dynamic-grid-size));
+    z-index: 12;
     font-size: 1.4rem;
     cursor: pointer;
   }
 
   .nav {
     display: flex;
-    gap: $grid-width;
+    gap: var(--dynamic-grid-size);
     position: absolute;
-    top: $grid-width;
-    right: $grid-width;
-    height: $grid-width;
+    top: var(--dynamic-grid-size);
+    right: var(--dynamic-grid-size);
+    height: var(--dynamic-grid-size);
     z-index: 9;
 
     p {
+      font-family: var(--font-title);
       display: flex;
-      align-items: center;
-      height: $grid-width;
+      align-items: end;
+      line-height: var(--dynamic-grid-size);
       cursor: pointer;
-      color: black;
+      color: white;
       width: 100%;
       position: relative;
       padding: 0 0.5rem;
-      font-weight: 700;
+      font-weight: 200;
       font-size: 1.2rem;
 
       &:hover::before {
         position: absolute;
         content: "";
-        background-color: white;
-        height: 0.2rem;
+        background-color: #FF2D95;
+        height: 4px;
         width: 100%;
         top: 50%;
         z-index: -1;
@@ -113,20 +118,20 @@ header {
 
   .side-menu {
     position: absolute;
-    top: calc(4 * $grid-width);
-    width: calc(6 * $grid-width);
-    height: calc(10 * $grid-width);
+    top: calc(4 * var(--dynamic-grid-size));
+    width: calc(6 * var(--dynamic-grid-size));
+    height: calc(10 * var(--dynamic-grid-size));
     background-color: #151717;
-    padding: $grid-width 0;
-    transition: all 400ms cubic-bezier(.84, .06, .52, 1.8);
+    padding: var(--dynamic-grid-size) 0;
 
     p {
       display: flex;
       align-items: center;
       justify-content: end;
-      height: calc(2 * $grid-width);
-      padding-right: $grid-width;
+      height: calc(2 * var(--dynamic-grid-size));
+      padding-right: var(--dynamic-grid-size);
       cursor: pointer;
+      font-family: var(--font-title);
 
       &:hover {
         background-color: white;
@@ -162,8 +167,8 @@ header {
 }
 
 .show-hamburger-menu {
-  -webkit-animation: scale-in-tl 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 1s both;
-  animation: scale-in-tl 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 1s both;
+  -webkit-animation: show-in 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 1s both;
+  animation: show-in 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 1s both;
 }
 
 .hide-hamburger-menu {
@@ -187,7 +192,7 @@ header {
 
   .line2 {
     opacity: 0;
-    transform: translateX(-20px);
+    //transform: translateX(-20px);
   }
 
   .line3 {
@@ -206,7 +211,7 @@ header {
 
 @for $i from 1 through 6 {
   .show-nav#{$i} {
-    @include slide-in-top($slide-down-duration, $slide-down-delay * $i);
+    @include show-in($slide-down-duration, $slide-down-delay * 6);
   }
 }
 
@@ -220,11 +225,12 @@ header {
 }
 
 .show-side-menu {
-  left: 0;
+  -webkit-animation: scale-in-tr 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.2 both;
+  animation: scale-in-tr 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.2s both;
 }
 
 .hide-side-menu {
-  left: calc(-6 * $grid-width);
+  left: calc(-8 * var(--dynamic-grid-size));
 }
 
 
@@ -236,13 +242,13 @@ header {
   }
 
   to {
-    height: $grid-width;
+    height: var(--dynamic-grid-size);
   }
 }
 
 @keyframes slide-up-animation {
   0% {
-    height: $grid-width;
+    height: var(--dynamic-grid-size);
   }
 
   100% {
@@ -252,18 +258,18 @@ header {
 
 @keyframes slide-left-animation-1 {
   0% {
-    height: $grid-width;
+    height: var(--dynamic-grid-size);
     width: 100%;
     z-index: 3;
   }
 
   50% {
-    height: calc(3 * $grid-width);
+    height: calc(3 * var(--dynamic-grid-size));
   }
 
   100% {
-    height: calc(3 * $grid-width);
-    width: calc(3 * $grid-width);
+    height: calc(3 * var(--dynamic-grid-size));
+    width: calc(3 * var(--dynamic-grid-size));
     z-index: 3;
   }
 }
@@ -274,13 +280,13 @@ header {
   }
 
   100% {
-    width: calc(3 * $grid-width);
+    width: calc(3 * var(--dynamic-grid-size));
   }
 }
 
 @keyframes slide-right-animation {
   0% {
-    width: calc(3 * $grid-width);
+    width: calc(3 * var(--dynamic-grid-size));
   }
 
   100% {
@@ -288,6 +294,7 @@ header {
   }
 }
 
+// deleteeeeeeeee
 @-webkit-keyframes scale-in-tl {
   0% {
     -webkit-transform: scale(0);
@@ -320,6 +327,17 @@ header {
     transform: scale(1);
     -webkit-transform-origin: 0% 0%;
     transform-origin: 0% 0%;
+    opacity: 1;
+  }
+}
+
+
+@keyframes show-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
     opacity: 1;
   }
 }
@@ -402,7 +420,19 @@ header {
 }
 
 
-
+@media (max-width:$sm) {
+  header {
+    .nav {
+      flex-direction: column;
+      align-items: end;
+      gap: 0;
+      p{
+        width: fit-content;
+        text-align: right;
+      }
+    }
+  }
+}
 
 
 

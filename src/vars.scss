@@ -6,21 +6,27 @@
     font-style: normal;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap');
+
 // Fonts
-$font-lcd: "lcd_solidregular";
+$font-lcd: "lcd_solidregular",sans-serif;;
+$font-main: "League Spartan", sans-serif;
 
 // Colors
-$color-bg-top: #000000;
-$color-bg-bottom: #1f2935;
-$color-font: #f1f1f1; 
-$color-border:#f5deb3;
-$color-header-left:#73c046;
-$color-header-right: #cb866d;
-$color-title-left:#1c4703;
-$color-title-right:#409111;
+$color-bg-top: #171717;
+$color-bg-bottom: #111623;
+
+$color-font: #f1f1f1;
+$color-border: #f5deb3;
+
+$color-header-left: #226B22;
+$color-header-right: #ACC424;
+
+$color-title-left: #226B22;
+$color-title-right: #ACC424;
 
 // Grid
-$grid-width: 18px;
+$grid-width: 22px;
 $grid-stroke-width: 1px;
 $grid-stroke-color :rgba(196, 202, 196, 0.1);
 
@@ -30,9 +36,8 @@ $slide-down-duration: 0.6s;
 $slide-down-delay: 0.08s;
 
 // Break Points
-$sm:576px;
-$md:768px;
-$lg:992px;
-$xl:1200px;
-$xxl:1400px
-
+$sm: 576px;
+$md: 768px;
+$lg: 992px;
+$xl: 1200px;
+$xxl: 1400px
