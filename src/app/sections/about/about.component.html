@@ -1,0 +1,32 @@
+<section id="about">
+    <div class="name">
+        Emil Suliman
+    </div>
+    <div class="image-wrapper">
+        <img src="assets/images/emil.png" alt="emil-image">
+        <video #emilVideo muted playsinline class="about-video">
+            <source src="assets/videos/emil.webm" type="video/webm">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div class="about-btns">
+        <div class="about-btn" [ngClass]="{'btn-active':selectedField==0}" (click)="onFieldChange(0,'architecture')">
+            architecture</div>
+        <div class="about-btn" [ngClass]="{'btn-active':selectedField==1}" (click)="onFieldChange(1,'visual')">
+            visual storytelling</div>
+        <div class="about-btn" [ngClass]="{'btn-active':selectedField==2}" (click)="onFieldChange(2,'personal')">
+            personal</div>
+    </div>
+
+    <div class="about-info">
+        <div class="video-wrapper">
+            <video #iconVideo autoplay loop muted>
+                <source [src]="about[selectedField].src" type="video/webm">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        <div class="about-info-text">
+            {{about[selectedField].info}}
+        </div>
+    </div>
+</section>

@@ -1,0 +1,9 @@
+footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(18 * var(--dynamic-grid-size));
+    .whale{
+        width: calc(25 * var(--dynamic-grid-size));
+    }
+}

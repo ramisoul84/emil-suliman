@@ -1,0 +1,10 @@
+#main {
+    background-image:
+        linear-gradient(var(--grid-stroke-color) var(--grid-stroke-width), transparent var(--grid-stroke-width)),
+        linear-gradient(90deg, var(--grid-stroke-color) var(--grid-stroke-width), transparent var(--grid-stroke-width));
+    background-size: var(--dynamic-grid-size) var(--dynamic-grid-size);
+}
+
+.blur {
+    filter: blur(10px);
+}

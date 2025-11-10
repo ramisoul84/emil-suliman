@@ -1,0 +1,48 @@
+<header>
+    <div class="line line1"></div>
+    <div class=" line line2"></div>
+    <div class="line line3"></div>
+    <div class="line line4"></div>
+    <div class="line line5"></div>
+    <div class="line line6"></div>
+
+    <div class="logo" (click)="goToSection('home')">
+        <span class="letter e">e </span>
+        <span class="letter m">m</span>
+        <span class="letter i">i</span>
+        <span class="letter l">l</span>
+        <span class="letter space">&nbsp;</span>
+        <span class="letter s">s</span>
+        <span class="letter u">u</span>
+        <span class="letter l2">l</span>
+        <span class="letter i2">i</span>
+        <span class="letter m2">m</span>
+        <span class="letter a">a</span>
+        <span class="letter n">n</span>
+    </div>
+    <div class="dot"></div>
+
+    <nav>
+        <p (click)="goToSection('about')">about</p>
+        <p (click)="goToSection('timeline')">timeline</p>
+        <p (click)="goToSection('cases')">cases</p>
+        <p (click)="goToSection('solidarity')">solidarity</p>
+        <p (click)="goToSection('contact')">contact</p>
+    </nav>
+
+    <div class="hamburger-menu" [ngClass]="{'close': showMenu,'open': !showMenu }" (click)="toggleMenu()">
+        <div class="hamburger-menu-lines">
+            <span class="menu-line menu-line1" aria-hidden="true"></span>
+            <span class="menu-line menu-line2" aria-hidden="true"></span>
+            <span class="menu-line menu-line3" aria-hidden="true"></span>
+        </div>
+    </div>
+
+    <div class="side-nav">
+        <p (click)="goToSection('about')">ABOUT</p>
+        <p (click)="goToSection('timeline')">TIMELINE</p>
+        <p (click)="goToSection('cases')">CASES</p>
+        <p (click)="goToSection('solidarity')">SOLIDARITY</p>
+        <p (click)="goToSection('contact')">CONTACT</p>
+    </div>
+</header>
