@@ -1,70 +1,27 @@
-<section class="timeline-section" #timelineSection>
-  <div class="timeline-container">
-    <!-- Spacer to ensure enough scroll space -->
-    <div class="scroll-spacer top-spacer"></div>
-    
-    <div class="lottie-container" #lottieContainer>
-      <ng-lottie 
-        [options]="timeLineOptions" 
-        (animationCreated)="onAnimationCreated($event)"
-        class="timeline-animation"
-      ></ng-lottie>
+<section id="timeline">
+  <div class="left-block">
+    <div class="title timeline-title">
+      timeline.
     </div>
-    
-    <!-- Spacer to ensure enough scroll space -->
-    <div class="scroll-spacer bottom-spacer"></div>
-    
-    <!-- Debug Information -->
-    <div class="debug-info" *ngIf="debugInfo">
-      <div class="debug-section">
-        <h4>Animation State</h4>
-        <div class="debug-item">
-          <span class="label">Status:</span>
-          <span class="value" [class.playing]="debugInfo.isPlaying" [class.paused]="!debugInfo.isPlaying">
-            {{ debugInfo.isPlaying ? 'PLAYING' : 'PAUSED' }}
-          </span>
-        </div>
-        <div class="debug-item">
-          <span class="label">Frame:</span>
-          <span class="value">{{ debugInfo.currentFrame }} / {{ debugInfo.totalFrames }}</span>
-        </div>
-        <div class="debug-item">
-          <span class="label">Target:</span>
-          <span class="value">{{ debugInfo.targetFrame }}</span>
-        </div>
-        <div class="debug-item">
-          <span class="label">Progress:</span>
-          <span class="value">{{ (debugInfo.scrollProgress * 100).toFixed(1) }}%</span>
-        </div>
-      </div>
-      
-      <div class="debug-section">
-        <h4>Position Data</h4>
-        <div class="debug-item">
-          <span class="label">Lottie Top:</span>
-          <span class="value">{{ debugInfo.lottieTop | number:'1.0-0' }}</span>
-        </div>
-        <div class="debug-item">
-          <span class="label">Lottie Bottom:</span>
-          <span class="value">{{ debugInfo.lottieBottom | number:'1.0-0' }}</span>
-        </div>
-        <div class="debug-item">
-          <span class="label">Window Top:</span>
-          <span class="value">{{ debugInfo.windowTop | number:'1.0-0' }}</span>
-        </div>
-        <div class="debug-item">
-          <span class="label">Window Bottom:</span>
-          <span class="value">{{ debugInfo.windowBottom | number:'1.0-0' }}</span>
-        </div>
+    <div class="map-wrapper">
+      <div class="map">
+        <ng-lottie [options]="mapOptions" (animationCreated)="onMapCreated($event)"></ng-lottie>
       </div>
     </div>
+  </div>
+  <div #timelineSection class="timeline-wrapper">
 
-    <!-- Visual position indicators -->
-    <div class="position-indicators">
-      <div class="indicator top-indicator">Lottie Top: {{ debugInfo.lottieTop | number:'1.0-0' }}</div>
-      <div class="indicator bottom-indicator">Lottie Bottom: {{ debugInfo.lottieBottom | number:'1.0-0' }}</div>
-      <div class="indicator viewport-top">Viewport Top: {{ debugInfo.windowTop | number:'1.0-0' }}</div>
-      <div class="indicator viewport-bottom">Viewport Bottom: {{ debugInfo.windowBottom | number:'1.0-0' }}</div>
-    </div>
+    <ng-lottie [options]="timeLineOptions" (animationCreated)="onTimelineCreated($event)"></ng-lottie>
+
+  </div>
+  <div class="info" *ngIf="false">
+    <div>TOP: {{timelineTop}}</div>
+    <div>BOTTOM: {{timelineBottom}}</div>
+    <div>Y: {{scrollY}}</div>
+    <div>{{startPlay}}</div>
+    <div>END_HEIGHT: {{EndHeight}}</div>
+    <div>END_PROG: {{EndProgress}}</div>
+    <div>END_FRAME {{EndFrame}}</div>
+    <div>{{currentFrame}}</div>
   </div>
 </section>

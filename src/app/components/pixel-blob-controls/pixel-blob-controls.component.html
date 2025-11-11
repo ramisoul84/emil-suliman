@@ -1,0 +1,104 @@
+<div class="controls-panel" [class.expanded]="isExpanded">
+  <button class="toggle-btn" (click)="toggleExpand()" aria-label="Toggle controls">
+    {{ isExpanded ? '−' : '+' }}
+  </button>
+
+  @if (isExpanded) {
+    <div class="controls-content">
+      <h3>Blob Controls</h3>
+
+      <div class="control-group">
+        <label for="radius">
+          Radius
+          <span class="value">{{ radiusPercent() }}%</span>
+        </label>
+        <input
+          type="range"
+          id="radius"
+          [value]="params().radius"
+          min="0.10"
+          max="0.20"
+          step="0.01"
+          (input)="onRadiusChange($event)"
+          aria-label="Blob radius"
+        />
+      </div>
+
+      <div class="control-group">
+        <label for="speed">
+          Speed
+          <span class="value">{{ speedPercent() }}%</span>
+        </label>
+        <input
+          type="range"
+          id="speed"
+          [value]="params().speed"
+          min="0.20"
+          max="1.50"
+          step="0.05"
+          (input)="onSpeedChange($event)"
+          aria-label="Animation speed"
+        />
+      </div>
+
+      <div class="control-group">
+        <label for="wobble">
+          Wobble
+          <span class="value">{{ wobblePercent() }}%</span>
+        </label>
+        <input
+          type="range"
+          id="wobble"
+          [value]="params().wobble"
+          min="0.50"
+          max="2.00"
+          step="0.01"
+          (input)="onWobbleChange($event)"
+          aria-label="Wobble amount"
+        />
+      </div>
+
+      <div class="control-group">
+        <label for="intensity">
+          Intensity
+          <span class="value">{{ intensityPercent() }}%</span>
+        </label>
+        <input
+          type="range"
+          id="intensity"
+          [value]="params().intensity"
+          min="0.50"
+          max="2.00"
+          step="0.01"
+          (input)="onIntensityChange($event)"
+          aria-label="Blob intensity"
+        />
+      </div>
+
+      <div class="control-group checkbox-group">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            [checked]="params().pixelated"
+            (change)="onPixelatedChange($event)"
+            aria-label="Enable pixelated effect"
+          />
+          <span>Pixelated</span>
+        </label>
+      </div>
+
+      <div class="button-group">
+        <button (click)="togglePause()" class="control-btn">
+          {{ state().isPaused ? 'Resume' : 'Pause' }}
+        </button>
+        <button (click)="reset()" class="control-btn">
+          Reset
+        </button>
+        <button (click)="randomize()" class="control-btn">
+          Randomize
+        </button>
+      </div>
+    </div>
+  }
+</div>
+

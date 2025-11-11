@@ -2,6 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
 import { AnimationItem } from 'lottie-web';
 import { AnimationOptions, LottieComponent } from 'ngx-lottie';
+import { ScrollService } from '../../services/scroll.service';
+import { GridService } from '../../services/grid.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-timeline',
@@ -9,7 +12,126 @@ import { AnimationOptions, LottieComponent } from 'ngx-lottie';
   templateUrl: './timeline.component.html',
   styleUrls: ['./timeline.component.scss']
 })
-export class TimelineComponent implements AfterViewInit, OnDestroy {
+export class TimelineComponent implements AfterViewInit {
+  @ViewChild('timelineSection', { static: true }) timelineSection!: ElementRef;
+  private timelineItem: AnimationItem | null = null;
+  private mapItem: AnimationItem | null = null;
+  timelineTop: number = 0;
+  timelineBottom: number = 0;
+  totalFrames: number = 0;
+  startPlay: number = 0;
+  EndHeight: number = 0;
+  EndProgress: number = 0;
+  EndFrame: number = 0;
+  viewBottom: number = 0;
+  scrollY: number = 0;
+  grid: number = 0;
+  currentFrame = 0;
+  private subscriptions = new Subscription();
+
+  timeLineOptions: AnimationOptions = {
+    path: '/assets/animations/timeline.json',
+    autoplay: false,
+    loop: false
+  };
+
+  mapOptions: AnimationOptions = {
+    path: '/assets/animations/map.json',
+    autoplay: true,
+    loop: true
+  };
+
+  constructor(private scrollService: ScrollService, private gridService: GridService) {
+  }
+
+  ngOnInit(): void {
+    this.subscriptions.add(
+      this.gridService.gridWidth$.subscribe(
+        (grid: number) => {
+          this.grid = grid
+        }
+      )
+    );
+
+    this.subscriptions.add(
+      this.scrollService.scrollY$.subscribe(
+        (scrollY: number) => {
+          this.scrollY = scrollY
+          this.handleScroll(scrollY)
+        }
+      )
+    );
+  }
+
+  ngAfterViewInit(): void {
+    this.calculateDimensions()
+  }
+
+  onTimelineCreated(animationItem: AnimationItem): void {
+    this.timelineItem = animationItem;
+    this.timelineItem.setSpeed(1);
+    animationItem.addEventListener('data_ready', () => {
+      this.totalFrames = animationItem.totalFrames;
+    });
+    animationItem.addEventListener('enterFrame', () => {
+      this.currentFrame = Math.floor(animationItem.currentFrame);
+      this.control(this.currentFrame)
+    });
+  }
+
+  onMapCreated(animationItem: AnimationItem): void {
+    this.mapItem = animationItem;
+    this.mapItem.setSpeed(1);
+    animationItem.addEventListener('data_ready', () => {
+      this.totalFrames = animationItem.totalFrames;
+    });
+    animationItem.addEventListener('enterFrame', () => {
+      this.currentFrame = Math.floor(animationItem.currentFrame);
+      this.control(this.currentFrame)
+    });
+  }
+  control(x: number) {
+    console.log("control")
+    if (x > this.EndFrame) {
+      this.timelineItem?.pause()
+      this.mapItem?.pause()
+    }
+  }
+
+  private calculateDimensions(): void {
+    console.log("calc")
+    if (!this.timelineSection?.nativeElement) return;
+
+    const rect = this.timelineSection.nativeElement.getBoundingClientRect();
+    this.timelineTop = rect.top;
+    this.timelineBottom = rect.bottom;
+    this.startPlay = rect.top - (this.grid * 7)
+  }
+
+  handleScroll(scrollY: number): void {
+    this.EndHeight = window.innerHeight + scrollY
+    if (this.EndHeight >= this.timelineTop && this.EndHeight <= this.timelineBottom) {
+      this.EndProgress = (this.EndHeight - this.timelineTop) / (this.timelineBottom - this.timelineTop)
+      this.EndFrame = Math.floor(this.EndProgress * this.totalFrames)
+    } else {
+      this.EndProgress = 0
+    }
+
+    if (scrollY < this.startPlay) {
+      this.timelineItem?.stop()
+      this.mapItem?.stop()
+    }
+
+
+    if (scrollY >= this.startPlay) {
+      this.timelineItem?.play()
+      this.mapItem?.play()
+    }
+
+  }
+}
+
+/*
   @ViewChild('timelineSection', { static: true }) timelineSection!: ElementRef;
   @ViewChild('lottieContainer', { static: true }) lottieContainer!: ElementRef;
 
@@ -37,11 +159,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     windowBottom: 0
   };
 
-  timeLineOptions: AnimationOptions = {
-    path: '/assets/animations/timeline.json',
-    autoplay: false,
-    loop: false
-  };
+
 
   ngAfterViewInit(): void {
     this.calculateDimensions();
@@ -66,7 +184,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
   }
 
-  @HostListener('window:scroll')
+  @HostListener('window:scroll')++++++++++++++++++++++-----------------
   onWindowScroll(): void {
     this.handleScroll();
   }
@@ -252,9 +370,10 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
     this.controlAnimation(targetFrame);
   }
-}
 
-/*
+
+
+  --------------------------------+++++++++++++++++++++++++++++
   @ViewChild('timelineSection') timelineSectionRef!: ElementRef;
   scrollY: number = 0
   grid: number = 0

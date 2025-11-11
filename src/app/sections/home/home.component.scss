@@ -1,3 +1,9 @@
 #home {
-    height: calc(20 * var(--dynamic-grid-size));
+    height: calc(24 * var(--dynamic-grid-size));
+    margin: 0;
+    padding-top: calc(6 * var(--dynamic-grid-size));
+
+    .pixel-blob-container {
+        height: calc(18 * var(--dynamic-grid-size));
+    }
 }
