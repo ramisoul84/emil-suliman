@@ -38,6 +38,15 @@ export class GridService {
         return gridSize;
     }
 
+    getMaxHeight(delta:number): number {
+        const screenHeight = window.innerHeight
+        let width = 0
+        this.gridWidth$.subscribe(data => width = data)
+        const n = Math.floor(screenHeight / width) - delta
+
+        return n * width
+    }
+
     private updateGrid(): void {
         let width = this.getAccurateWidth() - 20;
         const gridCount = this.getGridCount(width);

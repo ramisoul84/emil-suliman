@@ -1,0 +1,26 @@
+<section id="timeline">
+  <div class="left-block">
+    <div class="title timeline-title">
+      timeline.
+    </div>
+    <div class="map-wrapper" [style.height.px]="mapHeight">
+      <div class="map">
+        <ng-lottie [options]="mapOptions" (animationCreated)="onMapCreated($event)"></ng-lottie>
+      </div>
+    </div>
+  </div>
+  <div #timelineSection class="timeline-wrapper">
+    <ng-lottie [options]="timeLineOptions" (animationCreated)="onTimelineCreated($event)"></ng-lottie>
+  </div>
+  
+  <div class="info" *ngIf="false">
+    <div>TOP: {{timelineTop}}</div>
+    <div>BOTTOM: {{timelineBottom}}</div>
+    <div>Y: {{scrollY}}</div>
+    <div>{{startPlay}}</div>
+    <div>END_HEIGHT: {{EndHeight}}</div>
+    <div>END_PROG: {{EndProgress}}</div>
+    <div>END_FRAME {{EndFrame}}</div>
+    <div>{{currentFrame}}</div>
+  </div>
+</section>

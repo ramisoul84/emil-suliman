@@ -48,14 +48,14 @@ body {
     background: linear-gradient(to bottom, var(--color-bg-top), var(--color-bg-bottom));
     font-family: var(--font-main);
     color: var(--color-text-primary);
-    line-height: 1.6;
+    line-height: var(--dynamic-grid-size);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
 section {
     scroll-margin-top: calc(4 * var(--dynamic-grid-size));
-    margin: 0 var(--dynamic-grid-size) calc(2 * var(--dynamic-grid-size)) var(--dynamic-grid-size);
+    margin: 0 var(--dynamic-grid-size) calc(4 * var(--dynamic-grid-size)) var(--dynamic-grid-size);
 
     .title {
         display: flex;
@@ -128,9 +128,8 @@ video {
 */
 
 @media (min-width:1600px) {
-
     section {
-        padding: 0 calc(6 * var(--dynamic-grid-size));
-        padding-top: calc(4 * var(--dynamic-grid-size));
+        padding: 0 calc(5 * var(--dynamic-grid-size));
+        //padding-top: calc(1 * var(--dynamic-grid-size));
     }
 }

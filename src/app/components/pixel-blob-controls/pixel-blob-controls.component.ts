@@ -8,7 +8,7 @@ import { PixelBlobService } from '../../services/pixel.blob.service';
   styleUrl: './pixel-blob-controls.component.scss'
 })
 export class PixelBlobControlsComponent {
-  isExpanded = true;
+  isExpanded = false;
 
   // Get reactive params
   params;

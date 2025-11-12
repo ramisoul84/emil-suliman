@@ -1,0 +1,39 @@
+#timeline {
+  display: flex;
+  gap: var(--dynamic-grid-size);
+
+  .left-block {
+    position: sticky;
+    top: 0;
+
+    .timeline-title {
+      position: sticky;
+      top: calc(4 * var(--dynamic-grid-size));
+    }
+
+    .map-wrapper {
+      position: sticky;
+      top: calc(7 * var(--dynamic-grid-size));
+      width: calc(19 * var(--dynamic-grid-size));
+      border: 2px solid white;
+      overflow: hidden;
+
+      .map {
+        scale: 3.4;
+      }
+    }
+  }
+
+  .timeline-wrapper {
+    width: calc(25 * var(--dynamic-grid-size));
+    height: calc(68 * var(--dynamic-grid-size));
+    margin-top: calc(3 * var(--dynamic-grid-size));
+    background-color: rgba(255, 99, 71, 0.315);
+  }
+
+  .info {
+    position: fixed;
+    bottom: 0;
+    background-color: rgba(255, 99, 71, 0.397);
+  }
+}

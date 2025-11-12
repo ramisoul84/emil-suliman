@@ -1,3 +1,17 @@
 <section id="solidarity">
-    <div class="title">SOLIDARITY.</div>
+    <div class="title solidarity-title">solidarity.</div>
+    <div class="solidarity">
+        <p class="solidarity-text">
+            I dedicate part of my work to supporting initiatives that fight for dignity and equality. A portion of each
+            project goes to organizations such as Sea-Watch (rescue at sea), Pro Asyl (migrant rights), Queer Refugees
+            Deutschland, and Fridays for Future. I’m also glad to collaborate directly with NGOs and grassroots groups
+            who need design and storytelling support, feel free to reach out.
+        </p>
+        <div class="solidarity-links">
+            <div *ngFor="let link of links" class="solidarity-link">
+                <img [src]="link.logo" alt="logo" class="logo">
+                <button class="link-btn" (click)="openLink(link.link)">Donate</button>
+            </div>
+        </div>
+    </div>
 </section>

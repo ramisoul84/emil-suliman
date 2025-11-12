@@ -1,4 +1,4 @@
-import { Component, effect, ElementRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, ElementRef, ViewChild } from '@angular/core';
 import { PixelBlobService } from '../../services/pixel.blob.service';
 
 interface GridConfig {
@@ -11,7 +11,8 @@ interface GridConfig {
   selector: 'app-pixel-blob-canvas',
   imports: [],
   templateUrl: './pixel-blob-canvas.component.html',
-  styleUrl: './pixel-blob-canvas.component.scss'
+  styleUrl: './pixel-blob-canvas.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PixelBlobCanvasComponent {
   @ViewChild('canvas', { static: true }) canvasRef!: ElementRef<HTMLCanvasElement>;
@@ -27,12 +28,18 @@ export class PixelBlobCanvasComponent {
 
   // Responsive breakpoints for pixel/cell count
   private readonly breakpoints = [
+    { minWidth: 1560, cells: 57 },
+    { minWidth: 1160, cells: 47 },
+    { minWidth: 536, cells: 37 },
+    { minWidth: 0, cells: 27 }
+    /*
     { minWidth: 1580, cells: 60 },
     { minWidth: 1180, cells: 50 },
     { minWidth: 972, cells: 44 },
     { minWidth: 748, cells: 38 },
     { minWidth: 556, cells: 32 },
     { minWidth: 0, cells: 27 }
+     */
   ];
 
   constructor(public blobService: PixelBlobService) {
@@ -73,7 +80,7 @@ export class PixelBlobCanvasComponent {
 
   private initCanvas(): void {
     const canvas = this.canvasRef.nativeElement;
-    this.ctx = canvas.getContext('2d', { alpha: false });
+    this.ctx = canvas.getContext('2d', { alpha: true });
 
     if (!this.ctx) {
       console.error('Failed to get canvas context');
@@ -87,7 +94,7 @@ export class PixelBlobCanvasComponent {
 
     // Create offscreen canvas for low-res rendering
     this.offscreenCanvas = document.createElement('canvas');
-    this.offscreenCtx = this.offscreenCanvas.getContext('2d', { alpha: false });
+    this.offscreenCtx = this.offscreenCanvas.getContext('2d', { alpha: true });
 
     if (this.offscreenCtx) {
       this.offscreenCtx.imageSmoothingEnabled = false;
@@ -174,8 +181,7 @@ export class PixelBlobCanvasComponent {
     const cssWidth = canvas.clientWidth;
     const cssHeight = canvas.clientHeight;
 
-    this.ctx.fillStyle = params.bgColor || '#000000';
-    this.ctx.fillRect(0, 0, cssWidth, cssHeight);
+    this.ctx.clearRect(0, 0, cssWidth, cssHeight);
     this.ctx.drawImage(this.offscreenCanvas, 0, 0, cssWidth, cssHeight);
   }
 
@@ -190,10 +196,8 @@ export class PixelBlobCanvasComponent {
     const ctx = this.offscreenCtx;
     const time = state.time;
 
-    // Step 1: Render blob in grayscale
-    const bgColor = params.bgColor || '#000000';
-    ctx.fillStyle = bgColor;
-    ctx.fillRect(0, 0, cellsX, cellsY);
+    // Step 1: Clear canvas for transparent background
+    ctx.clearRect(0, 0, cellsX, cellsY);
 
     const centerX = state.cx * cellsX;
     const centerY = state.cy * cellsY;
@@ -265,10 +269,9 @@ export class PixelBlobCanvasComponent {
     // Color gradient: Black → Dark Green → Yellow-Green → Magenta
     const colorStops = [
       { threshold: 0, color: { r: 0, g: 0, b: 0 } },
-      { threshold: 60, color: darkGreen },
-      { threshold: 120, color: yellowGreen },
-      { threshold: 180, color: magenta },
-      { threshold: 255, color: { r: 255, g: 150, b: 253 } }
+      { threshold: 20, color: darkGreen },
+      { threshold: 150, color: yellowGreen },
+      { threshold: 255, color: magenta },
     ];
 
     for (let i = 0; i < data.length; i += 4) {
@@ -300,4 +303,6 @@ export class PixelBlobCanvasComponent {
 
     ctx.putImageData(imageData, 0, 0);
   }
+
+
 }

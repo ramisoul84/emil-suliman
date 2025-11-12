@@ -1,9 +1,19 @@
 #home {
-    height: calc(24 * var(--dynamic-grid-size));
     margin: 0;
     padding-top: calc(6 * var(--dynamic-grid-size));
+    position: relative;
+
+    .canvas{
+        background-color: rgba(255, 99, 71, 0.308);
+    }
 
     .pixel-blob-container {
-        height: calc(18 * var(--dynamic-grid-size));
+        margin-bottom:var(--dynamic-grid-size);
+    }
+
+    .control{
+        position: absolute;
+        top: calc(6 * var(--dynamic-grid-size));
+        right: 0;
     }
 }

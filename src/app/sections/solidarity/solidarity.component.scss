@@ -1,3 +1,57 @@
-#solidarity {
-    height: calc(20 * var(--dynamic-grid-size));
+.solidarity {
+    width: 100%;
+    background-color: white;
+    color: black;
+    padding: var(--dynamic-grid-size);
+
+    .solidarity-text {
+        font-size: var(--size-text);
+        line-height: var(--dynamic-grid-size);
+        margin-bottom: var(--dynamic-grid-size);
+    }
+
+    .solidarity-links {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--dynamic-grid-size);
+
+        .solidarity-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            .logo {
+                width: calc(4 * var(--dynamic-grid-size));
+                height: calc(4 * var(--dynamic-grid-size));
+            }
+
+            .link-btn {
+                width: calc(4 * var(--dynamic-grid-size));
+                height: calc(2 * var(--dynamic-grid-size));
+                font-size: var(--size-text);
+                outline: none;
+                border: 2px solid black;
+                background-color: transparent;
+                cursor: pointer;
+                color: black;
+                font-family: var(--font-title);
+                //transition: all 0.4s ease;
+
+                &:hover {
+                    border: 0;
+                    background: var(--gradient-title);
+                    color: white;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width:576px) {
+    .solidarity {
+        .solidarity-links {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
 }

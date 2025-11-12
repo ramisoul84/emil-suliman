@@ -124,7 +124,7 @@
     #about {
         display: grid;
         grid-template-columns: repeat(45, var(--dynamic-grid-size));
-        grid-template-rows: repeat(21, var(--dynamic-grid-size));
+        grid-template-rows: repeat(18, var(--dynamic-grid-size));
 
         .image-wrapper {
             grid-column-start: 1;
