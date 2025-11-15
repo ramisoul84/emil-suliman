@@ -9,12 +9,21 @@ import { SolidarityComponent } from "../../sections/solidarity/solidarity.compon
 import { ContactComponent } from "../../sections/contact/contact.component";
 import { FooterComponent } from "../../components/footer/footer.component";
 import { BlurService } from '../../services/blur.service';
+import { ResumeComponent } from "../../sections/resume/resume.component";
 
 @Component({
   selector: 'app-main',
   imports: [
     CommonModule,
-    HeaderComponent, HomeComponent, AboutComponent, TimelineComponent, CasesComponent, SolidarityComponent, ContactComponent, FooterComponent],
+    HeaderComponent,
+    HomeComponent,
+    AboutComponent,
+    CasesComponent,
+    SolidarityComponent,
+    ContactComponent,
+    FooterComponent,
+    ResumeComponent
+],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss'
 })
@@ -25,3 +34,13 @@ export class MainComponent {
     this.blurService.blurState$.subscribe(data => this.isBlur = data)
   }
 }
+
+/*
+    HomeComponent,
+    AboutComponent,
+    TimelineComponent,
+    CasesComponent,
+    SolidarityComponent,
+    ContactComponent,
+    FooterComponent
+*/

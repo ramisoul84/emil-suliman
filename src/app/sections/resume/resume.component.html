@@ -1,26 +1,42 @@
-<section id="timeline">
-  <div class="left-block">
-    <div class="title timeline-title">
-      timeline.
+<section id="resume">
+  <div class="resume" *ngIf="isLoaded">
+    <div class="title resume-title">timeline.</div>
+    <div class="timeline-wrapper" #timelineSection>
+      <ng-lottie [options]="timeLineOptions" (animationCreated)="onTimelineAnimationCreated($event)" />
     </div>
     <div class="map-wrapper" [style.height.px]="mapHeight">
       <div class="map">
-        <ng-lottie [options]="mapOptions" (animationCreated)="onMapCreated($event)"></ng-lottie>
+        <ng-lottie [options]="mapOptions" (animationCreated)="onMapAnimationCreated($event)" />
       </div>
     </div>
   </div>
-  <div #timelineSection class="timeline-wrapper">
-    <ng-lottie [options]="timeLineOptions" (animationCreated)="onTimelineCreated($event)"></ng-lottie>
-  </div>
-  
-  <div class="info" *ngIf="false">
-    <div>TOP: {{timelineTop}}</div>
-    <div>BOTTOM: {{timelineBottom}}</div>
-    <div>Y: {{scrollY}}</div>
-    <div>{{startPlay}}</div>
-    <div>END_HEIGHT: {{EndHeight}}</div>
-    <div>END_PROG: {{EndProgress}}</div>
-    <div>END_FRAME {{EndFrame}}</div>
-    <div>{{currentFrame}}</div>
-  </div>
 </section>
+
+
+<!--
+  <div class="resume" *ngIf="isLoaded">
+    <div class="map-wrapper">
+      <div class="title resume-title">timeline.</div>
+      <div class="map" [style.height.px]="mapHeight">
+        <div class="map-lottie">
+          <ng-lottie [options]="mapOptions" (animationCreated)="onMapAnimationCreated($event)" />
+        </div>
+      </div>
+    </div>
+    <div class="timeline" #timelineSection>
+      <ng-lottie [options]="timeLineOptions" (animationCreated)="onTimelineAnimationCreated($event)" />
+    </div>
+  </div>
+  <div class="resume-mobile" *ngIf="isLoaded">
+    <div class="title title-mobile">timeline.</div>
+    <div class="timeline-wrapper-mobile" #timelineSection>
+      <ng-lottie [options]="timeLineOptions" (animationCreated)="onTimelineAnimationCreated($event)" />
+    </div>
+    <div class="map-wrapper-mobile">
+      <div class="map-mobile">
+        <ng-lottie [options]="mapOptions" (animationCreated)="onMapAnimationCreated($event)" />
+      </div>
+    </div>
+  </div>
+
+-->

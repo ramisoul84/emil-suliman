@@ -1,9 +1,26 @@
 footer {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
     height: calc(18 * var(--dynamic-grid-size));
-    .whale{
+
+    .whale {
         width: calc(25 * var(--dynamic-grid-size));
+    }
+
+    .conditions {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: var(--dynamic-grid-size);
+        height: var(--dynamic-grid-size);
+
+        p {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: calc(4 * var(--dynamic-grid-size));
+            background-color: rgba(128, 128, 128, 0.11);
+        }
     }
 }

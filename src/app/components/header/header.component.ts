@@ -2,7 +2,6 @@ import { Component, HostListener, inject, OnDestroy, OnInit } from '@angular/cor
 import { distinctUntilChanged, Subscription } from 'rxjs';
 import { gsap } from 'gsap';
 import { GridService } from '../../services/grid.service';
-import { ScrollService } from '../../services/scroll.service';
 import { CommonModule } from '@angular/common';
 import { BlurService } from '../../services/blur.service';
 import { GoogleAnalyticsService } from 'ngx-google-analytics';
@@ -14,11 +13,11 @@ import { GoogleAnalyticsService } from 'ngx-google-analytics';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent implements OnInit, OnDestroy {
+  private compactThreshold: number = 40;
   private isCompact: boolean = false;
-  private isAnimating: boolean = true;
   private isFirstLoad: boolean = true;
+  private isAnimating: boolean = false;
   showMenu: boolean = false;
-  scrollY: number = 0;
   private gridWidth: number = 20;
   private subscriptions = new Subscription();
 
@@ -26,13 +25,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   constructor(
     private gridService: GridService,
-    private scrollService: ScrollService,
     private blurService: BlurService
   ) { }
 
   ngOnInit() {
-    console.log("ngOnInit")
-    window.scrollTo(0, 0);
+    this.isCompact = false;
+    this.isAnimating = false;
     this.subscriptions.add(
       this.gridService.gridWidth$.pipe(
         distinctUntilChanged()
@@ -41,160 +39,205 @@ export class HeaderComponent implements OnInit, OnDestroy {
         if (this.isFirstLoad) {
           this.headerLoad()
         }
-
       })
     );
+    window.addEventListener('scroll', this.handleScroll.bind(this), { passive: true });
+  }
+  private latestScrollRequest: number = 0;
 
-    this.subscriptions.add(
-      this.scrollService.scrollY$.subscribe(
-        (scrollY: number) => {
-          this.scrollY = scrollY
-          this.handleScroll(scrollY);
-        }
-      )
-    );
+  private handleScroll(): void {
+    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+    const toCompact = scrollY > this.compactThreshold;
+
+    // Store the latest scroll position
+    this.latestScrollRequest = scrollY;
+
+    // If animating, wait for completion then process latest request
+    if (this.isAnimating) {
+      return; // Let the current animation finish, then check latest state
+    }
+
+    this.processScrollState(toCompact);
   }
 
-  private handleScroll(scrollY: number): void {
-    const toCompact = scrollY > 120;
-    if (toCompact && !this.isCompact && !this.isAnimating) {
-      this.headerCompact()
-    } else if (!toCompact && this.isCompact && !this.isAnimating) {
-      this.sideNavHide()
-      this.headerExtended()
-      this.showMenu = false
-      this.blurService.setBlur(false);
+  // Call this at the end of your animations
+  private checkPendingScroll(): void {
+    if (!this.isAnimating) {
+      // Use the stored latest scroll position instead of current scroll
+      const toCompact = this.latestScrollRequest > this.compactThreshold;
 
+      // Only change state if different from current
+      if ((toCompact && !this.isCompact) || (!toCompact && this.isCompact)) {
+        this.processScrollState(toCompact);
+      }
     }
   }
 
-  private headerLoad(): void {
-    console.log("load")
-    gsap.to(".line",
-      {
-        height: this.gridWidth, duration: 0.6, stagger: 0.08, ease: "power2.inOut"
-      })
-    gsap.to("nav p", { opacity: 1, duration: 0.6, delay: 0.6 })
-    gsap.to(".logo", {
-      opacity: 1, duration: 0.4, delay: 0.6, onComplete: () => {
-        this.isAnimating = false;
-        this.isFirstLoad = false;
-      }
-    })
+  private processScrollState(toCompact: boolean): void {
+    if (toCompact && !this.isCompact) {
+      this.headerCompact();
+    } else if (!toCompact && this.isCompact) {
+      this.headerExtended();
+      this.sideNavHide();
+      this.showMenu = false;
+      this.blurService.setBlur(false);
+    }
   }
 
+
+  private headerLoad(): void {
+    this.isAnimating = true
+    setTimeout(() => {
+      this.isAnimating = false;
+      this.isFirstLoad = false;
+    }, 1300)
+    gsap.fromTo(".line", { height: 0 },
+      {
+        height: this.gridWidth, duration: 0.6, stagger: 0.1, ease: "power2.inOut"
+      })
+    gsap.fromTo("nav p", { opacity: 0 }, { opacity: 1, duration: 0.4, delay: 0.4, ease: "power2.inOut" })
+    gsap.fromTo(".logo", { opacity: 0 },
+      {
+        opacity: 1, duration: 0.4, delay: 0.4, ease: "power2.inOut"
+      })
+  }
+
+
+
   private headerCompact(): void {
-    console.log("compact")
+    gsap.killTweensOf("*");
     this.isAnimating = true;
-    gsap.to(".line6", { height: 0, duration: 0.6, ease: "power2.inOut" })
-    gsap.to(".line5", { height: 0, duration: 0.6, delay: 0.1, ease: "power2.inOut" })
-    gsap.to(".line4", { height: 0, duration: 0.6, delay: 0.2, ease: "power2.inOut" })
-    gsap.to("nav p", { opacity: 0, duration: 0.6, delay: 0.2, ease: "power2.inOut" })
-    gsap.to(".line3", { width: 3 * this.gridWidth, duration: 0.6, delay: 0.8, ease: "power3.inOut" })
-    gsap.to(".line2", { width: 3 * this.gridWidth, duration: 0.6, delay: 0.8, ease: "power3.inOut" })
-    gsap.to(".line1", {
-      width: 3 * this.gridWidth, height: 3 * this.gridWidth, duration: 0.6, delay: 0.8, ease: "power3.inOut"
+
+    setTimeout(() => {
+      this.isCompact = true;
+      this.isAnimating = false;
+      this.checkPendingScroll();
+    }, 2200)
+
+    gsap.fromTo(".line6", { height: this.gridWidth }, { height: 0, duration: 0.4, ease: "power2.inOut", overwrite: true })
+    gsap.fromTo(".line5", { height: this.gridWidth }, { height: 0, duration: 0.4, delay: 0.1, ease: "power2.inOut", overwrite: true },)
+    gsap.fromTo(".line4", { height: this.gridWidth }, { height: 0, duration: 0.4, delay: 0.2, ease: "power2.inOut", overwrite: true },)
+    gsap.fromTo("nav p", { opacity: 1 }, { opacity: 0, duration: 0.4, delay: 0.2, ease: "power2.inOut", overwrite: true })
+    gsap.fromTo(".line3", { width: "100%" }, { width: 3 * this.gridWidth, duration: 0.4, delay: 0.6, ease: "power3.inOut", overwrite: true })
+    gsap.fromTo(".line2", { width: "100%" }, { width: 3 * this.gridWidth, duration: 0.4, delay: 0.6, ease: "power3.inOut", overwrite: true })
+    gsap.fromTo(".line1", { width: "100%", height: this.gridWidth }, {
+      width: 3 * this.gridWidth, height: 3 * this.gridWidth, duration: 0.4, delay: 0.6, ease: "power3.inOut", overwrite: true
     })
-    gsap.to(".letter:not(.e, .s)", {
-      display: "none",
-      duration: 0.4,
-      delay: 0.3,
-      stagger: { each: 0.05, from: "end" },
-      ease: "power2.inOut"
-    });
+    gsap.fromTo(".letter:not(.e, .s)",
+      { display: "block" },
+      {
+        display: "none",
+        duration: 0.2,
+        delay: 0.2,
+        stagger: { each: 0.05, from: "end" },
+        ease: "power2.inOut", overwrite: true
+      });
 
-    gsap.to(".letter.e", {
-      scale: 2,
-      y: -0.1 * this.gridWidth,
-      x: -0.5 * this.gridWidth,
-      duration: 0.2,
-      delay: 1,
-      ease: "power2.inOut",
+    gsap.fromTo(".letter.e",
+      {
+        scale: 1,
+        y: 0,
+        x: 0,
+      },
+      {
+        scale: 1.8,
+        y: -0.1 * this.gridWidth,
+        x: -0.44 * this.gridWidth,
+        duration: 0.2,
+        delay: 1,
+        ease: "power2.inOut",
+        overwrite: true
+      });
 
-    });
+    gsap.fromTo(".letter.s",
+      {
+        scale: 1,
+        y: 0,
+        x: 0,
+      },
+      {
+        scale: 1.8,
+        y: -0.1 * this.gridWidth,
+        x: 0.24 * this.gridWidth,
+        duration: 0.2,
+        delay: 1,
+        ease: "power2.inOut",
+        overwrite: true
+      });
 
-    gsap.to(".letter.s", {
-      scale: 2,
-      y: -0.1 * this.gridWidth,
-      x: 0.3 * this.gridWidth,
-      duration: 0.2,
-      delay: 1,
-      ease: "power2.inOut",
-
-    });
-
-    gsap.to(".dot",
+    gsap.fromTo(".dot",
+      { opacity: 0, scale: 4 },
       {
         scale: 1,
         opacity: 1,
-        duration: 1,
-        delay: 1.6,
-        ease: "power2.inOut",
-        onComplete: () => {
-          this.isCompact = true;
-          this.isAnimating = false;
-          if (this.scrollY <= 120) {
-            this.headerExtended()
-          }
-        }
+        duration: 0.6,
+        delay: 1.2,
+        ease: "power2.inOut", overwrite: true
+
       });
 
-    gsap.to(".hamburger-menu", { zIndex: 11, opacity: 1, duration: 0.4, delay: 1.2, ease: "power3.inOut" })
+    gsap.fromTo(".hamburger-menu", { zIndex: 1, opacity: 0 }, { zIndex: 11, opacity: 1, duration: 0.4, delay: 1.2, ease: "power3.inOut", overwrite: true })
   }
 
   private headerExtended(): void {
-    console.log("extended")
     this.isAnimating = true;
-    gsap.to(".hamburger-menu", { zIndex: 1, opacity: 0, duration: 0.2, ease: "power3.inOut" })
-    gsap.to(".line1", { width: "100%", height: this.gridWidth, duration: 0.6, ease: "power3.inOut" })
-    gsap.to(".line2", { width: "100%", duration: 0.6, ease: "power3.inOut" })
-    gsap.to(".line3", { width: "100%", duration: 0.6, ease: "power3.inOut" })
-    gsap.to("nav p", { opacity: 1, duration: 0.6, delay: 0.6, ease: "power2.inOut" })
-    gsap.to(".line4", { height: this.gridWidth, duration: 0.6, delay: 0.4, ease: "power2.inOut" })
-    gsap.to(".line5", { height: this.gridWidth, duration: 0.6, delay: 0.5, ease: "power2.inOut" })
-    gsap.to(".line6", {
-      height: this.gridWidth, duration: 0.6, delay: 0.6, ease: "power2.inOut", onComplete: () => {
-        this.isCompact = false;
-        this.isAnimating = false;
-        if (this.scrollY > 120) {
-          this.headerCompact()
-        }
-      }
-    })
+    gsap.killTweensOf("*");
 
-    gsap.to(".dot", {
+    setTimeout(() => {
+      this.isCompact = false;
+      this.isAnimating = false;
+      this.checkPendingScroll();
+    }, 1400)
+
+    gsap.fromTo(".dot", { scale: 4, opacity: 1 }, {
       opacity: 0,
       scale: 8,
       duration: 0,
-
+      overwrite: true
     });
-
-    gsap.to(".letter.e", {
+    gsap.fromTo(".letter.e", {
+      scale: 1.8,
+      y: -0.1 * this.gridWidth,
+      x: -0.44 * this.gridWidth,
+    }, {
       scale: 1,
       y: 0,
       x: 0,
       duration: 0.2,
-      ease: "power2.inOut",
-
+      ease: "power2.inOut", overwrite: true
     });
 
-    gsap.to(".letter.s", {
-      scale: 1,
-      y: 0,
-      x: 0,
-      duration: 0.2,
-      ease: "power2.inOut",
+    gsap.fromTo(".letter.s", {
+      scale: 1.8,
+      y: -0.1 * this.gridWidth,
+      x: 0.24 * this.gridWidth,
+    },
+      {
+        scale: 1,
+        y: 0,
+        x: 0,
+        duration: 0.2,
+        ease: "power2.inOut", overwrite: true
 
-    });
+      });
 
-    gsap.to(".letter:not(.e, .s)", {
+    gsap.fromTo(".letter:not(.e, .s)", { display: "none" }, {
       display: "block",
       duration: 0.4,
       delay: 0.2,
       stagger: { each: 0.05 },
-      ease: "power2.inOut",
-
+      ease: "power2.inOut", overwrite: true
     });
+    gsap.fromTo(".hamburger-menu", { zIndex: 11, opacity: 1 }, { zIndex: 1, opacity: 0, duration: 0.2, ease: "power3.inOut", overwrite: true })
+    gsap.fromTo(".line1", { width: 3 * this.gridWidth, height: 3 * this.gridWidth }, { width: "100%", height: this.gridWidth, duration: 0.4, ease: "power3.inOut", overwrite: true })
+    gsap.fromTo(".line2", { width: 3 * this.gridWidth }, { width: "100%", duration: 0.4, ease: "power3.inOut", overwrite: true })
+    gsap.fromTo(".line3", { width: 3 * this.gridWidth }, { width: "100%", duration: 0.4, ease: "power3.inOut", overwrite: true })
+    gsap.fromTo("nav p", { opacity: 0 }, { opacity: 1, duration: 0.4, delay: 0.4, ease: "power2.inOut", overwrite: true })
+    gsap.fromTo(".line4", { height: 0 }, { height: this.gridWidth, duration: 0.4, delay: 0.4, ease: "power2.inOut", overwrite: true })
+    gsap.fromTo(".line5", { height: 0 }, { height: this.gridWidth, duration: 0.4, delay: 0.5, ease: "power2.inOut", overwrite: true })
+    gsap.fromTo(".line6", { height: 0 }, {
+      height: this.gridWidth, duration: 0.4, delay: 0.6, ease: "power2.inOut", overwrite: true
+    })
   }
 
   @HostListener('window:resize')
@@ -203,22 +246,24 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   update(): void {
+    if (this.isAnimating) return;
+
     if (this.isCompact) {
-      gsap.to(" .line1", { height: 3 * this.gridWidth, width: 3 * this.gridWidth })
-      gsap.to(" .line2, .line3", { height: this.gridWidth, width: 3 * this.gridWidth })
-      gsap.to(".letter.e", {
+      gsap.set(" .line1", { height: 3 * this.gridWidth, width: 3 * this.gridWidth })
+      gsap.set(" .line2, .line3", { height: this.gridWidth, width: 3 * this.gridWidth })
+      gsap.set(".letter.e", {
         y: -0.1 * this.gridWidth,
         x: -0.5 * this.gridWidth,
       });
-      gsap.to(".letter.s", {
+      gsap.set(".letter.s", {
         y: -0.1 * this.gridWidth,
         x: 0.3 * this.gridWidth,
       });
     } else if (!this.isCompact) {
-      gsap.to(" .line", { height: this.gridWidth })
+      gsap.set(" .line", { height: this.gridWidth })
     }
-  }
 
+  }
 
   goToSection(section: string) {
     try {
@@ -248,15 +293,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   toggleMenu(): void {
-    this.showMenu = !this.showMenu;
-    if (this.showMenu) {
-      this.sideNavShow()
+    //this.showMenu = !this.showMenu;
+    if (!this.showMenu) {
+      this.sideNavShow();
+      this.showMenu = true
       setTimeout(() => {
         const firstMenuItem = document.querySelector('.side-nav p');
         (firstMenuItem as HTMLElement)?.focus();
       }, 400);
     } else {
       this.sideNavHide()
+      this.showMenu = false
     }
 
     this.blurService.setBlur(this.showMenu)
@@ -265,6 +312,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   sideNavShow(): void {
     gsap.fromTo(".side-nav",
       {
+        x: 0,
         scale: 0,
         opacity: 0,
       },
@@ -303,6 +351,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    window.removeEventListener('scroll', this.handleScroll.bind(this));
     this.subscriptions.unsubscribe();
   }
 }

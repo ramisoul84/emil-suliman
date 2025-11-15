@@ -15,6 +15,7 @@ header {
 
     .line {
         height: 0; // var(--dynamic-grid-size);
+        width: 100%;
     }
 
     @for $i from 1 through 6 {
@@ -34,14 +35,13 @@ header {
         font-size: var(--dynamic-grid-size);
         z-index: 8;
         opacity: 0;
-        transition: all 0.3s ease;
         cursor: pointer;
         user-select: none;
 
         .letter {
             display: inline-block;
-            transition: all 0.3s ease;
             width: auto;
+            transform: scale(1);
         }
     }
 
@@ -52,7 +52,7 @@ header {
         width: calc(0.26 * var(--dynamic-grid-size));
         height: calc(0.26 * var(--dynamic-grid-size));
         background-color: white;
-        scale: 8;
+        scale: 1;
         opacity: 0;
         z-index: 8;
     }
@@ -156,6 +156,7 @@ header {
         height: calc(10 * var(--dynamic-grid-size));
         background-color: #242424;
         transform: scale(0);
+        opacity: 0; 
 
         p {
             display: flex;

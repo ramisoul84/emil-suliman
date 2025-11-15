@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { data } from './data';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -12,11 +12,13 @@ import { GoogleAnalyticsService } from 'ngx-google-analytics';
   styleUrl: './about.component.scss'
 })
 export class AboutComponent implements AfterViewInit {
-  @ViewChild('emilVideo') emilVideo!: ElementRef<HTMLVideoElement>;
-  @ViewChild('iconVideo') iconVideo!: ElementRef<HTMLVideoElement>;
+  @ViewChild('emilVideo', { static: true }) emilVideo!: ElementRef<HTMLVideoElement>;
+  @ViewChild('emilPhoto', { static: true }) emilPhoto!: ElementRef<HTMLImageElement>;
+  @ViewChild('iconVideo', { static: true }) iconVideo!: ElementRef<HTMLVideoElement>;
 
   selectedField: number = 0;
   firstLoad: boolean = true;
+  videoTop: number = 0;
   about = data;
 
   private gaService = inject(GoogleAnalyticsService);
@@ -27,7 +29,29 @@ export class AboutComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.loadVideo()
-    this.playVideo()
+    this.calculatePosition();
+    window.addEventListener('scroll', this.handleScroll.bind(this), { passive: true });
+    window.addEventListener('resize', this.calculatePosition.bind(this));
+  }
+
+  private calculatePosition(): void {
+    if (this.emilPhoto?.nativeElement) {
+      const rect = this.emilPhoto.nativeElement.getBoundingClientRect();
+      this.videoTop = rect.top - 120;
+      console.log("TOP", this.videoTop);
+    }
+  }
+
+
+  handleScroll() {
+    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+    if (scrollY > this.videoTop) {
+      if (this.firstLoad) {
+        this.emilVideo.nativeElement.play();
+        this.firstLoad = false
+      }
+
+    }
   }
 
   loadVideo(): void {
@@ -70,27 +94,32 @@ export class AboutComponent implements AfterViewInit {
       }
     );
   }
-
-  playVideo() {
-    gsap.fromTo('.about-video',
-      { opacity: 0 },
-      {
-        opacity: 1,
-        duration: 0.4,
-        scrollTrigger: {
-          trigger: '.about-video',
-          start: '0 80%',
-          toggleActions: "play none none none",
-
-          onEnter: () => {
-            if (this.firstLoad) {
-              this.emilVideo.nativeElement.play(),
-                this.firstLoad = false
+  /*
+    playVideo() {
+      gsap.fromTo('.about-video',
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.4,
+          scrollTrigger: {
+            trigger: '.about-video',
+            start: '0 80%',
+            toggleActions: "play none none none",
+  
+            onEnter: () => {
+              if (this.firstLoad) {
+                this.emilVideo.nativeElement.play(),
+                  this.firstLoad = false
+              }
             }
           }
         }
-      }
-    );
+      );
+    }
+  */
+  ngOnDestroy(): void {
+    window.removeEventListener('scroll', this.handleScroll.bind(this));
+    window.removeEventListener('resize', this.calculatePosition.bind(this));
   }
 
 }
