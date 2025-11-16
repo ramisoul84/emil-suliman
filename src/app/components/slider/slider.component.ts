@@ -14,9 +14,6 @@ export interface Slide {
   title?: string;
   description?: string;
   overlayColor?: string;
-  lottieAnimation?: string; // Lottie animation path
-  lottiePosition?: 'background' | 'foreground' | 'overlay'; // Where to position Lottie
-  lottieConfig?: AnimationOptions; // Custom Lottie config for this slide
 }
 
 export interface SliderConfig {
@@ -31,14 +28,11 @@ export interface SliderConfig {
   height?: string;
   overlay?: boolean;
   swipeThreshold?: number;
-  parallaxEffect?: boolean;
-  lottieAutoPlay?: boolean;
-  lottieLoop?: boolean;
 }
 
 @Component({
   selector: 'app-slider',
-  imports: [CommonModule, LottieComponent],
+  imports: [CommonModule,],
   templateUrl: './slider.component.html',
   styleUrl: './slider.component.scss'
 })
@@ -47,33 +41,28 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
   @Input() config: SliderConfig = {};
   @Output() slideChange = new EventEmitter<number>();
   @Output() slideClick = new EventEmitter<Slide>();
-  @Output() lottieLoaded = new EventEmitter<{ slideId: number, animation: any }>();
 
   @ViewChildren('slide') slideElements!: QueryList<ElementRef>;
   @ViewChildren('dot') dotElements!: QueryList<ElementRef>;
-  @ViewChildren('lottieAnim') lottieComponents!: QueryList<LottieComponent>;
 
   currentSlide = 0;
   isAnimating = false;
   autoPlayInterval: any;
   isHovering = false;
-  progress = 0;
-  private progressInterval: any;
 
-  // Touch swipe properties with improved detection
+  birdsOptions: AnimationOptions = {
+    path: '/assets/animations/birds.json',
+    autoplay: true,
+    loop: true
+  };
+
+  // Touch swipe properties
   private touchStartX = 0;
   private touchStartY = 0;
   private touchEndX = 0;
   private touchEndY = 0;
   private isSwiping = false;
-  private swipeThreshold = 50;
-  private readonly SWIPE_DIRECTION = {
-    LEFT: 'left',
-    RIGHT: 'right',
-    UP: 'up',
-    DOWN: 'down',
-    NONE: 'none'
-  };
+  private swipeThreshold = 50; // Minimum distance for swipe to trigger slide change
 
   private defaultConfig: SliderConfig = {
     autoPlay: true,
@@ -86,10 +75,7 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
     infinite: true,
     height: '500px',
     overlay: true,
-    swipeThreshold: 50,
-    parallaxEffect: true,
-    lottieAutoPlay: true,
-    lottieLoop: true
+    swipeThreshold: 50
   };
 
   get effectiveConfig(): SliderConfig {
@@ -100,7 +86,6 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
 
   ngOnInit() {
     this.startAutoPlay();
-    this.startProgressBar();
     this.swipeThreshold = this.effectiveConfig.swipeThreshold || 50;
   }
 
@@ -122,15 +107,11 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
     this.setupTouchEvents();
   }
 
-  // Enhanced touch event setup
   setupTouchEvents() {
-    const sliderElement = this.elementRef.nativeElement.querySelector('.slider-container');
-
-    if (sliderElement) {
-      sliderElement.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: true });
-      sliderElement.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: false });
-      sliderElement.addEventListener('touchend', this.handleTouchEnd.bind(this));
-    }
+    // Add touch events to the entire document for vertical scrolling
+    document.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
+    document.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: false });
+    document.addEventListener('touchend', this.handleTouchEnd.bind(this));
   }
 
   handleTouchStart(event: TouchEvent) {
@@ -140,7 +121,7 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
   }
 
   handleTouchMove(event: TouchEvent) {
-    if (!this.touchStartX || !this.touchStartY || this.isAnimating) return;
+    if (!this.touchStartX || !this.touchStartY) return;
 
     this.touchEndX = event.touches[0].clientX;
     this.touchEndY = event.touches[0].clientY;
@@ -148,88 +129,74 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
     const diffX = this.touchStartX - this.touchEndX;
     const diffY = this.touchStartY - this.touchEndY;
 
-    // Only prevent default for horizontal swipes to maintain vertical scrolling
-    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
+    // Determine if it's primarily a horizontal swipe
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+      // It's a horizontal swipe - prevent default to avoid page scroll
       event.preventDefault();
       this.isSwiping = true;
+
+      // Optional: Add visual feedback during swipe
       this.updateSlidePositionDuringSwipe(diffX);
     }
+    // Vertical swipes will naturally scroll the page without prevention
   }
 
   handleTouchEnd() {
     if (!this.isSwiping) return;
 
-    const swipeDirection = this.getSwipeDirection();
-
-    if (swipeDirection === this.SWIPE_DIRECTION.LEFT) {
-      this.nextSlide();
-    } else if (swipeDirection === this.SWIPE_DIRECTION.RIGHT) {
-      this.prevSlide();
-    }
-
-    this.resetSwipeState();
-  }
-
-  getSwipeDirection(): string {
     const diffX = this.touchStartX - this.touchEndX;
     const diffY = this.touchStartY - this.touchEndY;
 
-    // Check if swipe meets threshold and is primarily horizontal
-    if (Math.abs(diffX) > this.swipeThreshold && Math.abs(diffX) > Math.abs(diffY)) {
-      return diffX > 0 ? this.SWIPE_DIRECTION.LEFT : this.SWIPE_DIRECTION.RIGHT;
+    // Check if it's a horizontal swipe that meets the threshold
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > this.swipeThreshold) {
+      if (diffX > 0) {
+        // Swipe left - go to next slide
+        this.nextSlide();
+      } else {
+        // Swipe right - go to previous slide
+        this.prevSlide();
+      }
     }
 
-    return this.SWIPE_DIRECTION.NONE;
+    // Reset swipe position
+    this.resetSlidePosition();
+
+    // Reset touch coordinates
+    this.touchStartX = 0;
+    this.touchStartY = 0;
+    this.touchEndX = 0;
+    this.touchEndY = 0;
+    this.isSwiping = false;
   }
 
   updateSlidePositionDuringSwipe(diffX: number) {
     if (this.isAnimating || this.slides.length <= 1) return;
 
     const currentSlideElement = this.slideElements.toArray()[this.currentSlide].nativeElement;
-    const swipePercent = Math.min(Math.abs(diffX) / window.innerWidth, 0.5); // Limit to 50% of screen
+    const swipePercent = Math.min(Math.abs(diffX) / window.innerWidth, 1);
     const direction = diffX > 0 ? 1 : -1;
 
-    // Move current slide with easing
+    // Move current slide based on swipe distance
     gsap.set(currentSlideElement, {
       x: direction * swipePercent * 100 + '%',
       overwrite: true
     });
 
-    // Show adjacent slide during swipe
-    const adjacentIndex = this.getAdjacentSlideIndex(direction);
-    if (adjacentIndex !== -1) {
-      const adjacentSlideElement = this.slideElements.toArray()[adjacentIndex].nativeElement;
+    // Optional: Show next/previous slide during swipe
+    if (this.effectiveConfig.infinite || (direction > 0 && this.currentSlide < this.slides.length - 1) ||
+      (direction < 0 && this.currentSlide > 0)) {
+      const nextIndex = direction > 0 ?
+        (this.currentSlide + 1) % this.slides.length :
+        this.currentSlide === 0 ? this.slides.length - 1 : this.currentSlide - 1;
 
-      gsap.set(adjacentSlideElement, {
+      const nextSlideElement = this.slideElements.toArray()[nextIndex].nativeElement;
+
+      gsap.set(nextSlideElement, {
         x: (direction * -100) + (direction * swipePercent * 100) + '%',
-        opacity: 0.7, // Slightly visible during swipe
+        opacity: 1,
         overwrite: true
       });
     }
-  }
-
-  getAdjacentSlideIndex(direction: number): number {
-    if (this.effectiveConfig.infinite) {
-      return direction > 0 ?
-        (this.currentSlide + 1) % this.slides.length :
-        this.currentSlide === 0 ? this.slides.length - 1 : this.currentSlide - 1;
-    } else {
-      if (direction > 0 && this.currentSlide < this.slides.length - 1) {
-        return this.currentSlide + 1;
-      } else if (direction < 0 && this.currentSlide > 0) {
-        return this.currentSlide - 1;
-      }
-    }
-    return -1;
-  }
-
-  resetSwipeState() {
-    this.resetSlidePosition();
-    this.touchStartX = 0;
-    this.touchStartY = 0;
-    this.touchEndX = 0;
-    this.touchEndY = 0;
-    this.isSwiping = false;
   }
 
   resetSlidePosition() {
@@ -243,7 +210,7 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
       ease: 'power2.out'
     });
 
-    // Reset all slides
+    // Reset all other slides
     this.slideElements.forEach((slide, index) => {
       if (index !== this.currentSlide) {
         gsap.set(slide.nativeElement, {
@@ -254,72 +221,12 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
     });
   }
 
-  // Lottie Animation Methods
-  getLottieOptions(slide: Slide): AnimationOptions {
-    const defaultOptions: AnimationOptions = {
-      path: slide.lottieAnimation,
-      autoplay: this.effectiveConfig.lottieAutoPlay,
-      loop: this.effectiveConfig.lottieLoop,
-      rendererSettings: {
-        preserveAspectRatio: 'xMidYMid slice'
-      }
-    };
-
-    return slide.lottieConfig ? { ...defaultOptions, ...slide.lottieConfig } : defaultOptions;
-  }
-
-  onLottieAnimationCreated(animation: any, slideId: number) {
-    this.lottieLoaded.emit({ slideId, animation });
-
-    // Optional: Add interactive controls to Lottie animations
-    if (this.effectiveConfig.pauseOnHover) {
-      const slideElement = this.elementRef.nativeElement.querySelector(`[data-slide-id="${slideId}"]`);
-      if (slideElement) {
-        slideElement.addEventListener('mouseenter', () => animation.pause());
-        slideElement.addEventListener('mouseleave', () => animation.play());
-      }
-    }
-  }
-
-  // Progress Bar
-  startProgressBar() {
-    if (this.effectiveConfig.showProgress && this.effectiveConfig.autoPlay) {
-      this.progress = 0;
-      const interval = 50;
-      const increment = (interval / (this.effectiveConfig.autoPlayInterval || 5000)) * 100;
-
-      this.progressInterval = setInterval(() => {
-        if (!this.isHovering || !this.effectiveConfig.pauseOnHover) {
-          this.progress += increment;
-          if (this.progress >= 100) {
-            this.progress = 0;
-            this.nextSlide();
-          }
-        }
-      }, interval);
-    }
-  }
-
-  stopProgressBar() {
-    if (this.progressInterval) {
-      clearInterval(this.progressInterval);
-    }
-  }
-
-  resetProgressBar() {
-    this.stopProgressBar();
-    this.progress = 0;
-    this.startProgressBar();
-  }
-
-  // Existing methods with enhancements
   resetSlider() {
     this.currentSlide = 0;
     this.stopAutoPlay();
-    this.stopProgressBar();
     this.startAutoPlay();
-    this.startProgressBar();
 
+    // Reset all slides to initial state
     if (this.slideElements) {
       this.slideElements.forEach((slide, index) => {
         gsap.set(slide.nativeElement, {
@@ -383,26 +290,26 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
 
     this.isAnimating = true;
     this.stopAutoPlay();
-    this.stopProgressBar();
 
     const currentSlideElement = this.slideElements.toArray()[this.currentSlide].nativeElement;
     const nextSlideElement = this.slideElements.toArray()[index].nativeElement;
 
     const direction = index > this.currentSlide ? 1 : -1;
 
-    // Enhanced animation with parallax
+    // Animate current slide out
     gsap.to(currentSlideElement, {
       x: direction * -100 + '%',
       opacity: 0,
-      scale: this.effectiveConfig.parallaxEffect ? 1.1 : 1,
+      scale: 1,
       duration: this.effectiveConfig.animationDuration,
       ease: 'power2.inOut'
     });
 
+    // Prepare and animate next slide in
     gsap.set(nextSlideElement, {
       x: direction * 100 + '%',
       opacity: 1,
-      scale: this.effectiveConfig.parallaxEffect ? 0.9 : 1
+      scale: 1.1
     });
 
     gsap.to(nextSlideElement, {
@@ -415,21 +322,12 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
         this.isAnimating = false;
         this.slideChange.emit(this.currentSlide);
         this.startAutoPlay();
-        this.resetProgressBar();
         this.animateDots();
-        this.triggerLottieAnimations(index);
       }
     });
 
+    // Animate content if present
     this.animateContent(nextSlideElement);
-  }
-
-  triggerLottieAnimations(slideIndex: number) {
-    // Optional: Trigger Lottie animations when slide becomes active
-    const currentSlide = this.slides[slideIndex];
-    if (currentSlide.lottieAnimation) {
-      // Lottie will auto-play based on config, but you can add custom triggers here
-    }
   }
 
   animateSlideIn(index: number) {
@@ -439,7 +337,7 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
       {
         x: 100,
         opacity: 0,
-        scale: 1.1
+        scale: 1
       },
       {
         x: 0,
@@ -477,7 +375,7 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
       dots.forEach((dot, index) => {
         if (index === this.currentSlide) {
           gsap.to(dot.nativeElement, {
-            scale: 1.2,
+            scale: 1.0,
             duration: 0.3,
             ease: 'back.out'
           });
@@ -506,14 +404,9 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
 
   ngOnDestroy() {
     this.stopAutoPlay();
-    this.stopProgressBar();
-
-    // Clean up event listeners
-    const sliderElement = this.elementRef.nativeElement.querySelector('.slider-container');
-    if (sliderElement) {
-      sliderElement.removeEventListener('touchstart', this.handleTouchStart.bind(this));
-      sliderElement.removeEventListener('touchmove', this.handleTouchMove.bind(this));
-      sliderElement.removeEventListener('touchend', this.handleTouchEnd.bind(this));
-    }
+    // Clean up touch event listeners
+    document.removeEventListener('touchstart', this.handleTouchStart.bind(this));
+    document.removeEventListener('touchmove', this.handleTouchMove.bind(this));
+    document.removeEventListener('touchend', this.handleTouchEnd.bind(this));
   }
 }
