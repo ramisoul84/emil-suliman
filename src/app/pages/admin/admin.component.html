@@ -1,1 +1,7 @@
-<p>admin works!</p>
+<div class="admin">
+      <form [formGroup]="loginForm"   *ngIf="!isLoggedin">
+      <input  id="email" formControlName="email" type="email" placeholder="Email" autocomplete="on" > 
+      <input  id="password" formControlName="password" type="password" placeholder="Password" autocomplete="off" >
+      <button class="submit" [disabled]="loginForm.invalid" (click)="onSubmit()" >LOGIN</button>
+  </form>
+</div>

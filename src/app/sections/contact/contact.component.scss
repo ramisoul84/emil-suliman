@@ -1,6 +1,17 @@
 #contact {
     position: relative;
 
+    .msg {
+        position: absolute;
+        left: calc(9 * var(--dynamic-grid-size));
+        right: 0;
+        height: calc(2 * var(--dynamic-grid-size));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(9, 109, 26, 0.24);
+    }
+
     form {
         display: flex;
         flex-direction: column;
@@ -62,13 +73,42 @@
             width: calc(6 * var(--dynamic-grid-size));
             height: calc(2 * var(--dynamic-grid-size));
             border: 2px solid white;
+            outline: none;
             align-self: end;
             cursor: pointer;
+            background-color: transparent;
+            color: white;
 
-            &:hover {
+            &:disabled {
+                background-color: rgb(114, 111, 111);
+                cursor: not-allowed;
+            }
+
+            &:hover:not(:disabled) {
                 background: var(--gradient-title);
                 border: none;
             }
+
+            &.loading {
+                position: relative;
+                color: transparent;
+
+                &::after {
+                    content: '';
+                    position: absolute;
+                    width: 20px;
+                    height: 20px;
+                    top: 50%;
+                    left: 50%;
+                    margin: -10px 0 0 -10px;
+                    border: 2px solid transparent;
+                    border-top: 2px solid white;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                }
+            }
+
+
         }
     }
 
@@ -108,4 +148,9 @@
         background: var(--gradient-title);
         margin-top: var(--dynamic-grid-size);
     }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
