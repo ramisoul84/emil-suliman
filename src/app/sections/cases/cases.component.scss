@@ -52,7 +52,6 @@
                 width: calc(25 * var(--dynamic-grid-size));
                 height: calc(25 * var(--dynamic-grid-size));
                 margin-bottom: var(--dynamic-grid-size);
-                background-color: green;
             }
 
             .case-info {
@@ -87,6 +86,11 @@
     }
 }
 
+.xx{
+    width:500px;
+    height: 500px;
+}
+
 @media (min-width:576px) {
     #cases {
         .cases {
@@ -99,7 +103,6 @@
                     width: calc(14 * var(--dynamic-grid-size));
                     height: calc(14 * var(--dynamic-grid-size));
                     margin-bottom: var(--dynamic-grid-size);
-                    background-color: green;
                 }
 
                 .case-info {
@@ -107,7 +110,6 @@
 
                     .case-title {
                         height: calc(2 * var(--dynamic-grid-size));
-                        ;
                         font-family: var(--font-title);
                         font-size: var(--size-title);
                     }
@@ -124,169 +126,3 @@
         }
     }
 }
-
-/*
-
-#cases {
-    padding: 0;
-
-    .cases {
-        position: relative;
-        background-color: white;
-        height: auto;
-        color: black;
-        overflow: hidden;
-        height: calc(82 * var(--dynamic-grid-size));
-
-        .cases-title {
-            margin-top: var(--dynamic-grid-size);
-            margin-left: var(--dynamic-grid-size);
-            color: white;
-        }
-
-        .case {
-            position: absolute;
-            opacity: 0;
-            transform: translateX(100%);
-            padding: 0 var(--dynamic-grid-size);
-            width: 100%;
-
-            &.active {
-                opacity: 1;
-                transform: translateX(0);
-            }
-
-            .case-img {
-                width: calc(25 * var(--dynamic-grid-size));
-                height: calc(25 * var(--dynamic-grid-size));
-            }
-
-            .case-info {
-                width: calc(25 * var(--dynamic-grid-size));
-                height: auto;
-                font-size: var(--size-text);
-                color: black;
-                line-height: var(--dynamic-grid-size);
-
-                .case-title {
-                    font-family: var(--font-title);
-                    font-size: var(--size-text);
-                    margin: var(--dynamic-grid-size) 0;
-                }
-
-                .case-lottie {
-                    position: absolute;
-                    top: 0;
-                    height: calc(15 * var(--dynamic-grid-size));
-                    width: 100%;
-                }
-            }
-        }
-
-        .nav-arrow {
-            position: absolute;
-            top: var(--dynamic-grid-size);
-            right: var(--dynamic-grid-size);
-            border: none;
-            height: calc(2 * var(--dynamic-grid-size));
-            display: flex;
-            align-items: center;
-            fill: rgb(88, 87, 87);
-            cursor: pointer;
-            transition: all 0.3s ease-in-out;
-
-            &.prev {
-                right: calc(4 * var(--dynamic-grid-size));
-
-                &:hover {
-                    fill: var(--color-header-right);
-                }
-            }
-
-            &.next {
-                right: var(--dynamic-grid-size);
-
-                &:hover {
-                    fill: var(--color-header-right);
-                }
-
-            }
-        }
-
-        .progress-container {
-            position: absolute;
-            bottom: 0px;
-            left: 0;
-            width: 100%;
-            height: var(--dynamic-grid-size);
-            z-index: 19;
-
-            .progress-bar {
-                height: 100%;
-                background: linear-gradient(90deg, var(--color-header-left), var(--color-header-right));
-                transition: width 0.3s ease;
-                border-radius: 0 2px 2px 0;
-            }
-        }
-
-    }
-
-}
-
-@media (min-width:1200px) {
-    #cases {
-
-        .cases {
-            height: calc(20 * var(--dynamic-grid-size));
-
-            .case {
-
-
-                .case-img {
-                    position: absolute;
-                    left: calc(34 * var(--dynamic-grid-size));
-                    width: calc(15 * var(--dynamic-grid-size));
-                    height: calc(15 * var(--dynamic-grid-size));
-                }
-
-                .case-info {
-                    position: absolute;
-                    width: calc(32 * var(--dynamic-grid-size));
-
-                    .case-title {
-                        margin: 0;
-                        margin-bottom: var(--dynamic-grid-size);
-                    }
-                }
-            }
-
-        }
-    }
-}
-
-
-@media (min-width:1600px) {
-    #cases {
-        padding: calc(4 * var(--dynamic-grid-size)) calc(6 * var(--dynamic-grid-size)) 0 calc(6 * var(--dynamic-grid-size));
-
-        .cases {
-            height: calc(24 * var(--dynamic-grid-size));
-
-            .case {
-                .case-img {
-                    position: absolute;
-                    left: calc(28 * var(--dynamic-grid-size));
-                    width: calc(19 * var(--dynamic-grid-size));
-                    height: calc(19 * var(--dynamic-grid-size));
-                }
-
-                .case-info {
-                    position: absolute;
-                    width: calc(26 * var(--dynamic-grid-size));
-
-                }
-            }
-        }
-    }
-}
-*/

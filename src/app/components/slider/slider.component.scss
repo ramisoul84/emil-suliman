@@ -3,7 +3,7 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  
+
   .slider-wrapper {
     position: relative;
     width: 100%;
@@ -26,10 +26,15 @@
     transform: translateX(0);
   }
 
+  .lottie-animation {
+    padding: 24px;
+    background-color: rgb(39, 38, 38);
+  }
+
   .slide-image {
     width: 100%;
     aspect-ratio: 1/1;
-    object-fit:fill;
+    object-fit: fill;
     object-position: center;
   }
 

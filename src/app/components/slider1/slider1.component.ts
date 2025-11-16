@@ -5,14 +5,18 @@ import {
   OnChanges, SimpleChanges
 } from '@angular/core';
 import { gsap } from 'gsap';
-import { AnimationItem } from 'lottie-web';
 import { AnimationOptions, LottieComponent } from 'ngx-lottie';
+import { AnimationItem } from 'lottie-web';
 
 export interface Slide {
   id: number;
-  src?: string;
-  options?: AnimationOptions,
-  bg?:string
+  src: string;
+  alt?: string;
+  title?: string;
+  description?: string;
+  overlayColor?: string;
+  type?: 'image' | 'lottie';
+  lottieOptions?: AnimationOptions;
 }
 
 export interface SliderConfig {
@@ -27,41 +31,51 @@ export interface SliderConfig {
   height?: string;
   overlay?: boolean;
   swipeThreshold?: number;
+  lottieWidth?: string;
+  lottieHeight?: string;
 }
 
 @Component({
-  selector: 'app-slider',
+  selector: 'app-slider1',
   imports: [CommonModule, LottieComponent],
-  templateUrl: './slider.component.html',
-  styleUrl: './slider.component.scss'
+  templateUrl: './slider1.component.html',
+  styleUrl: './slider1.component.scss'
 })
 export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
   @Input() slides: Slide[] = [];
   @Input() config: SliderConfig = {};
   @Output() slideChange = new EventEmitter<number>();
   @Output() slideClick = new EventEmitter<Slide>();
+  @Output() lottieLoaded = new EventEmitter<{index: number, animation: AnimationItem}>();
 
   @ViewChildren('slide') slideElements!: QueryList<ElementRef>;
   @ViewChildren('dot') dotElements!: QueryList<ElementRef>;
+  @ViewChildren(LottieComponent) lottieComponents!: QueryList<LottieComponent>;
 
   currentSlide = 0;
   isAnimating = false;
   autoPlayInterval: any;
   isHovering = false;
+  progress = 0;
+  progressInterval: any;
 
-  birdsOptions: AnimationOptions = {
-    path: '/assets/animations/birds.json',
-    autoplay: true,
-    loop: true
+  // Store Lottie animation instances
+  private lottieAnimations: Map<number, AnimationItem> = new Map();
+
+  defaultLottieOptions: AnimationOptions = {
+    autoplay: false,
+    loop: true,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice'
+    }
   };
 
-  // Touch swipe properties
   private touchStartX = 0;
   private touchStartY = 0;
   private touchEndX = 0;
   private touchEndY = 0;
   private isSwiping = false;
-  private swipeThreshold = 50; // Minimum distance for swipe to trigger slide change
+  private swipeThreshold = 50;
 
   private defaultConfig: SliderConfig = {
     autoPlay: true,
@@ -74,7 +88,9 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
     infinite: true,
     height: '500px',
     overlay: true,
-    swipeThreshold: 50
+    swipeThreshold: 50,
+    lottieWidth: '100%',
+    lottieHeight: '100%'
   };
 
   get effectiveConfig(): SliderConfig {
@@ -86,6 +102,7 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
   ngOnInit() {
     this.startAutoPlay();
     this.swipeThreshold = this.effectiveConfig.swipeThreshold || 50;
+    this.initializeSlides();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -106,20 +123,46 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
     this.setupTouchEvents();
   }
 
-  setupTouchEvents() {
-    // Add touch events to the entire document for vertical scrolling
-    document.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
-    document.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: false });
-    document.addEventListener('touchend', this.handleTouchEnd.bind(this));
+  private initializeSlides() {
+    this.slides = this.slides.map(slide => {
+      if (!slide.type) {
+        slide.type = this.detectContentType(slide.src);
+      }
+      
+      if (slide.type === 'lottie' && !slide.lottieOptions) {
+        slide.lottieOptions = {
+          ...this.defaultLottieOptions,
+          path: slide.src
+        };
+      }
+      
+      return slide;
+    });
   }
 
-  handleTouchStart(event: TouchEvent) {
+  private detectContentType(src: string): 'image' | 'lottie' {
+    const extension = src.split('.').pop()?.toLowerCase();
+    const lottieExtensions = ['json', 'lottie'];
+    return lottieExtensions.includes(extension || '') ? 'lottie' : 'image';
+  }
+
+  // Touch Events
+  private setupTouchEvents() {
+    const sliderElement = this.elementRef.nativeElement.querySelector('.image-slider');
+    if (sliderElement) {
+      sliderElement.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
+      sliderElement.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: false });
+      sliderElement.addEventListener('touchend', this.handleTouchEnd.bind(this));
+    }
+  }
+
+  private handleTouchStart(event: TouchEvent) {
     this.touchStartX = event.touches[0].clientX;
     this.touchStartY = event.touches[0].clientY;
     this.isSwiping = false;
   }
 
-  handleTouchMove(event: TouchEvent) {
+  private handleTouchMove(event: TouchEvent) {
     if (!this.touchStartX || !this.touchStartY) return;
 
     this.touchEndX = event.touches[0].clientX;
@@ -128,39 +171,28 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
     const diffX = this.touchStartX - this.touchEndX;
     const diffY = this.touchStartY - this.touchEndY;
 
-    // Determine if it's primarily a horizontal swipe
     if (Math.abs(diffX) > Math.abs(diffY)) {
-      // It's a horizontal swipe - prevent default to avoid page scroll
       event.preventDefault();
       this.isSwiping = true;
-
-      // Optional: Add visual feedback during swipe
       this.updateSlidePositionDuringSwipe(diffX);
     }
-    // Vertical swipes will naturally scroll the page without prevention
   }
 
-  handleTouchEnd() {
+  private handleTouchEnd() {
     if (!this.isSwiping) return;
 
     const diffX = this.touchStartX - this.touchEndX;
     const diffY = this.touchStartY - this.touchEndY;
 
-    // Check if it's a horizontal swipe that meets the threshold
     if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > this.swipeThreshold) {
       if (diffX > 0) {
-        // Swipe left - go to next slide
         this.nextSlide();
       } else {
-        // Swipe right - go to previous slide
         this.prevSlide();
       }
     }
 
-    // Reset swipe position
     this.resetSlidePosition();
-
-    // Reset touch coordinates
     this.touchStartX = 0;
     this.touchStartY = 0;
     this.touchEndX = 0;
@@ -168,20 +200,18 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
     this.isSwiping = false;
   }
 
-  updateSlidePositionDuringSwipe(diffX: number) {
+  private updateSlidePositionDuringSwipe(diffX: number) {
     if (this.isAnimating || this.slides.length <= 1) return;
 
     const currentSlideElement = this.slideElements.toArray()[this.currentSlide].nativeElement;
     const swipePercent = Math.min(Math.abs(diffX) / window.innerWidth, 1);
     const direction = diffX > 0 ? 1 : -1;
 
-    // Move current slide based on swipe distance
     gsap.set(currentSlideElement, {
       x: direction * swipePercent * 100 + '%',
       overwrite: true
     });
 
-    // Optional: Show next/previous slide during swipe
     if (this.effectiveConfig.infinite || (direction > 0 && this.currentSlide < this.slides.length - 1) ||
       (direction < 0 && this.currentSlide > 0)) {
       const nextIndex = direction > 0 ?
@@ -198,7 +228,7 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
     }
   }
 
-  resetSlidePosition() {
+  private resetSlidePosition() {
     if (this.isAnimating || this.slides.length <= 1) return;
 
     const currentSlideElement = this.slideElements.toArray()[this.currentSlide].nativeElement;
@@ -209,7 +239,6 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
       ease: 'power2.out'
     });
 
-    // Reset all other slides
     this.slideElements.forEach((slide, index) => {
       if (index !== this.currentSlide) {
         gsap.set(slide.nativeElement, {
@@ -220,25 +249,11 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
     });
   }
 
-  resetSlider() {
-    this.currentSlide = 0;
-    this.stopAutoPlay();
-    this.startAutoPlay();
-
-    // Reset all slides to initial state
-    if (this.slideElements) {
-      this.slideElements.forEach((slide, index) => {
-        gsap.set(slide.nativeElement, {
-          x: index === 0 ? '0%' : '100%',
-          opacity: index === 0 ? 1 : 0
-        });
-      });
-    }
-  }
-
+  // AutoPlay Methods
   startAutoPlay() {
     if (this.effectiveConfig.autoPlay && this.slides.length > 1) {
       this.stopAutoPlay();
+      this.startProgress();
       this.autoPlayInterval = setInterval(() => {
         if (!this.isHovering || !this.effectiveConfig.pauseOnHover) {
           this.nextSlide();
@@ -250,7 +265,9 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
   stopAutoPlay() {
     if (this.autoPlayInterval) {
       clearInterval(this.autoPlayInterval);
+      this.autoPlayInterval = null;
     }
+    this.stopProgress();
   }
 
   restartAutoPlay() {
@@ -258,6 +275,32 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
     this.startAutoPlay();
   }
 
+  startProgress() {
+    if (this.effectiveConfig.showProgress) {
+      this.progress = 0;
+      const interval = 50;
+      const increment = (interval / this.effectiveConfig.autoPlayInterval!) * 100;
+      
+      this.progressInterval = setInterval(() => {
+        if (!this.isHovering || !this.effectiveConfig.pauseOnHover) {
+          this.progress += increment;
+          if (this.progress >= 100) {
+            this.progress = 0;
+          }
+        }
+      }, interval);
+    }
+  }
+
+  stopProgress() {
+    if (this.progressInterval) {
+      clearInterval(this.progressInterval);
+      this.progressInterval = null;
+    }
+    this.progress = 0;
+  }
+
+  // Navigation Methods
   nextSlide() {
     if (this.isAnimating || this.slides.length <= 1) return;
 
@@ -290,16 +333,19 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
     this.isAnimating = true;
     this.stopAutoPlay();
 
+    // Handle Lottie animations
+    if (this.slides[this.currentSlide].type === 'lottie') {
+      this.pauseLottieAnimation(this.currentSlide);
+    }
+
     const currentSlideElement = this.slideElements.toArray()[this.currentSlide].nativeElement;
     const nextSlideElement = this.slideElements.toArray()[index].nativeElement;
-
     const direction = index > this.currentSlide ? 1 : -1;
 
     // Animate current slide out
     gsap.to(currentSlideElement, {
       x: direction * -100 + '%',
       opacity: 0,
-      scale: 1,
       duration: this.effectiveConfig.animationDuration,
       ease: 'power2.inOut'
     });
@@ -307,16 +353,19 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
     // Prepare and animate next slide in
     gsap.set(nextSlideElement, {
       x: direction * 100 + '%',
-      opacity: 1,
-      scale: 1.1
+      opacity: 0
     });
 
     gsap.to(nextSlideElement, {
       x: '0%',
-      scale: 1,
+      opacity: 1,
       duration: this.effectiveConfig.animationDuration,
       ease: 'power2.inOut',
       onComplete: () => {
+        if (this.slides[index].type === 'lottie') {
+          this.playLottieAnimation(index);
+        }
+
         this.currentSlide = index;
         this.isAnimating = false;
         this.slideChange.emit(this.currentSlide);
@@ -325,26 +374,16 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
       }
     });
 
-    // Animate content if present
     this.animateContent(nextSlideElement);
   }
 
+  // Animation Methods
   animateSlideIn(index: number) {
     const slideElement = this.slideElements.toArray()[index].nativeElement;
 
     gsap.fromTo(slideElement,
-      {
-        x: 100,
-        opacity: 0,
-        scale: 1
-      },
-      {
-        x: 0,
-        opacity: 1,
-        scale: 1,
-        duration: this.effectiveConfig.animationDuration,
-        ease: 'power2.out'
-      }
+      { x: 100, opacity: 0 },
+      { x: 0, opacity: 1, duration: this.effectiveConfig.animationDuration, ease: 'power2.out' }
     );
 
     this.animateContent(slideElement);
@@ -353,18 +392,16 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
   animateContent(slideElement: HTMLElement) {
     const title = slideElement.querySelector('.slide-title');
     const description = slideElement.querySelector('.slide-description');
+    const media = slideElement.querySelector('.slide-media');
 
-    if (title || description) {
-      gsap.set([title, description], { y: 30, opacity: 0 });
+    if (title || description || media) {
+      gsap.set([title, description, media], { y: 30, opacity: 0 });
 
-      gsap.to([title, description], {
-        y: 0,
-        opacity: 1,
-        duration: 0.6,
-        stagger: 0.2,
-        ease: 'power2.out',
-        delay: 0.3
-      });
+      const tl = gsap.timeline();
+      
+      tl.to(media, { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out' })
+        .to(title, { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' }, '-=0.3')
+        .to(description, { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' }, '-=0.2');
     }
   }
 
@@ -373,22 +410,50 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
       const dots = this.dotElements.toArray();
       dots.forEach((dot, index) => {
         if (index === this.currentSlide) {
-          gsap.to(dot.nativeElement, {
-            scale: 1.0,
-            duration: 0.3,
-            ease: 'back.out'
-          });
+          gsap.to(dot.nativeElement, { scale: 1.2, duration: 0.3, ease: 'back.out' });
         } else {
-          gsap.to(dot.nativeElement, {
-            scale: 1,
-            duration: 0.3,
-            ease: 'power2.out'
-          });
+          gsap.to(dot.nativeElement, { scale: 1, duration: 0.3, ease: 'power2.out' });
         }
       });
     }
   }
 
+  // Lottie Methods - CORRECTED
+  onLottieAnimationCreated(animation: AnimationItem, index: number) {
+    // Store the animation instance in our map
+    this.lottieAnimations.set(index, animation);
+    this.lottieLoaded.emit({ index, animation });
+    
+    // Only play if this is the current slide
+    if (index === this.currentSlide) {
+      this.playLottieAnimation(index);
+    } else {
+      this.pauseLottieAnimation(index);
+    }
+  }
+
+  playLottieAnimation(index: number) {
+    const animation = this.lottieAnimations.get(index);
+    if (animation) {
+      animation.play();
+    }
+  }
+
+  pauseLottieAnimation(index: number) {
+    const animation = this.lottieAnimations.get(index);
+    if (animation) {
+      animation.pause();
+    }
+  }
+
+  stopLottieAnimation(index: number) {
+    const animation = this.lottieAnimations.get(index);
+    if (animation) {
+      animation.stop();
+    }
+  }
+
+  // Event Handlers
   onSlideClick(slide: Slide) {
     this.slideClick.emit(slide);
   }
@@ -401,11 +466,43 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy, OnChan
     this.isHovering = false;
   }
 
+  resetSlider() {
+    // Stop all Lottie animations
+    this.lottieAnimations.forEach((animation, index) => {
+      animation.stop();
+    });
+
+    this.currentSlide = 0;
+    this.stopAutoPlay();
+    this.startAutoPlay();
+
+    if (this.slideElements) {
+      this.slideElements.forEach((slide, index) => {
+        gsap.set(slide.nativeElement, {
+          x: index === 0 ? '0%' : '100%',
+          opacity: index === 0 ? 1 : 0
+        });
+      });
+    }
+
+    if (this.slides[this.currentSlide].type === 'lottie') {
+      setTimeout(() => this.playLottieAnimation(this.currentSlide), 100);
+    }
+  }
+
   ngOnDestroy() {
     this.stopAutoPlay();
-    // Clean up touch event listeners
-    document.removeEventListener('touchstart', this.handleTouchStart.bind(this));
-    document.removeEventListener('touchmove', this.handleTouchMove.bind(this));
-    document.removeEventListener('touchend', this.handleTouchEnd.bind(this));
+    const sliderElement = this.elementRef.nativeElement.querySelector('.image-slider');
+    if (sliderElement) {
+      sliderElement.removeEventListener('touchstart', this.handleTouchStart.bind(this));
+      sliderElement.removeEventListener('touchmove', this.handleTouchMove.bind(this));
+      sliderElement.removeEventListener('touchend', this.handleTouchEnd.bind(this));
+    }
+    
+    // Clean up Lottie animations
+    this.lottieAnimations.forEach((animation) => {
+      animation.destroy();
+    });
+    this.lottieAnimations.clear();
   }
 }

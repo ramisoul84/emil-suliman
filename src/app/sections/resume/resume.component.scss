@@ -17,7 +17,7 @@
             position: -webkit-sticky;
             bottom: var(--dynamic-grid-size);
             width: calc(25 * var(--dynamic-grid-size));
-            height: calc(12 * var(--dynamic-grid-size));
+            height: calc(15 * var(--dynamic-grid-size));
             margin-top: calc(3 * var(--dynamic-grid-size));
             border: 2px solid white;
             overflow: hidden;
@@ -49,7 +49,7 @@
                 margin-top: 0;
 
                 .map {
-                    transform: scale(3);
+                    transform: scale(3.8);
                 }
             }
 
@@ -74,7 +74,7 @@
                 position: sticky;
 
                 .map {
-                    transform: scale(4);
+                    transform: scale(4.4);
                 }
             }
 

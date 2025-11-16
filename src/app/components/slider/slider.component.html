@@ -2,18 +2,18 @@
   <div class="slider-wrapper">
     <!-- Slides -->
     <div #slide *ngFor="let slide of slides; let i = index" class="slide" [class.active]="i === currentSlide"
-      (click)="onSlideClick(slide)"
-      [style.background]="slide.overlayColor || 'linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.6))'">
-     
-      <img [src]="slide.src" [alt]="slide.alt || slide.title || 'Slide ' + (i + 1)" class="slide-image" loading="lazy">
+      (click)="onSlideClick(slide)">
+      <div *ngIf="slide.options; else imageSlide">
+        <div class="lottie-animation" [style.backgroundColor]="slide.bg">
+          <ng-lottie [options]="slide.options" >
+          </ng-lottie>
+        </div>
 
-      <div class="slide-overlay" *ngIf="effectiveConfig.overlay"></div>
-
-      <!-- Content -->
-      <div class="slide-content" *ngIf="slide.title || slide.description">
-        <h3 class="slide-title" *ngIf="slide.title">{{ slide.title }}</h3>
-        <p class="slide-description" *ngIf="slide.description">{{ slide.description }}</p>
       </div>
+      <ng-template #imageSlide>
+        <img [src]="slide.src" [alt]="'Slide ' + (i + 1)" class="slide-image" loading="lazy">
+      </ng-template>
+
     </div>
   </div>
 

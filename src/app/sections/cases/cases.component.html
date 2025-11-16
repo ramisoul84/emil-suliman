@@ -16,7 +16,6 @@
     <div class="case" #slide>
       <div class="case-slider">
         <app-slider [slides]="cases[currentSlide].images" [config]="sliderConfig"></app-slider>
-        Slider {{ currentSlide + 1 }}
       </div>
       <div class="case-info">
         <div class="case-title">
@@ -31,36 +30,3 @@
     </div>
   </div>
 </section>
-
-
-<!--
-  <div class="cases">
-    <div class="title cases-title">
-      cases.
-    </div>
-    <div #slide *ngFor="let case of cases; let i = index" class="case" [class.active]="i === currentSlide">
-      <div class="case-img">
-        <app-slider [slides]="case.images" [config]="sliderConfig"></app-slider>
-      </div>
-      <div class="case-info">
-        <h2 class="case-title">{{ case.title }}</h2>
-        <p class="case-description" [innerHTML]="case.description"></p>
-      </div>
-    </div>
-
-    <button (click)="prevSlide()" aria-label="Previous slide">
-      <svg viewBox="0 0 34 42" class="nav-arrow prev">
-        <path d="M20.067 1L0 21.068L19.569 40.637l4.933-4.933L9.864 21.068L25 5.933z" />
-      </svg>
-    </button>
-
-    <button (click)="nextSlide()" aria-label="Next slide">
-      <svg viewBox="0 0 34 42" class="nav-arrow next">
-        <path d="M13.933 1L34 21.068L14.431 40.637l-4.933-4.933l14.638-14.636L9 5.933z" />
-      </svg>
-    </button>
-    <div class="progress-container">
-      <div class="progress-bar" [style.width.%]="((currentSlide + 1) / cases.length) * 100"></div>
-    </div>
-  </div>
--->

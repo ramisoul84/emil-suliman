@@ -1,19 +1,26 @@
+import { Slide } from "../../components/slider/slider.component";
+
 interface Case {
     title: string;
     description: string;
-    images: Image[];
+    images: Slide[];
 }
 
-interface Image {
-    id: number;
-    src: string;
-}
 
 export const data: Case[] = [
     {
         title: "WAHA",
         description: "In the heart of the Syrian desert, this viewing platform celebrates the hidden vitality of the landscape. Inspired by Palmyra’s beehive houses, its domed forms—built from fired mud bricks—combine natural beauty with strong thermal performance. Water and greenery create a cool refuge where travelers can pause and take in the vast horizon.</br/>A steel-and-clay canopy hovers above the terrace, blending ancient craftsmanship with modern design. It conveys authenticity and lightness. More than a viewpoint, the project stands as a symbol of resilience—a landmark reimagining the desert as a place of renewal and helping revive Syria’s tourism, culture, and hope after years of conflict<br/></br><strong>Role:</strong> Design and visualisation",
         images: [
+            {
+                id: 0,
+                options: {
+                    path: '/assets/animations/waha.json',
+                    autoplay: true,
+                    loop: true
+                },
+                bg:"#111623"
+            },
             {
                 id: 1,
                 src: 'assets/projects/1/1.jpg',
@@ -54,6 +61,15 @@ export const data: Case[] = [
         title: "THE INNER LOOP",
         description: "At EXPO 2020 Dubai, the inner loop served as the main pedestrian path that needed shading from the intense desert sun while maintaining an engaging visual identity. Originally proposed by SWA Design in Los Angeles, the concept of a flock of birds was developed and executed by our team.<br/><br/>The installation includes 3,370 aluminum birds in three sizes, distributed across ten canopies to evoke a migrating flock. Designed for shading, durability, and lightness, the birds were arranged in two layers to create dynamic, shifting patterns of shadow throughout the day.<br/><br/>The project became a distinctive feature of the EXPO site. My role included developing the bird forms, optimizing their distribution, and supervising the technical design and implementation.<br/><br/><strong>Project by:</strong> Werner Sobek AG,<br/><strong>Role:</strong> Design and visualisation",
         images: [
+            {
+                id: 0,
+                options: {
+                    path: '/assets/animations/birds.json',
+                    autoplay: true,
+                    loop: true
+                },
+                 bg:"white"
+            },
             {
                 id: 1,
                 src: 'assets/projects/3/1.jpg',
