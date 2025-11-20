@@ -2,6 +2,7 @@
     .resume {
         .resume-title {
             position: sticky;
+            position: -webkit-sticky;
             top: calc(4 * var(--dynamic-grid-size));
             z-index: 3;
         }
@@ -68,10 +69,17 @@
         .resume {
             grid-template-columns: repeat(45, var(--dynamic-grid-size));
 
+            .resume-title {
+                position: sticky;
+                top: calc(1 * var(--dynamic-grid-size));
+                z-index: 3;
+            }
+
             .map-wrapper {
                 grid-column-end: 20;
                 height: calc(14 * var(--dynamic-grid-size));
                 position: sticky;
+                  top: calc(4 * var(--dynamic-grid-size));
 
                 .map {
                     transform: scale(4.4);
@@ -82,6 +90,33 @@
                 grid-row: 4;
                 grid-column-start: 21;
                 grid-column-end: 46;
+
+            }
+        }
+    }
+
+}
+
+@media (min-width:1600px) {
+    #resume {
+
+        .resume {
+            grid-template-columns: repeat(43, var(--dynamic-grid-size));
+
+            .map-wrapper {
+                grid-column-end: 18;
+                height: calc(14 * var(--dynamic-grid-size));
+                position: sticky;
+
+                .map {
+                    transform: scale(4.4);
+                }
+            }
+
+            .timeline-wrapper {
+                grid-row: 4;
+                grid-column-start: 19;
+                grid-column-end: 44;
 
             }
         }

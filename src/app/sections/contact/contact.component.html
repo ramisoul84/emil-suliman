@@ -1,6 +1,7 @@
 <section id="contact">
     <div class="msg" *ngIf="msg">
-        {{msg}}
+        <p class="text">{{msg}}</p>
+        
     </div>
     <div class="title contact-title">contact.</div>
     <form [formGroup]="contactForm">
@@ -12,8 +13,8 @@
             <label for="">E-Mail</label>
             <input type="email" placeholder="your email*" required formControlName="email">
         </div>
-        <textarea placeholder="A short description of your project*" required formControlName="message"></textarea>
-        <button class="submit" [class.loading]="isSubmitting" (click)="sendMessage()"
+        <textarea placeholder="A short description of your project*" required formControlName="text"></textarea>
+        <button class="submit" [class.loading]="isSubmitting" (click)="submitForm()"
             [disabled]="contactForm.invalid">
             <span *ngIf="!isSubmitting">Send</span>
             <span *ngIf="isSubmitting">Sending...</span>

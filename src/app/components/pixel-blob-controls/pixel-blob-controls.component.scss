@@ -1,8 +1,190 @@
+.control-wrapper {
+  width: 100%;
+  height: calc(3 * var(--dynamic-grid-size));
+  position: relative;
+
+  .toggle-btn {
+    width: var(--dynamic-grid-size);
+    height: var(--dynamic-grid-size);
+    border: 2px solid white;
+    background-color: transparent;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    color: white;
+    font-size: var(--size-text);
+    cursor: pointer;
+    z-index: 2;
+  }
+
+  .pixelated {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: var(--size-text);
+
+    input {
+      width: var(--dynamic-grid-size);
+      height: var(--dynamic-grid-size);
+      -webkit-appearance: none;
+      appearance: none;
+      border: 2px solid white;
+      background-color: transparent;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s ease-in-out;
+
+      &:hover {
+        border-color: #6b7280;
+      }
+
+      &:checked {
+        background-color: green;
+        animation: checkAnim 0.2s ease-in-out;
+      }
+    }
+  }
+
+  .control {
+    position: absolute;
+    left: 0;
+    right: inherit;
+    height: 100%;
+
+    &:not(.expanded) {
+      right: 0;
+    }
+
+    .speed {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      left: calc(2 * var(--dynamic-grid-size));
+      bottom: 0;
+      height: var(--dynamic-grid-size);
+      width: calc(5 * var(--dynamic-grid-size));
+      font-size: var(--size-text);
+
+      #speed {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 6px;
+        background: var(--gradient-title);
+        outline: none;
+      }
+
+      #speed::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 24px;
+        height: 24px;
+        background: green;
+        border: 3px solid #fff;
+        border-radius: 0;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+    }
+
+    .wobble {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      left: calc(8 * var(--dynamic-grid-size));
+      bottom: 0;
+      height: var(--dynamic-grid-size);
+      width: calc(5 * var(--dynamic-grid-size));
+      font-size: var(--size-text);
+
+      #wobble {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 6px;
+        background: var(--gradient-title);
+        outline: none;
+      }
+
+      #wobble::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 24px;
+        height: 24px;
+        background: green;
+        border: 3px solid #fff;
+        border-radius: 0;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+    }
+
+    .intensity {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      left: calc(14 * var(--dynamic-grid-size));
+      bottom: 0;
+      height: var(--dynamic-grid-size);
+      width: calc(5 * var(--dynamic-grid-size));
+      font-size: var(--size-text);
+
+      #intensity {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 6px;
+        background: var(--gradient-title);
+        outline: none;
+      }
+
+      #intensity::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 24px;
+        height: 24px;
+        background: green;
+        border: 3px solid #fff;
+        border-radius: 0;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+    }
+
+    .randomize {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: calc(5 * var(--dynamic-grid-size));
+      height: calc(2 * var(--dynamic-grid-size));
+      cursor: pointer;
+      background-color: transparent;
+      color: white;
+      outline: none;
+      border: 2px solid white;
+      font-size: var(--size-text);
+    }
+  }
+}
+
+/*
 :host {
   display: block;
 }
 
 .controls-panel {
+  position: absolute;
   //position: fixed;
   //top: 20px;
   //right: 20px;
@@ -298,3 +480,6 @@ h3 {
     transition: none;
   }
 }
+
+
+*/

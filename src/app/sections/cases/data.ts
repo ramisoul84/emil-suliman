@@ -19,7 +19,7 @@ export const data: Case[] = [
                     autoplay: true,
                     loop: true
                 },
-                bg:"#111623"
+                bg:"white"
             },
             {
                 id: 1,

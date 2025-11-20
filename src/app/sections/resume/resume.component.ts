@@ -68,7 +68,7 @@ export class ResumeComponent implements AfterViewInit {
     this.timelineAnimation = animationItem;
     animationItem.addEventListener('data_ready', () => {
       this.timelineTotalFrames = animationItem.totalFrames;
-      console.log('Timeline animation ready. Total frames:', animationItem.totalFrames);
+      console.log('Timeline animation ready. Total frames:', animationItem.getDuration());
     });
   }
 
@@ -76,7 +76,7 @@ export class ResumeComponent implements AfterViewInit {
     this.mapAnimation = animationItem;
     animationItem.addEventListener('data_ready', () => {
       this.mapTotalFrames = animationItem.totalFrames;
-      console.log('Map animation ready. Total frames:', animationItem.totalFrames);
+      console.log('Map animation ready. Total frames:', animationItem.getDuration());
     });
   }
 
@@ -125,7 +125,7 @@ export class ResumeComponent implements AfterViewInit {
     if (progress >= 0 && progress <= 1) {
       progress = Math.max(0, Math.min(1, progress));
       const timelineTargetFrame = Math.floor(progress * this.timelineTotalFrames);
-      const mapTargetFrame = Math.floor(progress * this.mapTotalFrames);
+      const mapTargetFrame = Math.floor(progress * this.timelineTotalFrames);
       this.mapAnimation.goToAndPlay(mapTargetFrame, true);
       this.timelineAnimation.goToAndPlay(timelineTargetFrame, true);
     }

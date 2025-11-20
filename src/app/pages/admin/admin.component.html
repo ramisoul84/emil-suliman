@@ -1,7 +1,71 @@
 <div class="admin">
-      <form [formGroup]="loginForm"   *ngIf="!isLoggedin">
-      <input  id="email" formControlName="email" type="email" placeholder="Email" autocomplete="on" > 
-      <input  id="password" formControlName="password" type="password" placeholder="Password" autocomplete="off" >
-      <button class="submit" [disabled]="loginForm.invalid" (click)="onSubmit()" >LOGIN</button>
-  </form>
+  <!-- Login Form -->
+  <div class="form-wrapper" *ngIf="!(api.isAuthenticated() | async)">
+    <form [formGroup]="loginForm" class="login-form">
+      <input id="email" formControlName="email" type="email" placeholder="Admin Email" autocomplete="email"
+        [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+
+      <input id="password" formControlName="password" type="password" placeholder="Password"
+        autocomplete="current-password"
+        [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+
+      <button class="submit" [disabled]="loginForm.invalid || loading" (click)="onSubmit()">
+        {{ loading ? 'LOGGING IN...' : 'LOGIN' }}
+      </button>
+
+      <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-message">
+        Valid email is required
+      </div>
+    </form>
+  </div>
+
+
+  <!-- Admin Dashboard -->
+  <div *ngIf="api.isAuthenticated() | async" class="dashboard">
+    <div class="header">
+      <div class="total">
+        {{total}}
+      </div>
+      <button (click)="logout()" class="logout-btn">Logout</button>
+
+    </div>
+
+    <div *ngIf="loading" class="loading">Loading messages...</div>
+
+    <table class="table" *ngIf="!loading">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let message of messages" [class.unread]="message.unread"
+          [class.selected]="selectedMessage?.id === message.id" (click)="selectMessage(message)">
+          <td class="name">{{ message.name }}</td>
+          <td class="email">{{ message.email }}</td>
+          <td class="date">{{ message.time | date:'short' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <button (click)="loadPrevious()" [disabled]="offset === 0 || loading">Previous</button>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <button (click)="loadNext()" [disabled]="!hasMore || loading">Next</button>
+    </div>
+  </div>
+
+  <div class="details" *ngIf="selectedMessage">
+    <button class="close-btn" (click)="closeDetails()">×</button>
+    <strong>{{ selectedMessage.name }}</strong>
+    <span class="email">&lt;{{ selectedMessage.email }}&gt;</span>
+    <div class="message-time">{{ selectedMessage.time | date:'medium' }}</div>
+    <div class="message-text">
+      <p>{{ selectedMessage.text }}</p>
+    </div>
+
+  </div>
 </div>

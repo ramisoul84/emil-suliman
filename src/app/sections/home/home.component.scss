@@ -13,7 +13,7 @@
 
     .control{
         position: absolute;
-        top: calc(6 * var(--dynamic-grid-size));
-        right: 0;
+        bottom: var(--dynamic-grid-size);
+        width: 100%;
     }
 }

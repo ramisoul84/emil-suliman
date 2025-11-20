@@ -15,7 +15,8 @@
         width: calc(25 * var(--dynamic-grid-size));
         height: calc(25 * var(--dynamic-grid-size));
         position: relative;
-        .about-video{
+
+        .about-video {
             position: absolute;
             top: 0;
             left: 0;
@@ -151,7 +152,7 @@
             margin: 0;
             flex-direction: row;
 
-            .about-btn{
+            .about-btn {
                 width: calc(13 * var(--dynamic-grid-size));
             }
         }
@@ -165,6 +166,64 @@
 
             .about-info-text {
                 width: calc(22 * var(--dynamic-grid-size));
+            }
+
+            .video-wrapper {
+                width: calc(7 * var(--dynamic-grid-size));
+            }
+        }
+
+    }
+}
+
+
+@media (min-width:1600px) {
+    #about {
+        display: grid;
+        grid-template-columns: repeat(43, var(--dynamic-grid-size));
+        grid-template-rows: repeat(24, var(--dynamic-grid-size));
+
+        .image-wrapper {
+            grid-column-start: 1;
+            grid-column-end: 16;
+            grid-row-start: 1;
+            grid-row-end: 16;
+            height: 100%;
+        }
+
+        .name {
+            grid-column-start: 17;
+            grid-column-end: 44;
+            grid-row-start: 1;
+            grid-row-end: 1;
+            justify-content: flex-start;
+            padding-left: var(--dynamic-grid-size);
+        }
+
+        .about-btns {
+            grid-column-start: 1;
+            grid-column-end: 16;
+            grid-row-start: 17;
+            grid-row-end: 25;
+            margin: 0;
+            flex-direction: column;
+            gap: calc(1 * var(--dynamic-grid-size));
+
+            .about-btn {
+                width: calc(15 * var(--dynamic-grid-size));
+                height: calc(2 * var(--dynamic-grid-size));
+            }
+        }
+
+        .about-info {
+            grid-column-start: 17;
+            grid-column-end: 44;
+            grid-row-start: 4;
+            grid-row-end: 25;
+            position: relative;
+
+            .about-info-text {
+                width: calc(20 * var(--dynamic-grid-size));
             }
 
             .video-wrapper {

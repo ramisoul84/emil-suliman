@@ -2,14 +2,26 @@
     position: relative;
 
     .msg {
-        position: absolute;
-        left: calc(9 * var(--dynamic-grid-size));
-        right: 0;
+        position: fixed;
+        top: calc(2 * var(--dynamic-grid-size));
         height: calc(2 * var(--dynamic-grid-size));
+        width: 100%;
+        left: 0;
+        right: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: rgba(9, 109, 26, 0.24);
+
+        .text {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: calc(25 * var(--dynamic-grid-size));
+            background-color: green;
+            color: black;
+            border: 2px solid white;
+        }
     }
 
     form {
@@ -151,6 +163,11 @@
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
