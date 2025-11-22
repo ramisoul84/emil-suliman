@@ -69,12 +69,16 @@
 
       .error-message {
         display: flex;
-        align-items: center;
+        flex-direction: column;
         justify-content: center;
         width: calc(13 * var(--dynamic-grid-size));
         height: calc(2 * var(--dynamic-grid-size));
         border: 1px solid white;
         background-color: #e74d3c62;
+        p{
+          line-height: var(--dynamic-grid-size);
+          background-color: red;
+        }
       }
     }
   }
@@ -224,6 +228,16 @@
       cursor: pointer;
       font-size: 24px;
       border: 2px solid black;
+    }
+
+    .delete-btn {
+      margin-top: var(--dynamic-grid-size);
+      height: calc(2 * var(--dynamic-grid-size));
+      width: calc(8 * var(--dynamic-grid-size));
+      outline: none;
+      border: none;
+      background-color: rgba(255, 0, 0, 0.466);
+      cursor: pointer;
     }
 
     .message-text {

@@ -12,10 +12,16 @@
       <button class="submit" [disabled]="loginForm.invalid || loading" (click)="onSubmit()">
         {{ loading ? 'LOGGING IN...' : 'LOGIN' }}
       </button>
-
-      <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-message">
-        Valid email is required
+      <div *ngIf="errMsg" class="error-message">
+        {{errMsg}}
       </div>
+      <!--
+            <div *ngIf="loginForm.invalid" class="error-message">
+        <p *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">Valid email is required</p>
+        <p *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"> Pass</p>
+      </div>
+      -->
+
     </form>
   </div>
 
@@ -41,7 +47,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let message of messages" [class.unread]="message.unread"
+        <tr *ngFor="let message of messages" [class.unread]="!message.unread"
           [class.selected]="selectedMessage?.id === message.id" (click)="selectMessage(message)">
           <td class="name">{{ message.name }}</td>
           <td class="email">{{ message.email }}</td>
@@ -51,7 +57,7 @@
     </table>
 
     <!-- Pagination -->
-    <div class="pagination">
+    <div class="pagination" *ngIf="totalPages > 1">
       <button (click)="loadPrevious()" [disabled]="offset === 0 || loading">Previous</button>
       <span>Page {{ currentPage }} of {{ totalPages }}</span>
       <button (click)="loadNext()" [disabled]="!hasMore || loading">Next</button>
@@ -66,6 +72,6 @@
     <div class="message-text">
       <p>{{ selectedMessage.text }}</p>
     </div>
-
+    <button class="delete-btn" (click)="deleteMessage(selectedMessage.id)">Delete</button>
   </div>
 </div>

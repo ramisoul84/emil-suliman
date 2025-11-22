@@ -9,22 +9,33 @@
         aria-label="Enable pixelated effect" />
       <label for="">pixelated</label>
     </div>
-    <div class="speed">
-      <input type="range" id="speed" [value]="params().speed" min="0.20" max="1.50" step="0.05"
+    <div class="range-group speed">
+      <input class="range" type="range" id="speed" [value]="params().speed" min="0.20" max="1.50" step="0.05"
         (input)="onSpeedChange($event)" aria-label="Animation speed" />
     </div>
-    <div class="wobble">
-      <input type="range" id="wobble" [value]="params().wobble" min="0.50" max="2.00" step="0.01"
+    <div class="range-group wobble">
+      <input class="range" type="range" id="wobble" [value]="params().wobble" min="0.50" max="2.00" step="0.01"
         (input)="onWobbleChange($event)" aria-label="Wobble amount" />
     </div>
-    <div class="intensity">
-      <input type="range" id="intensity" [value]="params().intensity" min="0.50" max="2.00" step="0.01"
+    <div class="range-group intensity">
+      <input class="range" type="range" id="intensity" [value]="params().intensity" min="0.50" max="2.00" step="0.01"
         (input)="onIntensityChange($event)" aria-label="Blob intensity" />
     </div>
+    <div class="range-group radius">
+      <input class="range" type="range" id="radius" [value]="params().radius" min="0.10" max="0.20" step="0.01"
+        (input)="onRadiusChange($event)" aria-label="Blob radius" />
+    </div>
+    <div (click)="randomize()" class="control-btn randomize">
+      R
+    </div>
+    <div  (click)="togglePause()" class="control-btn pause">
+      P
+    </div>
 
-    <button (click)="randomize()" class="randomize">
-      Randomize
-    </button>
+      <div  (click)="reset()" class="control-btn reset">
+      r
+    </div>
+
   </div>
   }
 </div>

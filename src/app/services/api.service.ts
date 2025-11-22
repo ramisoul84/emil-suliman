@@ -1,11 +1,11 @@
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, catchError, Observable, retry, tap, timeout } from "rxjs";
+import { BehaviorSubject,  Observable,  tap, } from "rxjs";
 import { List, Message, MessageRequest } from "../models/message";
 
 @Injectable()
 export class ApiService {
-    private readonly apiUrl = 'https://ramisuliman.ru/api/emil';
+    private readonly apiUrl = 'https://ramisuliman.ru/api/emil' //'http://localhost:8080/api/v1';
     private readonly tokenKey = 'access_token';
     private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
 
@@ -28,7 +28,7 @@ export class ApiService {
     }
 
     markMessageAsRead(id: string): Observable<void> {
-        return this.http.put<void>(`${this.apiUrl}/message/${id}`,{}, { headers: this.getHeaders() })
+        return this.http.put<void>(`${this.apiUrl}/message/${id}`, {}, { headers: this.getHeaders() })
     }
 
     deleteMessage(id: string): Observable<void> {
@@ -42,7 +42,6 @@ export class ApiService {
         ).pipe(
             tap(response => {
                 if (response.access_token) {
-                    console.log("LOGIN SERVICE TRUE")
                     this.setToken(response.access_token);
                     this.isAuthenticatedSubject.next(true);
                 }

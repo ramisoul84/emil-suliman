@@ -14,7 +14,8 @@ import { Subscription } from 'rxjs';
 })
 export class AdminComponent implements OnInit, OnDestroy {
   loginForm: FormGroup;
-   selectedMessage: Message | null = null;
+  selectedMessage: Message | null = null;
+  errMsg: string = ""
 
   isLoggedin = true
   loading: boolean = false;
@@ -63,14 +64,16 @@ export class AdminComponent implements OnInit, OnDestroy {
 
       this.api.login(email, password).subscribe({
         next: () => {
-           console.log("login success")
           this.loading = false;
           this.loadMessages();
         },
         error: (error) => {
+          this.errMsg = "Invalid Credentials"
+          setTimeout(() => {
+            this.errMsg = ""
+          }, 1000)
           this.loading = false;
-          console.error('Login failed:', error);
-          // Show error message to user
+
         }
       });
     }
@@ -87,7 +90,7 @@ export class AdminComponent implements OnInit, OnDestroy {
       next: (response) => {
         this.messages = response.messages;
         this.total = response.total;
-        this.totalPages =Math.ceil(response.total / this.limit) 
+        this.totalPages = Math.ceil(response.total / this.limit)
         this.hasMore = (this.offset + this.limit) < this.total;
         this.loading = false;
       },
@@ -114,28 +117,29 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
 
   markAsRead(id: string) {
-    this.api.markMessageAsRead(id).subscribe({
-      next:()=>{console.log("updated")}
-    })
+    this.api.markMessageAsRead(id).subscribe()
   }
 
   deleteMessage(id: string) {
+    this.api.deleteMessage(id).subscribe({
+      next: () => {
+        this.selectedMessage = null;
+        this.loadMessages()
+      }
+    })
 
   }
 
-  openMessage(){
-    
-  }
-
-    selectMessage(message: Message) {
+  selectMessage(message: Message) {
     this.selectedMessage = message;
-    // Auto-mark as read when selected
+
     if (message.unread) {
       this.markAsRead(message.id);
     }
   }
 
-    closeDetails() {
+  closeDetails() {
     this.selectedMessage = null;
+    this.loadMessages();
   }
 }
