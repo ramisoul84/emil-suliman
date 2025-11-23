@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../components/header/header.component';
 import { HomeComponent } from "../../sections/home/home.component";
@@ -10,6 +10,7 @@ import { ContactComponent } from "../../sections/contact/contact.component";
 import { FooterComponent } from "../../components/footer/footer.component";
 import { BlurService } from '../../services/blur.service';
 import { ResumeComponent } from "../../sections/resume/resume.component";
+import { AnalyticsService } from '../../services/analytics.service';
 
 @Component({
   selector: 'app-main',
@@ -23,24 +24,18 @@ import { ResumeComponent } from "../../sections/resume/resume.component";
     ContactComponent,
     FooterComponent,
     ResumeComponent
-],
+  ],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss'
 })
-export class MainComponent {
+export class MainComponent implements OnInit {
   isBlur: boolean = false;
 
-  constructor(private blurService: BlurService) {
+  constructor(private blurService: BlurService, private analytics: AnalyticsService) {
     this.blurService.blurState$.subscribe(data => this.isBlur = data)
   }
-}
 
-/*
-    HomeComponent,
-    AboutComponent,
-    TimelineComponent,
-    CasesComponent,
-    SolidarityComponent,
-    ContactComponent,
-    FooterComponent
-*/
+  ngOnInit(): void {
+    this.analytics.trackVisit();
+  }
+}

@@ -5,6 +5,7 @@ export interface Message {
     text: string;
     time: Date;
     unread: boolean;
+    city: string;
     country: string;
 }
 

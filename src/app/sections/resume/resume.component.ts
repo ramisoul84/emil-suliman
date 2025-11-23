@@ -68,7 +68,6 @@ export class ResumeComponent implements AfterViewInit {
     this.timelineAnimation = animationItem;
     animationItem.addEventListener('data_ready', () => {
       this.timelineTotalFrames = animationItem.totalFrames;
-      console.log('Timeline animation ready. Total frames:', animationItem.getDuration());
     });
   }
 
@@ -76,7 +75,6 @@ export class ResumeComponent implements AfterViewInit {
     this.mapAnimation = animationItem;
     animationItem.addEventListener('data_ready', () => {
       this.mapTotalFrames = animationItem.totalFrames;
-      console.log('Map animation ready. Total frames:', animationItem.getDuration());
     });
   }
 
@@ -88,9 +86,6 @@ export class ResumeComponent implements AfterViewInit {
 
         const sectionTop = rect.top + window.pageYOffset;
         const sectionHeight = rect.height;
-
-        console.log('Section dimensions calculated:', { sectionTop, sectionHeight });
-
         this.setupScrollListener(sectionTop, sectionHeight);
       }
     }, 300); // Small delay to ensure DOM is fully rendered

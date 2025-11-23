@@ -9,7 +9,4 @@ import { GridService } from './services/grid.service';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'emil-suliman';
-
-  constructor(private grid: GridService) { }
 }

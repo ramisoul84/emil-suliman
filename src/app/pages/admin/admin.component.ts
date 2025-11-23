@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ApiService } from '../../services/api.service';
 import { Message } from '../../models/message';
 import { Subscription } from 'rxjs';
+import { Visitor } from '../../models/visitor';
 
 @Component({
   selector: 'app-admin',
@@ -23,6 +24,10 @@ export class AdminComponent implements OnInit, OnDestroy {
 
 
   messages: Message[] = [];
+  visitors: Visitor[] = [];
+
+  totalVisitors:number=0;
+  uniqueVisitors:number=0;
 
   // Pagination
   limit = 10;
@@ -45,6 +50,7 @@ export class AdminComponent implements OnInit, OnDestroy {
       isAuthenticated => {
         if (isAuthenticated) {
           this.loadMessages();
+          this.loadVisitors();
         }
       }
     );
@@ -57,7 +63,6 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    console.log("login")
     if (this.loginForm.valid) {
       this.loading = true;
       const { email, password } = this.loginForm.value;
@@ -141,5 +146,20 @@ export class AdminComponent implements OnInit, OnDestroy {
   closeDetails() {
     this.selectedMessage = null;
     this.loadMessages();
+  }
+
+  loadVisitors() {
+    this.loading = true;
+    this.api.getVisitors().subscribe({
+      next: (response) => {
+        this.visitors = response.visitors
+        this.totalVisitors = response.total;
+        this,this.uniqueVisitors = response.unique;
+      },
+      error: (error) => {
+        console.error('Failed to load visitors:', error);
+
+      }
+    });
   }
 }

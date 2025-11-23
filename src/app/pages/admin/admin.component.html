@@ -62,13 +62,30 @@
       <span>Page {{ currentPage }} of {{ totalPages }}</span>
       <button (click)="loadNext()" [disabled]="!hasMore || loading">Next</button>
     </div>
+
+
+    <table>
+      <p>[{{totalVisitors}}] - [{{uniqueVisitors}}]</p>
+      <tbody>
+        <tr *ngFor="let visitor of visitors">
+          <td class="name">{{ visitor.ip }}</td>
+          <td class="email">{{ visitor.user_agent }}</td>
+          <td class="name">{{ visitor.city }}</td>
+          <td class="email">{{ visitor.country }}</td>
+          <td class="date">{{ visitor.time | date:'short' }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
+
+
 
   <div class="details" *ngIf="selectedMessage">
     <button class="close-btn" (click)="closeDetails()">×</button>
     <strong>{{ selectedMessage.name }}</strong>
-    <span class="email">&lt;{{ selectedMessage.email }}&gt;</span>
+    <span class="email"> &lt; {{ selectedMessage.email }} &gt;</span>
     <div class="message-time">{{ selectedMessage.time | date:'medium' }}</div>
+    <div>{{selectedMessage.city}} [ {{selectedMessage.country}} ]</div>
     <div class="message-text">
       <p>{{ selectedMessage.text }}</p>
     </div>
