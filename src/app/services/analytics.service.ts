@@ -33,7 +33,7 @@ export class AnalyticsService {
     }
 
     private sendTrackRequest(): void {
-        this.http.get('http://localhost:8080/api/v1/analytics/track')
+        this.http.get('https://ramisuliman.ru/api/emil/analytics/track')
             .subscribe({
                 next: () => console.log('📊 Tracked visit'),
                 error: () => console.log('⚠️ Analytics offline')

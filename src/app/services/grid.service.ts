@@ -2,9 +2,9 @@ import { Injectable, NgZone } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 
 const breakpoints = [
-    { minWidth: 1580, gridCount: 57 },
-    { minWidth: 1180, gridCount: 47 },
-    { minWidth: 556, gridCount: 37 },
+    { minWidth: 1560, gridCount: 57 },
+    { minWidth: 1160, gridCount: 47 },
+    { minWidth: 536, gridCount: 37 },
     { minWidth: 0, gridCount: 27 }
 ];
 

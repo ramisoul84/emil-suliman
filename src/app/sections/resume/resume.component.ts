@@ -60,7 +60,7 @@ export class ResumeComponent implements AfterViewInit {
       this.mapHeight = this.gridService.getMaxHeight(8)
     } else {
       this.gridService.gridWidth$.subscribe(data => this.grid = data)
-      this.mapHeight = 10 * this.grid
+      this.mapHeight = 12 * this.grid
     }
   }
 

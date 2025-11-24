@@ -2,12 +2,11 @@ import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject,  Observable,  tap, } from "rxjs";
 import { List, Message, MessageRequest } from "../models/message";
-import { Visitor } from "@angular/compiler";
 import { Visitors } from "../models/visitor";
 
 @Injectable()
 export class ApiService {
-    private readonly apiUrl =  'http://localhost:8080/api/v1' // 'https://ramisuliman.ru/api/emil'
+    private readonly apiUrl ='https://ramisuliman.ru/api/emil' //   'http://localhost:8080/api/v1' // 'https://ramisuliman.ru/api/emil'
     private readonly tokenKey = 'access_token';
     private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
 

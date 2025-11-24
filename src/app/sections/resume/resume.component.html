@@ -4,9 +4,12 @@
     <div class="timeline-wrapper" #timelineSection>
       <ng-lottie [options]="timeLineOptions" (animationCreated)="onTimelineAnimationCreated($event)" />
     </div>
-    <div class="map-wrapper" [style.height.px]="mapHeight">
-      <div class="map">
-        <ng-lottie [options]="mapOptions" (animationCreated)="onMapAnimationCreated($event)" />
+    <div class="wrapper" [style.height.px]="mapHeight">
+      <div class="title desktop-title">timeline.</div>
+      <div class="map-wrapper">
+        <div class="map">
+          <ng-lottie [options]="mapOptions" (animationCreated)="onMapAnimationCreated($event)" />
+        </div>
       </div>
     </div>
   </div>

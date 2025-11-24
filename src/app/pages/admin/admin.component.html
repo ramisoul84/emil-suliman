@@ -64,18 +64,35 @@
     </div>
 
 
-    <table>
-      <p>[{{totalVisitors}}] - [{{uniqueVisitors}}]</p>
-      <tbody>
-        <tr *ngFor="let visitor of visitors">
-          <td class="name">{{ visitor.ip }}</td>
-          <td class="email">{{ visitor.user_agent }}</td>
-          <td class="name">{{ visitor.city }}</td>
-          <td class="email">{{ visitor.country }}</td>
-          <td class="date">{{ visitor.time | date:'short' }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="visitors">
+      <div class="head">
+        <div class="total">
+          TOTAL: {{totalVisitors}}
+        </div>
+        <div class="unique">
+          UNIQUE: {{uniqueVisitors}}
+        </div>
+      </div>
+      <table>
+        <thead>
+          <th>IP</th>
+          <th>OS</th>
+          <th>CITY</th>
+          <th>COUNTRY</th>
+          <th>TIME</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let visitor of visitors">
+            <td class="name">{{ visitor.ip }}</td>
+            <td class="email">{{ visitor.os }}</td>
+            <td class="name">{{ visitor.city }}</td>
+            <td class="email">{{ visitor.country }}</td>
+            <td class="date">{{ visitor.time | date:'short' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
   </div>
 
 

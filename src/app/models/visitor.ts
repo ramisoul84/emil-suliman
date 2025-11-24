@@ -1,7 +1,7 @@
 export interface Visitor {
     id: string;
     ip: string;
-    user_agent: string;
+    os: string;
     city: string;
     country: string;
     time: Date;

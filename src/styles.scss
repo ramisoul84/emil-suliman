@@ -129,7 +129,6 @@ video {
 
 @media (min-width:1600px) {
     section {
-        padding: 0 calc(6 * var(--dynamic-grid-size));
-        //padding-top: calc(1 * var(--dynamic-grid-size));
+        margin: 0 calc(7 * var(--dynamic-grid-size)) calc(4 * var(--dynamic-grid-size)) calc(7 * var(--dynamic-grid-size));
     }
 }
