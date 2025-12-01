@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AnimationItem } from 'lottie-web';
 import { AnimationOptions, LottieComponent } from 'ngx-lottie';
 import { GridService } from '../../services/grid.service';
@@ -12,9 +12,76 @@ import { debounceTime, fromEvent, Subscription, throttleTime } from 'rxjs';
   styleUrl: './resume.component.scss'
 })
 export class ResumeComponent implements AfterViewInit {
+    @ViewChild('timelineSection') timelineSection!: ElementRef;
+
+  isLoaded: boolean = false;
+  shouldLoadTimeline = false;
+  shouldLoadMap = false;
+  grid: number = 0;
+  mapHeight: number = 0;
+
+  private timelineAnimation: AnimationItem | null = null;
+  private timelineTotalFrames: number = 0;
+
+  private mapAnimation: AnimationItem | null = null;
+
+  private scrollSubscription!: Subscription;
+  private resizeSubscription!: Subscription;
+  private observer!: IntersectionObserver;
+
+  mapOptions: AnimationOptions = {
+    path: '/assets/animations/map.json',
+    autoplay: false,
+    loop: false,
+    renderer:'svg'
+  };
+
+  timeLineOptions: AnimationOptions = {
+    path: '/assets/animations/timeline.json',
+    autoplay: false,
+    loop: false,
+    renderer:'svg'
+  };
+
+  constructor(private gridService: GridService) { }
+
+  ngAfterViewInit() {
+    this.setupIntersectionObserver();
+    this.calculateTimelineDimensions();
+    this.gridService.gridWidth$.subscribe(data => this.grid = data);
+    this.calculateMapHeight();
+    
+    this.resizeSubscription = fromEvent(window, 'resize').pipe(
+      debounceTime(100)
+    ).subscribe(() => {
+      this.calculateTimelineDimensions();
+      this.calculateMapHeight();
+    });
+  }
+
+  private setupIntersectionObserver(): void {
+    this.observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          this.shouldLoadTimeline = true;
+          this.shouldLoadMap = true;
+          // Stop observing once visible
+          this.observer.unobserve(entry.target);
+        }
+      });
+    }, { 
+      threshold: 0.1,
+      rootMargin: '50px' // Start loading when 50px away from viewport
+    });
+
+    if (this.timelineSection?.nativeElement) {
+      this.observer.observe(this.timelineSection.nativeElement);
+    }
+  }
+  /*
   @ViewChild('timelineSection') timelineSection!: ElementRef;
 
-  isLoaded: boolean = true;
+  isLoaded: boolean = false;
   grid: number = 0;
   mapHeight: number = 0
 
@@ -43,7 +110,14 @@ export class ResumeComponent implements AfterViewInit {
 
   constructor(private gridService: GridService) { }
 
+  ngOnInit(): void {
+    setTimeout(()=>{
+      this.isLoaded = true
+    },500)
+  }
+
   ngAfterViewInit() {
+
     this.calculateTimelineDimensions();
     this.gridService.gridWidth$.subscribe(data => this.grid = data)
     this.calculateMapHeight()
@@ -54,6 +128,7 @@ export class ResumeComponent implements AfterViewInit {
       this.calculateMapHeight()
     });
   }
+  */
 
   private calculateMapHeight(): void {
     if (window.innerWidth >= 1200) {
@@ -74,7 +149,7 @@ export class ResumeComponent implements AfterViewInit {
   onMapAnimationCreated(animationItem: AnimationItem): void {
     this.mapAnimation = animationItem;
     animationItem.addEventListener('data_ready', () => {
-      this.mapTotalFrames = animationItem.totalFrames;
+     
     });
   }
 
@@ -114,21 +189,16 @@ export class ResumeComponent implements AfterViewInit {
     const endPlay = sectionTop + sectionHeight - (viewportHeight / 1.1) + (this.grid * 10);
     const playHeight = endPlay - startPlay
 
-
     let progress = (scrollY - startPlay) / playHeight
 
     if (progress >= 0 && progress <= 1) {
       progress = Math.max(0, Math.min(1, progress));
       const timelineTargetFrame = Math.floor(progress * this.timelineTotalFrames);
       const mapTargetFrame = Math.floor(progress * this.timelineTotalFrames);
-      this.mapAnimation.goToAndPlay(mapTargetFrame, true);
-      this.timelineAnimation.goToAndPlay(timelineTargetFrame, true);
+      this.mapAnimation.goToAndStop(mapTargetFrame, true);
+      this.timelineAnimation.goToAndStop(timelineTargetFrame, true);
     }
-
-
   }
-
-
 
   ngOnDestroy() {
     if (this.scrollSubscription) {

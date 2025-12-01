@@ -10,10 +10,10 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class SolidarityComponent {
   links = [
-    { logo: "assets/logos/sea-watch.png", link: "https://www.ramisuliman.ru/" },
-    { logo: "assets/logos/pro.png", link: "ramisuliman.ru" },
-    { logo: "assets/logos/queer.png", link: "ramisuliman.ru" },
-    { logo: "assets/logos/fridays.png", link: "ramisuliman.ru" },
+    { logo: "assets/logos/sea-watch.png", link: "https://sea-watch.org/en/donate/" },
+    { logo: "assets/logos/pro.png", link: "https://www.proasyl.de/spenden/" },
+    { logo: "assets/logos/queer.png", link: "https://queer-refugees.de/en/" },
+    { logo: "assets/logos/fridays.png", link: "https://fridaysforfuture.de/spenden/" },
   ]
 
   constructor(private sanitizer: DomSanitizer) { }

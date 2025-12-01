@@ -40,6 +40,12 @@
                 .arrow {
                     height: calc(2 * var(--dynamic-grid-size));
                     fill: gray;
+                    pointer-events: none;
+                }
+
+                .arrow-btn * {
+                    pointer-events: none;
+                    /* Disables interactions on all child elements */
                 }
             }
         }
@@ -64,7 +70,7 @@
                 }
 
                 .case-text {
-                    line-height: var(--dynamic-grid-size);
+                    line-height: calc(2 * var(--dynamic-grid-size));
                     font-size: var(--size-text);
                 }
 
@@ -86,8 +92,8 @@
     }
 }
 
-.xx{
-    width:500px;
+.xx {
+    width: 500px;
     height: 500px;
 }
 

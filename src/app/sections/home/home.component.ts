@@ -12,13 +12,14 @@ import { GridService } from '../../services/grid.service';
 export class HomeComponent {
   canvasHeight: number = 0
   homeHeight: number = 0
+  loading: boolean = true;
   constructor(private gridService: GridService) {
   }
 
   ngOnInit(): void {
-    setTimeout(()=>{
-    this.homeHeight = this.gridService.getMaxHeight(0)
-    this.canvasHeight = this.gridService.getMaxHeight(6)
+    setTimeout(() => {
+      this.homeHeight = this.gridService.getMaxHeight(0)
+      this.canvasHeight = this.gridService.getMaxHeight(6)
     })
 
   }

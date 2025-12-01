@@ -9,7 +9,7 @@
         </p>
         <div class="solidarity-links">
             <div *ngFor="let link of links" class="solidarity-link">
-                <img [src]="link.logo" alt="logo" class="logo">
+                <img [src]="link.logo" alt="logo" class="logo" loading="lazy">
                 <button class="link-btn" (click)="openLink(link.link)">Donate</button>
             </div>
         </div>

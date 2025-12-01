@@ -1,5 +1,37 @@
 <section id="resume">
-  <div class="resume" *ngIf="isLoaded">
+  <div class="resume">
+    <div class="title resume-title">timeline.</div>
+    <div class="timeline-wrapper" #timelineSection>
+      <!-- Show placeholder until animation should load -->
+      <div *ngIf="!shouldLoadTimeline" class="animation-placeholder">
+        Loading timeline...
+      </div>
+      <ng-lottie 
+        *ngIf="shouldLoadTimeline"
+        [options]="timeLineOptions" 
+        (animationCreated)="onTimelineAnimationCreated($event)" />
+    </div>
+    <div class="wrapper" [style.height.px]="mapHeight">
+      <div class="title desktop-title">timeline.</div>
+      <div class="map-wrapper">
+        <div class="map">
+          <div *ngIf="!shouldLoadMap" class="animation-placeholder">
+            Loading map...
+          </div>
+          <ng-lottie 
+            *ngIf="shouldLoadMap"
+            [options]="mapOptions" 
+            (animationCreated)="onMapAnimationCreated($event)" />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!--
+<section id="resume">
+  <div class="resume" >
     <div class="title resume-title">timeline.</div>
     <div class="timeline-wrapper" #timelineSection>
       <ng-lottie [options]="timeLineOptions" (animationCreated)="onTimelineAnimationCreated($event)" />
@@ -14,3 +46,4 @@
     </div>
   </div>
 </section>
+-->

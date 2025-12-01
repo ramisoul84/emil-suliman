@@ -8,7 +8,7 @@
         margin-bottom: var(--dynamic-grid-size);
         background: var(--gradient-title);
         font-family: var(--font-title);
-        font-size: var(--size-title);
+        font-size: var(--size-name);
     }
 
     .image-wrapper {
@@ -58,7 +58,7 @@
 
         .about-info-text {
             padding: var(--dynamic-grid-size);
-            line-height: var(--dynamic-grid-size);
+            line-height: calc(2 * var(--dynamic-grid-size));
             font-size: var(--size-text);
             color: black;
         }
@@ -69,7 +69,7 @@
     #about {
         display: grid;
         grid-template-columns: repeat(35, var(--dynamic-grid-size));
-        grid-template-rows: repeat(22, var(--dynamic-grid-size));
+        grid-template-rows: repeat(24, var(--dynamic-grid-size));
 
 
         .image-wrapper {
@@ -99,10 +99,12 @@
             grid-column-start: 1;
             grid-column-end: 36;
             grid-row-start: 13;
-            grid-row-end: 23;
+            //grid-row-end: 25;
+            grid-row-end: span 1; /* Change from fixed end to span */
+            min-height: fit-content;
             position: relative;
-
             .about-info-text {
+                line-height: var(--dynamic-grid-size);
                 width: calc(26 * var(--dynamic-grid-size));
             }
 
@@ -166,6 +168,7 @@
 
             .about-info-text {
                 width: calc(22 * var(--dynamic-grid-size));
+                line-height: var(--dynamic-grid-size);
             }
 
             .video-wrapper {
@@ -220,14 +223,18 @@
             grid-column-end: 44;
             grid-row-start: 4;
             grid-row-end: 25;
-            position: relative;
+            display: flex;
+            flex-direction: column;
 
             .about-info-text {
-                width: calc(20 * var(--dynamic-grid-size));
+                position: absolute;
+                top: calc(9 * var(--dynamic-grid-size));
+                width: calc(27 * var(--dynamic-grid-size));
             }
 
             .video-wrapper {
-                width: calc(7 * var(--dynamic-grid-size));
+                left: calc(9 * var(--dynamic-grid-size));
+                width: calc(11 * var(--dynamic-grid-size));
             }
         }
 

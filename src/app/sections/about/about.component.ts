@@ -37,7 +37,7 @@ export class AboutComponent implements AfterViewInit {
   private calculatePosition(): void {
     if (this.emilPhoto?.nativeElement) {
       const rect = this.emilPhoto.nativeElement.getBoundingClientRect();
-      this.videoTop = rect.top - 120;
+      this.videoTop = rect.bottom;
     }
   }
 

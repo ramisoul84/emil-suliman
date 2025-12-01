@@ -4,11 +4,8 @@
   </button>
   @if (isExpanded) {
   <div class="control">
-    <div class="pixelated">
-      <input type="checkbox" [checked]="params().pixelated" (change)="onPixelatedChange($event)"
-        aria-label="Enable pixelated effect" />
-      <label for="">pixelated</label>
-    </div>
+    <input class="pixelated" type="checkbox" [checked]="params().pixelated" (change)="onPixelatedChange($event)"
+      aria-label="Enable pixelated effect" />
     <div class="range-group speed">
       <input class="range" type="range" id="speed" [value]="params().speed" min="0.20" max="1.50" step="0.05"
         (input)="onSpeedChange($event)" aria-label="Animation speed" />
@@ -25,13 +22,15 @@
       <input class="range" type="range" id="radius" [value]="params().radius" min="0.10" max="0.20" step="0.01"
         (input)="onRadiusChange($event)" aria-label="Blob radius" />
     </div>
+    <div (click)="randomize()" class="control-btn randomize">
+      randomize
+    </div>
+    <div (click)="togglePause()" class="control-btn pause">
+      pause
+    </div>
     <!--
-        <div (click)="randomize()" class="control-btn randomize">
-      R
-    </div>
-    <div  (click)="togglePause()" class="control-btn pause">
-      P
-    </div>
+ 
+
       <div  (click)="reset()" class="control-btn reset">
       r
     </div>

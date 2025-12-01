@@ -3,17 +3,24 @@
     position: relative;
     margin-left: 0;
     margin-right: 0;
-    .canvas{
-        background-color: rgba(255, 99, 71, 0.308);
-    }
+
 
     .pixel-blob-container {
-        margin-bottom:var(--dynamic-grid-size);
+        margin-bottom: var(--dynamic-grid-size);
     }
 
-    .control{
+    .control {
         position: absolute;
         bottom: var(--dynamic-grid-size);
         width: 100%;
     }
+}
+
+@media (min-width:1600px) {
+    #home {
+        .control {
+            right: calc(6 * var(--dynamic-grid-size))
+        }
+    }
+
 }

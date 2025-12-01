@@ -140,8 +140,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
         x: 0,
       },
       {
-        scale: 1.8,
-        y: -0.1 * this.gridWidth,
+        scale: 2.2,
+        y: -0.2 * this.gridWidth,
         x: -0.44 * this.gridWidth,
         duration: 0.2,
         delay: 1,
@@ -156,9 +156,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
         x: 0,
       },
       {
-        scale: 1.8,
-        y: -0.1 * this.gridWidth,
-        x: 0.24 * this.gridWidth,
+        scale: 2.2,
+        y: -0.2 * this.gridWidth,
+        x: 0.44 * this.gridWidth,
         duration: 0.2,
         delay: 1,
         ease: "power2.inOut",
@@ -166,15 +166,26 @@ export class HeaderComponent implements OnInit, OnDestroy {
       });
 
     gsap.fromTo(".dot",
-      { opacity: 0, scale: 4 },
+      { opacity: 0 },
       {
-        scale: 1,
         opacity: 1,
         duration: 0.6,
         delay: 1.2,
         ease: "power2.inOut", overwrite: true
-
       });
+
+    gsap.to(".dot", {
+      keyframes: {
+        "0%": { opacity: 1 },
+        "15%": { opacity: 1 },
+        "20%": { opacity: 0 },
+        "80%": { opacity: 0 },
+        "85%": { opacity: 1 },
+        "100%": { opacity: 1 }
+      },
+      delay:1.8,
+      duration: 0.15, // total animation duration
+    });
 
     gsap.fromTo(".hamburger-menu", { zIndex: 1, opacity: 0 }, { zIndex: 11, opacity: 1, duration: 0.4, delay: 1.2, ease: "power3.inOut", overwrite: true })
   }
@@ -189,15 +200,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.checkPendingScroll();
     }, 1400)
 
-    gsap.fromTo(".dot", { scale: 4, opacity: 1 }, {
+    gsap.fromTo(".dot", { opacity: 1 }, {
       opacity: 0,
-      scale: 8,
       duration: 0,
       overwrite: true
     });
     gsap.fromTo(".letter.e", {
-      scale: 1.8,
-      y: -0.1 * this.gridWidth,
+      scale: 2.8,
+      y: -0.2 * this.gridWidth,
       x: -0.44 * this.gridWidth,
     }, {
       scale: 1,
@@ -208,9 +218,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
 
     gsap.fromTo(".letter.s", {
-      scale: 1.8,
-      y: -0.1 * this.gridWidth,
-      x: 0.24 * this.gridWidth,
+      scale: 2.8,
+      y: -0.2 * this.gridWidth,
+      x: 0.44 * this.gridWidth,
     },
       {
         scale: 1,

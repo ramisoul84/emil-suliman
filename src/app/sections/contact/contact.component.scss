@@ -30,8 +30,9 @@
         gap: var(--dynamic-grid-size);
 
         .input-group {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: calc(5 * var(--dynamic-grid-size))  1fr;
+            align-items: center;
 
             label {
                 line-height: var(--dynamic-grid-size);
@@ -41,6 +42,7 @@
 
             input {
                 height: calc(2 * var(--dynamic-grid-size));
+                width: 100%;
                 border: 2px solid white;
                 outline: none;
                 background-color: transparent;
@@ -49,10 +51,10 @@
                 color: white;
                 border-radius: 0;
 
-                &:hover {
-                    background: #226b2238;
+                &:focus {
+                    background: var(--color-bg-bottom);
                     color: var(--color-header-right);
-                    box-shadow: 6px 6px 1px var(--color-header-right);
+                    box-shadow: 8px 8px 1px var(--color-header-right);
                 }
 
             }
@@ -69,10 +71,10 @@
             padding: var(--dynamic-grid-size);
             color: white;
 
-            &:hover {
-                background: #226b2238;
+            &:focus {
+                background: var(--color-bg-bottom);
                 color: var(--color-header-right);
-                box-shadow: 6px 6px 1px var(--color-header-right);
+                box-shadow: 8px 8px 1px var(--color-header-right);
             }
         }
 
@@ -137,7 +139,7 @@
             height: calc(2 * var(--dynamic-grid-size));
 
             .icon {
-                padding: 4px;
+                padding: 8px;
                 border: 2px solid #fff;
                 fill: #fff;
                 transition: all 0.6s ease;

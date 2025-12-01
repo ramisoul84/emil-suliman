@@ -4,47 +4,43 @@
   position: relative;
 
   .toggle-btn {
-    width: var(--dynamic-grid-size);
-    height: var(--dynamic-grid-size);
+    width: calc(3 * var(--dynamic-grid-size));
+    height: calc(3 * var(--dynamic-grid-size));
     border: 2px solid white;
     background-color: transparent;
     position: absolute;
-    left: 0;
+    right: var(--dynamic-grid-size);
     bottom: 0;
     color: white;
-    font-size: var(--size-text);
+    font-size: 1.2rem;
     cursor: pointer;
     z-index: 2;
+
+    &:hover {
+      box-shadow: 4px 4px 1px var(--color-header-right);
+    }
   }
 
   .pixelated {
-    display: flex;
-    align-items: center;
-    gap: 6px;
     position: absolute;
-    left: 0;
-    top: 0;
-    font-size: var(--size-text);
+    right: var(--dynamic-grid-size);
+    top: calc(-4 * var(--dynamic-grid-size));
+    width: calc(3 * var(--dynamic-grid-size));
+    height: calc(3 * var(--dynamic-grid-size));
+    -webkit-appearance: none;
+    appearance: none;
+    border: 2px solid white;
+    background-color: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
 
-    input {
-      width: var(--dynamic-grid-size);
-      height: var(--dynamic-grid-size);
-      -webkit-appearance: none;
-      appearance: none;
-      border: 2px solid white;
-      background-color: transparent;
-      cursor: pointer;
-      position: relative;
-      transition: all 0.2s ease-in-out;
+    &:hover {
+      border-color: #6b7280;
+    }
 
-      &:hover {
-        border-color: #6b7280;
-      }
-
-      &:checked {
-        background-color: green;
-        animation: checkAnim 0.2s ease-in-out;
-      }
+    &:checked {
+      background-color: rgba(0, 128, 0);
+      animation: checkAnim 0.2s ease-in-out;
     }
   }
 
@@ -73,42 +69,45 @@
         -webkit-appearance: none;
         appearance: none;
         width: 100%;
-        height: 6px;
-        background: var(--gradient-title);
+        height: 2px;
+        background-color: white;
         outline: none;
+
+        &:hover {
+          background-color: var(--color-header-right);
+        }
 
         &::-webkit-slider-thumb {
           -webkit-appearance: none;
           appearance: none;
           width: var(--dynamic-grid-size);
           height: var(--dynamic-grid-size);
-          background: green;
-          border: 1px solid #fff;
+          border: 2px solid #fff;
           border-radius: 0;
           box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
           cursor: pointer;
           transition: all 0.2s ease;
+          background-color: var(--color-bg-top)
         }
       }
-
-
-
     }
 
     .speed {
-      left: calc(3 * var(--dynamic-grid-size));
+      top: 0;
+      right: calc(14 * var(--dynamic-grid-size));
     }
 
     .wobble {
-      left: calc(9 * var(--dynamic-grid-size));
+      right: calc(14 * var(--dynamic-grid-size));
     }
 
     .intensity {
-      left: calc(15 * var(--dynamic-grid-size));
+      right: calc(20 * var(--dynamic-grid-size));
     }
 
     .radius {
-      left: calc(21 * var(--dynamic-grid-size));
+      top: 0;
+      right: calc(20 * var(--dynamic-grid-size));
     }
 
     .control-btn {
@@ -116,23 +115,28 @@
       align-items: center;
       justify-content: center;
       position: absolute;
-      top: 0;
-      width: var(--dynamic-grid-size);
+      width: calc(6 * var(--dynamic-grid-size));
       height: var(--dynamic-grid-size);
       cursor: pointer;
       background-color: transparent;
       color: white;
       outline: none;
       border: 2px solid white;
-      font-size: var(--size-text);
+      font-size: calc(0.7 * var(--dynamic-grid-size));
+      font-family: var(--font-title);
+
+      &:hover {
+        box-shadow: 4px 4px 1px var(--color-header-right);
+      }
     }
 
     .randomize {
-      right: 0;
+      right: calc(6 * var(--dynamic-grid-size));
     }
 
     .pause {
-      right: calc(2 * var(--dynamic-grid-size));
+      right: calc(6 * var(--dynamic-grid-size));
+      bottom: 0;
     }
 
     .reset {

@@ -23,19 +23,19 @@ export const data: Case[] = [
             },
             {
                 id: 1,
-                src: 'assets/projects/1/1.jpg',
+                src: 'assets/projects/waha/1.jpg',
             },
             {
                 id: 2,
-                src: 'assets/projects/1/2.jpg',
+                src: 'assets/projects/waha/2.jpg',
             },
             {
                 id: 3,
-                src: 'assets/projects/1/3.jpg',
+                src: 'assets/projects/waha/3.jpg',
             },
             {
                 id: 4,
-                src: 'assets/projects/1/4.jpg',
+                src: 'assets/projects/waha/4.jpg',
             }
         ]
     },
@@ -45,15 +45,15 @@ export const data: Case[] = [
         images: [
             {
                 id: 1,
-                src: 'assets/projects/2/1.jpg',
+                src: 'assets/projects/swsg/1.jpg',
             },
             {
                 id: 2,
-                src: 'assets/projects/2/2.jpg',
+                src: 'assets/projects/swsg/2.jpg',
             },
             {
                 id: 3,
-                src: 'assets/projects/2/3.jpg',
+                src: 'assets/projects/swsg/3.jpg',
             }
         ]
     },
@@ -72,19 +72,19 @@ export const data: Case[] = [
             },
             {
                 id: 1,
-                src: 'assets/projects/3/1.jpg',
+                src: 'assets/projects/loop/1.jpg',
             },
             {
                 id: 2,
-                src: 'assets/projects/3/2.jpg',
+                src: 'assets/projects/loop/2.jpg',
             },
             {
                 id: 3,
-                src: 'assets/projects/3/3.jpg',
+                src: 'assets/projects/loop/3.jpg',
             },
             {
                 id: 4,
-                src: 'assets/projects/3/4.jpg',
+                src: 'assets/projects/loop/4.jpg',
             }
         ]
     },
@@ -94,11 +94,11 @@ export const data: Case[] = [
         images: [
             {
                 id: 1,
-                src: 'assets/projects/4/1.jpg',
+                src: 'assets/projects/twin/1.jpg',
             },
             {
                 id: 2,
-                src: 'assets/projects/4/2.jpg',
+                src: 'assets/projects/twin/2.jpg',
             }
         ]
     },
@@ -108,7 +108,7 @@ export const data: Case[] = [
         images: [
             {
                 id: 1,
-                src: 'assets/projects/5/1.jpg',
+                src: 'assets/projects/isenburg/1.jpg',
             }
         ]
     },
@@ -118,7 +118,7 @@ export const data: Case[] = [
         images: [
             {
                 id: 1,
-                src: 'assets/projects/6/1.jpg',
+                src: 'assets/projects/dormitory/1.jpg',
             }
         ]
     },
@@ -128,15 +128,15 @@ export const data: Case[] = [
         images: [
             {
                 id: 1,
-                src: 'assets/projects/7/1.jpg',
+                src: 'assets/projects/nordic/1.jpg',
             },
             {
                 id: 2,
-                src: 'assets/projects/7/2.jpg',
+                src: 'assets/projects/nordic/2.jpg',
             },
             {
                 id: 3,
-                src: 'assets/projects/7/3.jpg',
+                src: 'assets/projects/nordic/3.jpg',
             }
         ]
     },
@@ -146,15 +146,15 @@ export const data: Case[] = [
         images: [
             {
                 id: 1,
-                src: 'assets/projects/8/1.jpg',
+                src: 'assets/projects/wolkenreich/1.jpg',
             },
             {
                 id: 2,
-                src: 'assets/projects/8/2.jpg',
+                src: 'assets/projects/wolkenreich/2.jpg',
             },
             {
                 id: 3,
-                src: 'assets/projects/8/3.jpg',
+                src: 'assets/projects/wolkenreich/3.jpg',
             }
         ]
     },
@@ -164,7 +164,7 @@ export const data: Case[] = [
         images: [
             {
                 id: 1,
-                src: 'assets/projects/9/1.jpg',
+                src: 'assets/projects/seafront/1.jpg',
             },
         ]
     },

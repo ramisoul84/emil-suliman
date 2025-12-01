@@ -1,31 +1,31 @@
 footer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  height: calc(18 * var(--dynamic-grid-size));
+  overflow: hidden;
+
+
+  .whale {
+    //transform: translateX(calc(50 * var(--dynamic-grid-size)));
+    width: calc(25 * var(--dynamic-grid-size));
+    //animation: myAnimation 20s steps(70) infinite;
+  }
+
+  .conditions {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: calc(18 * var(--dynamic-grid-size));
-    overflow: hidden;
+    align-self: self-start;
+    gap: var(--dynamic-grid-size);
+    height: var(--dynamic-grid-size);
 
-    .whale {
-        transform: translateX(calc(50 * var(--dynamic-grid-size)));
-        width: calc(25 * var(--dynamic-grid-size));
-        animation: myAnimation 20s steps(70) infinite;
+    p {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: calc(4 * var(--dynamic-grid-size));
+      background-color: rgba(128, 128, 128, 0.11);
     }
-
-    .conditions {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: var(--dynamic-grid-size);
-        height: var(--dynamic-grid-size);
-
-        p {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: calc(4 * var(--dynamic-grid-size));
-            background-color: rgba(128, 128, 128, 0.11);
-        }
-    }
+  }
 }
 
 
@@ -33,6 +33,7 @@ footer {
   0% {
     transform: translateX(calc(35 * var(--dynamic-grid-size)));
   }
+
   100% {
     transform: translateX(calc(-35 * var(--dynamic-grid-size)));
   }
