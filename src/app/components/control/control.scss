@@ -1,0 +1,460 @@
+.control-wrapper {
+    width: 100%;
+    height: calc(3 * var(--dynamic-grid-size));
+    position: relative;
+    user-select: none;
+    font-size: calc(0.7 * var(--dynamic-grid-size));
+    font-family: var(--font-title);
+    color: #fff;
+
+    .toggle-btn {
+        width: calc(3 * var(--dynamic-grid-size));
+        height: calc(3 * var(--dynamic-grid-size));
+        border: 2px solid white;
+        background-color: transparent;
+        position: absolute;
+        right: var(--dynamic-grid-size);
+        bottom: 0;
+        font-size: 1.2rem;
+        cursor: pointer;
+        z-index: 2;
+        color: #fff;
+
+        &:hover {
+            box-shadow: var(--shadow);
+        }
+
+        &:active {
+            background-color: white;
+            color: black;
+        }
+    }
+
+    .control {
+        position: absolute;
+        left: 0;
+        right: inherit;
+        height: 100%;
+
+        &:not(.expanded) {
+            right: 0;
+        }
+
+        .hint {
+            position: absolute;
+            top: calc(-8 * var(--dynamic-grid-size));
+            left: calc(1 * var(--dynamic-grid-size));
+            height: var(--dynamic-grid-size);
+            line-height: var(--dynamic-grid-size);
+            width: calc(16 * var(--dynamic-grid-size));
+            background-color: rgb(63, 63, 63);
+            text-align: center;
+            opacity: 0;
+            animation: blink 3s 1s forwards ease-in-out;
+        }
+
+        .colors {
+            display: flex;
+            align-items: center;
+            gap: var(--dynamic-grid-size);
+            position: absolute;
+            top: calc(-3 * var(--dynamic-grid-size));
+            right: var(--dynamic-grid-size);
+            height: calc(3 * var(--dynamic-grid-size));
+            width: calc(17 * var(--dynamic-grid-size));
+
+            .colors-title {
+                width: calc(4 * var(--dynamic-grid-size));
+
+                @media (max-width:576px) {
+                    display: none;
+                }
+            }
+
+            .color-btn {
+                width: calc(5 * var(--dynamic-grid-size));
+                height: calc(1 * var(--dynamic-grid-size));
+                cursor: pointer;
+                border: none;
+                border-width: 0;
+                outline: none;
+                padding: 0;
+                margin: 0;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                background: transparent;
+                border-radius: 0;
+
+                &::-webkit-color-swatch-wrapper {
+                    padding: 0;
+                }
+
+                &::-webkit-color-swatch {
+                    border: none;
+                    height: 100%;
+                }
+            }
+        }
+
+        .randomize-color {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: calc(-2 * var(--dynamic-grid-size));
+            left: var(--dynamic-grid-size);
+            border: 2px solid white;
+            width: calc(7 * var(--dynamic-grid-size));
+            height: calc(5 * var(--dynamic-grid-size));
+            cursor: pointer;
+            text-align: center;
+            padding: 0 8px;
+
+            &:hover {
+                box-shadow: var(--shadow);
+            }
+        }
+
+        .range-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            bottom: 0;
+            height: var(--dynamic-grid-size);
+            width: calc(12 * var(--dynamic-grid-size));
+
+            .range {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 100%;
+                height: 2px;
+                background-color: white;
+                outline: none;
+                cursor: pointer;
+
+                animation: blink2 0.2s 2s forwards;
+                -webkit-animation: blink2 0.2s 2s forwards;
+
+                &:hover {
+                    background-color: var(--color2);
+                }
+
+                &:active {
+                    height: 4px;
+                }
+
+                &::-webkit-slider-thumb {
+                    -webkit-appearance: none;
+                    appearance: none;
+                    width: var(--dynamic-grid-size);
+                    height: var(--dynamic-grid-size);
+                    border: 2px solid #fff;
+                    border-radius: 0;
+                    cursor: pointer;
+                    background-color: var(--color-bg-top);
+
+                }
+            }
+        }
+
+        .speed {
+            top: calc(-6 * var(--dynamic-grid-size));
+            right: var(--dynamic-grid-size);
+        }
+
+        .wobble {
+            top: calc(-4 * var(--dynamic-grid-size));
+            right: var(--dynamic-grid-size);
+        }
+
+        .intensity {
+            top: calc(-4 * var(--dynamic-grid-size));
+            right: calc(14 * var(--dynamic-grid-size));
+        }
+
+        .radius {
+            top: calc(-6 * var(--dynamic-grid-size));
+            right: calc(14 * var(--dynamic-grid-size));
+        }
+
+        .control-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: absolute;
+            width: calc(6 * var(--dynamic-grid-size));
+            height: var(--dynamic-grid-size);
+            cursor: pointer;
+            background-color: transparent;
+            color: white;
+            outline: none;
+            border: 2px solid white;
+
+            &:hover {
+                box-shadow: var(--shadow);
+            }
+        }
+
+        .randomize {
+            right: calc(12 * var(--dynamic-grid-size));
+            height: calc(3 * var(--dynamic-grid-size));
+            animation: blink1 0.3s 2s forwards ease-in-out;
+        }
+
+        .pixelated {
+            right: calc(5 * var(--dynamic-grid-size));
+            height: calc(3 * var(--dynamic-grid-size));
+            bottom: 0;
+            animation: blink1 0.3s 2s forwards ease-in-out;
+        }
+    }
+}
+
+@keyframes blink {
+    0% {
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+@media (min-width:576px) {
+    .control-wrapper {
+        .control {
+            .hint {
+                top: calc(-6 * var(--dynamic-grid-size));
+                left: calc(1 * var(--dynamic-grid-size));
+            }
+
+            .colors {
+                gap: var(--dynamic-grid-size);
+                position: absolute;
+                top: 0;
+                left: var(--dynamic-grid-size);
+                border: 2px solid white;
+                height: calc(3 * var(--dynamic-grid-size));
+                width: calc(10 * var(--dynamic-grid-size));
+                padding: calc(1 * var(--dynamic-grid-size));
+
+                .color-btn {
+                    width: calc(1 * var(--dynamic-grid-size));
+                }
+
+                .colors-title {
+                    width: calc(2 * var(--dynamic-grid-size));
+                }
+
+                .color-btn {
+                    width: calc(3 * var(--dynamic-grid-size));
+                }
+            }
+
+            .randomize-color {
+                height: calc(3 * var(--dynamic-grid-size));
+                width: calc(5 * var(--dynamic-grid-size));
+                left: calc(12 * var(--dynamic-grid-size));
+                top: 0;
+            }
+
+            .range-group {
+                width: calc(16 * var(--dynamic-grid-size));
+            }
+
+            .speed {
+                top: calc(-4 * var(--dynamic-grid-size));
+                right: calc(1 * var(--dynamic-grid-size));
+            }
+
+            .wobble {
+                top: calc(-2 * var(--dynamic-grid-size));
+                right: calc(1 * var(--dynamic-grid-size));
+            }
+
+            .intensity {
+                top: calc(-4 * var(--dynamic-grid-size));
+                right: calc(20 * var(--dynamic-grid-size));
+            }
+
+            .radius {
+                top: calc(-2 * var(--dynamic-grid-size));
+                right: calc(20 * var(--dynamic-grid-size));
+            }
+
+            .randomize {
+                width: calc(12 * var(--dynamic-grid-size));
+                right: calc(5 * var(--dynamic-grid-size));
+                height: var(--dynamic-grid-size);
+            }
+
+            .pixelated {
+                width: calc(12 * var(--dynamic-grid-size));
+                right: calc(5 * var(--dynamic-grid-size));
+                height: var(--dynamic-grid-size);
+                bottom: 0;
+            }
+        }
+    }
+}
+
+@media (min-width:1200px) {
+    .control-wrapper {
+        .control {
+            .hint {
+                left: calc(15 * var(--dynamic-grid-size));
+            }
+
+            .range-group {
+                width: calc(24 * var(--dynamic-grid-size));
+            }
+
+            .speed {
+                top: calc(-4 * var(--dynamic-grid-size));
+                right: calc(1 * var(--dynamic-grid-size));
+            }
+
+            .wobble {
+                top: calc(-2 * var(--dynamic-grid-size));
+                right: calc(1 * var(--dynamic-grid-size));
+            }
+
+            .intensity {
+                top: calc(-4 * var(--dynamic-grid-size));
+                right: calc(28 * var(--dynamic-grid-size));
+            }
+
+            .radius {
+                top: calc(-2 * var(--dynamic-grid-size));
+                right: calc(28 * var(--dynamic-grid-size));
+            }
+
+            .colors {
+                left: calc(15 * var(--dynamic-grid-size));
+                width: calc(15 * var(--dynamic-grid-size));
+
+                .colors-title {
+                    width: calc(4 * var(--dynamic-grid-size));
+                }
+
+                .color-btn {
+                    width: calc(2 * var(--dynamic-grid-size));
+                }
+
+            }
+
+            .randomize-color {
+                left: calc(31 * var(--dynamic-grid-size));
+                border: 2px solid white;
+                width: calc(8 * var(--dynamic-grid-size));
+            }
+
+            .control-btn {
+                width: calc(19 * var(--dynamic-grid-size));
+            }
+
+            .randomize {
+                right: calc(6 * var(--dynamic-grid-size));
+            }
+
+            .pixelated {
+                right: calc(6 * var(--dynamic-grid-size));
+            }
+        }
+    }
+}
+
+@media (min-width:1600px) {
+    .control-wrapper {
+
+        .toggle-btn {
+            right: 0;
+        }
+
+        .control {
+            .hint {
+                left: calc(25 * var(--dynamic-grid-size));
+            }
+
+            .range-group {
+                width: calc(24 * var(--dynamic-grid-size));
+            }
+
+            .speed {
+                top: calc(-4 * var(--dynamic-grid-size));
+                right: 0;
+            }
+
+            .wobble {
+                top: calc(-2 * var(--dynamic-grid-size));
+                right: 0;
+            }
+
+            .intensity {
+                top: calc(-4 * var(--dynamic-grid-size));
+                right: calc(28 * var(--dynamic-grid-size));
+            }
+
+            .radius {
+                top: calc(-2 * var(--dynamic-grid-size));
+                right: calc(28 * var(--dynamic-grid-size));
+            }
+
+            .colors {
+                left: calc(25 * var(--dynamic-grid-size));
+                width: calc(15 * var(--dynamic-grid-size));
+            }
+
+            .randomize-color {
+                left: calc(41 * var(--dynamic-grid-size));
+                border: 2px solid white;
+                width: calc(8 * var(--dynamic-grid-size));
+            }
+
+            .control-btn {
+                width: calc(19 * var(--dynamic-grid-size));
+            }
+
+            .randomize {
+                right: calc(5 * var(--dynamic-grid-size));
+            }
+
+            .pixelated {
+                right: calc(5 * var(--dynamic-grid-size));
+            }
+        }
+    }
+}
+
+@media (min-width:2200px) {
+    .control-wrapper {
+        .control {
+            .hint {
+                left: calc(35 * var(--dynamic-grid-size));
+            }
+
+            .colors {
+                left: calc(35 * var(--dynamic-grid-size));
+                width: calc(15 * var(--dynamic-grid-size));
+            }
+
+            .randomize-color {
+                left: calc(51 * var(--dynamic-grid-size));
+                border: 2px solid white;
+                width: calc(8 * var(--dynamic-grid-size));
+            }
+        }
+    }
+}

@@ -1,0 +1,16 @@
+.main {
+  background-image:
+    linear-gradient(var(--grid-stroke-color) var(--grid-stroke-width), transparent var(--grid-stroke-width)),
+    linear-gradient(90deg, var(--grid-stroke-color) var(--grid-stroke-width), transparent var(--grid-stroke-width));
+  background-size: var(--dynamic-grid-size) var(--dynamic-grid-size);
+
+  will-change: background-size;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  transform: translateZ(0);
+  transition: background-size 0.1s ease;
+  &.blurred {
+    transform: translateZ(0); 
+    transition: filter 0.3s ease;
+  }
+}

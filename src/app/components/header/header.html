@@ -1,0 +1,55 @@
+<header>
+    <div class="logo-img" (click)="goToSection('home')">
+        <img src="assets/logos/logo.png" alt="logo">
+    </div>
+
+    <div class="line line1"></div>
+    <div class="line line2"></div>
+    <div class="line line3"></div>
+    <div class="line line4"></div>
+    <div class="line line5"></div>
+    <div class="line line6"></div>
+
+    <div class="logo">
+        <span class="letter">e </span>
+        <span class="letter">m</span>
+        <span class="letter">i</span>
+        <span class="letter">l</span>
+        <span class="letter space">&nbsp;</span>
+        <span class="letter">s</span>
+        <span class="letter">u</span>
+        <span class="letter">l</span>
+        <span class="letter">i</span>
+        <span class="letter">m</span>
+        <span class="letter">a</span>
+        <span class="letter">n</span>
+    </div>
+
+
+
+    <nav>
+        <p (click)="goToSection('about')">{{'HEADER.ABOUT'|translate}}</p>
+        <p (click)="goToSection('timeline')">{{'HEADER.TIMELINE'|translate}}</p>
+        <p (click)="goToSection('cases')">{{'HEADER.CASES'|translate}}</p>
+        <p (click)="goToSection('solidarity')">{{'HEADER.SOLIDARITY'|translate}}</p>
+        <p (click)="goToSection('contact')">{{'HEADER.CONTACT'|translate}}</p>
+        <p (click)="toggleLanguage()">{{!isEnglish?"EN/DE":"DE/EN"}}</p>
+    </nav>
+
+    <div class="hamburger-menu" [ngClass]="{'close': showMenu,'open': !showMenu }" (click)="toggleMenu()">
+        <div class="hamburger-menu-lines">
+            <span class="menu-line menu-line1" aria-hidden="true"></span>
+            <span class="menu-line menu-line2" aria-hidden="true"></span>
+            <span class="menu-line menu-line3" aria-hidden="true"></span>
+        </div>
+    </div>
+
+    <div class="side-nav">
+        <p (click)="goToSection('about')">{{'SIDENAV.ABOUT'|translate}}</p>
+        <p (click)="goToSection('timeline')">{{'SIDENAV.TIMELINE'|translate}}</p>
+        <p (click)="goToSection('cases')">{{'SIDENAV.CASES'|translate}}</p>
+        <p (click)="goToSection('solidarity')">{{'SIDENAV.SOLIDARITY'|translate}}</p>
+        <p (click)="goToSection('contact')">{{'SIDENAV.CONTACT'|translate}}</p>
+        <p (click)="toggleLanguage()">{{!isEnglish?"EN/DE":"DE/EN"}}</p>
+    </div>
+</header>

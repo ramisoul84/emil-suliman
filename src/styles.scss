@@ -1,0 +1,220 @@
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap');
+
+@font-face {
+  font-family: "lcd_solidregular";
+  src: url("assets/fonts/lcdsolid/lcdsolid-vpzb-webfont.woff2") format("woff2"),
+    url("assets/fonts/lcdsolid/lcdsolid-vpzb-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+;
+
+:root {
+  /* colors */
+  --color-bg-top: #0a1225;
+  --color-bg-bottom: #0a1225;
+
+  --color1: #226b22;
+  --color2: #ACC424;
+  --color3: #FF2D95;
+
+  --color-header-left: #226b22;
+  --color-header-right: #ACC424;
+  --gradient-title: linear-gradient(135deg, var(--color-header-left), var(--color-header-right));
+
+  /* grid */
+  --grid-stroke-color: rgba(196, 202, 196, 0.1);
+  --grid-stroke-width: 1px;
+  --margin: 0;
+
+  /* fonts */
+  --font-main: "League Spartan", sans-serif;
+  --font-title: "lcd_solidregular", sans-serif;
+
+  --size-main-nav: 0.8rem;
+  --size-side-nav: 0.7rem;
+  --size-name: 1.4rem;
+  --size-title: 1rem;
+  --size-text: 1.2rem;
+
+  --shadow: calc(0.3 * var(--dynamic-grid-size)) calc(0.3 * var(--dynamic-grid-size)) 1px var(--color2);
+}
+
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: var(--dynamic-grid-size);
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0 var(--margin);
+  background: linear-gradient(to bottom, var(--color-bg-top), var(--color-bg-bottom));
+  font-family: var(--font-main);
+  color: white;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  font-display: swap;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+
+}
+
+section {
+  scroll-margin-top: calc(4 * var(--dynamic-grid-size));
+  margin: 0 var(--dynamic-grid-size) calc(6 * var(--dynamic-grid-size)) var(--dynamic-grid-size);
+
+  .title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(25 * var(--dynamic-grid-size));
+    height: calc(2 * var(--dynamic-grid-size));
+    margin-bottom: var(--dynamic-grid-size);
+    background: var(--gradient-title);
+    font-family: var(--font-title);
+    font-size: var(--size-title);
+    user-select: none;
+  }
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  /* ADD: Prevent layout shifts */
+  // aspect-ratio: attr(width) / attr(height);
+}
+
+
+.no-scroll {
+  overflow: hidden !important;
+  height: 100vh;
+  position: fixed;
+  width: 100%;
+}
+
+
+.blur {
+  filter:
+    url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg"><filter id="pixelate"><feFlood x="0" y="0" height="2" width="2"/><feComposite width="12" height="12"/><feTile result="a"/><feComposite in="SourceGraphic" in2="a" operator="in"/><feMorphology operator="dilate" radius="4"/></filter></svg>#pixelate') blur(2px) contrast(1);
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+  -ms-interpolation-mode: nearest-neighbor;
+  user-select: none;
+  pointer-events: none;
+  opacity: 0.5;
+  transform: translateZ(0);
+}
+
+
+
+
+::-webkit-scrollbar {
+  width: 20px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(to bottom, var(--color-bg-top), var(--color-bg-bottom));
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-header-right);
+  background-clip: padding-box;
+  border: 3px solid transparent;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-header-left);
+  background-clip: padding-box;
+  cursor: pointer;
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--color-bg-top);
+}
+
+
+@supports (-ms-overflow-style: none) {
+  * {
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* ADD: Respect user motion preferences 
+  html {
+    scroll-behavior: auto;
+  }
+  
+  .blur {
+    transition: none !important;
+  }
+    */
+}
+
+/* ADD: Print styles for better printing 
+@media print {
+  .blur {
+    filter: none !important;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}
+  */
+
+@media (min-width:576px) {
+  section {
+
+    .title {
+      width: calc(12 * var(--dynamic-grid-size));
+    }
+  }
+
+}
+
+@media (min-width:1200px) {
+  :root {
+    --size-text: 1rem;
+  }
+
+  section {
+    .title {
+      width: calc(11 * var(--dynamic-grid-size));
+    }
+
+    margin: 0 calc(8 * var(--dynamic-grid-size)) calc(6 * var(--dynamic-grid-size)) calc(8 * var(--dynamic-grid-size));
+  }
+}
+
+@media (min-width:1600px) {
+  section {
+    margin: 0 calc(13 * var(--dynamic-grid-size)) calc(6 * var(--dynamic-grid-size)) calc(13 * var(--dynamic-grid-size));
+  }
+}
+
+@media (min-width:2200px) {
+  section {
+    margin: 0 calc(18 * var(--dynamic-grid-size)) calc(6 * var(--dynamic-grid-size)) calc(18 * var(--dynamic-grid-size));
+  }
+}

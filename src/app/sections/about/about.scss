@@ -1,0 +1,241 @@
+#about {
+    .about {
+        display: flex;
+        flex-direction: column;
+        color: black;
+
+        .about-title {
+            color: white;
+        }
+
+        .about-left {
+            .about-emil-img {
+                margin-bottom: var(--dynamic-grid-size);
+                position: relative;
+
+                .about-video {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                }
+            }
+        }
+
+        .about-right {
+            background-color: white;
+            color: black;
+
+            @media (min-width:576px) {
+                display: none;
+            }
+
+            .about-imgs {
+                display: grid;
+                grid-template-columns: repeat(3, calc(7 * var(--dynamic-grid-size)));
+                grid-template-rows: repeat(2, calc(5 * var(--dynamic-grid-size)));
+                gap: var(--dynamic-grid-size);
+                padding: var(--dynamic-grid-size);
+
+                .img-wrapper {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    overflow: hidden;
+                }
+
+                .img-active {
+                    grid-column: span 2 / span 2;
+                    grid-row: span 2 / span 2;
+                }
+
+                .img-small1 {
+                    grid-column-start: 3;
+                    grid-row-start: 1;
+                    filter: grayscale(1);
+                    cursor: pointer;
+                }
+
+                .img-small2 {
+                    grid-column-start: 3;
+                    grid-row-start: 2;
+                    filter: grayscale(1);
+                    cursor: pointer;
+                }
+
+            }
+
+            .about-info {
+                padding: var(--dynamic-grid-size);
+
+
+                .about-info-title {
+                    font-family: var(--font-title);
+                    font-size: var(--size-title);
+                    margin-bottom: var(--dynamic-grid-size);
+                    line-height: var(--dynamic-grid-size);
+                }
+
+                .about-info-text {
+
+                    line-height: calc(2 * var(--dynamic-grid-size));
+                    font-size: var(--size-text);
+                }
+            }
+        }
+
+        .about-right-desktop {
+            display: none;
+        }
+    }
+}
+
+@media (min-width:576px) {
+    #about {
+        position: relative;
+
+        .about {
+            .about-left {
+                .about-title {
+                    width: calc(18 * var(--dynamic-grid-size));
+                }
+
+                .about-emil-img {
+                    width: calc(18 * var(--dynamic-grid-size));
+                }
+
+                margin-right: var(--dynamic-grid-size);
+            }
+
+
+            .about-right-desktop {
+                display: block;
+                background-color: white;
+
+                .about-imgs {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    display: flex;
+                    flex-direction: column;
+                    justify-items: center;
+                    justify-content: space-around;
+                    width: calc(16 * var(--dynamic-grid-size));
+                    height: calc(21 * var(--dynamic-grid-size));
+                    background-color: white;
+                    padding: 0 calc(4 * var(--dynamic-grid-size));
+
+                    .img-wrapper-desktop {
+                        width: calc(7 * var(--dynamic-grid-size));
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border: none;
+                        overflow: hidden;
+                        cursor: pointer;
+                        filter: grayscale(1);
+
+                        &:hover img {
+                            transform: scale(1.1);
+                        }
+                    }
+
+                    .active {
+                        filter: grayscale(0);
+                    }
+                }
+
+                .about-info {
+                    padding: var(--dynamic-grid-size);
+
+                    .about-info-title {
+                        font-family: var(--font-title);
+                        font-size: var(--size-title);
+                        margin-bottom: var(--dynamic-grid-size);
+                    }
+
+                    .about-info-text {
+
+                        line-height: calc(2 * var(--dynamic-grid-size));
+                        font-size: var(--size-text);
+                    }
+                }
+            }
+
+        }
+
+
+    }
+}
+
+@media (min-width:1200px) {
+    #about {
+        width: auto;
+
+        .about {
+            flex-direction: row;
+            width: auto;
+
+            .about-left {
+                .about-title {
+                    width: calc(16 * var(--dynamic-grid-size));
+                }
+
+                .about-emil-img {
+                    width: calc(16 * var(--dynamic-grid-size));
+                    margin-bottom: 0;
+                }
+
+                margin-right: var(--dynamic-grid-size);
+            }
+
+            .about-right-desktop {
+                display: flex;
+                background-color: white;
+                height: calc(19 * var(--dynamic-grid-size));
+
+                .about-imgs {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    padding: var(--dynamic-grid-size);
+                    position: static;
+                    height: auto;
+
+                    .img-wrapper-desktop {
+                        width: calc(7 * var(--dynamic-grid-size));
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border: none;
+                        overflow: hidden;
+                        cursor: pointer;
+                        filter: grayscale(1);
+
+                        &:hover img {
+                            transform: scale(1.1);
+                        }
+                    }
+
+                    .active {
+                        filter: grayscale(0);
+                    }
+                }
+
+                .about-info {
+                    padding: var(--dynamic-grid-size);
+
+                    .about-info-title {
+                        font-family: var(--font-title);
+                        font-size: var(--size-title);
+                        margin-bottom: var(--dynamic-grid-size);
+                    }
+
+                    .about-info-text {
+                        font-size: var(--size-text);
+                        line-height: var(--spacing);
+                    }
+                }
+            }
+        }
+    }
+}

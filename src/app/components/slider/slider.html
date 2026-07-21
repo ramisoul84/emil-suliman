@@ -1,0 +1,50 @@
+<div class="image-slider" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+
+  <div class="slider-wrapper">
+    <div #slide *ngFor="let slide of slides; let i = index" class="slide" [class.active]="i === currentSlide"
+      [style.background-color]="slide.bg || '#ffffff'"
+      (click)="onSlideClick(i)">
+
+      <div *ngIf="slide.video; else checkAnimation">
+        <div class="video-container" [style.backgroundColor]="slide.bg">
+          <video class="slide-video" muted loop playsinline webkit-playsinline preload="auto" #videoElement>
+            <source [src]="slide.video" type="video/webm">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+
+      <ng-template #checkAnimation>
+        <div *ngIf="slide.options; else imageSlide">
+          <div class="lottie-animation" [style.backgroundColor]="slide.bg">
+            <ng-lottie [options]="slide.options"></ng-lottie>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template #imageSlide>
+        <img [src]="slide.src" [alt]="'Slide ' + (i + 1)" class="slide-image" loading="lazy">
+      </ng-template>
+    </div>
+  </div>
+
+  <button *ngIf="effectiveConfig.showArrows && slides.length > 1" class="nav-arrow prev" (click)="prevSlide()"
+    aria-label="Previous slide">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round" />
+    </svg>
+  </button>
+
+  <button *ngIf="effectiveConfig.showArrows && slides.length > 1" class="nav-arrow next" (click)="nextSlide()"
+    aria-label="Next slide">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </button>
+
+  <div *ngIf="effectiveConfig.showDots && slides.length > 1" class="dots-container">
+    <button #dot *ngFor="let slide of slides; let i = index" class="dot" [class.active]="i === currentSlide"
+      (click)="goToSlide(i)" [attr.aria-label]="'Go to slide ' + (i + 1)"></button>
+  </div>
+</div>

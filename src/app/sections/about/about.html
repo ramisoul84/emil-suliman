@@ -1,0 +1,57 @@
+<section id="about">
+    <div class="about" [ngClass]="{'blur':isBlur}">
+        <div class="about-left">
+            <div class="title about-title">about me.</div>
+            <div class="about-emil-img" #emilPhoto>
+                <img src="assets/images/emil.png" alt="emil image" width="600" height="600" fetchpriority="high"
+                    loading="eager">
+                @if (!isIOS) {
+                <video #emilVideo muted playsinline preload="metadata" class="about-video">
+                    <source src="assets/videos/emil.webm" type="video/webm">
+                    Your browser does not support the video tag.
+                </video>
+                }
+            </div>
+        </div>
+        <div class="about-right">
+            <div class="about-imgs">
+                <div class="img-active img-wrapper">
+                    <img [src]="activeItem.src" [alt]="activeItem.title" width="300" height="300" loading="eager">
+                </div>
+                <div class="img-small1 img-wrapper" (click)="selectActive(0)">
+                    <img [src]="smallItems[0]?.src" [alt]="smallItems[0]?.title" width="300" height="300"
+                        loading="eager">
+                </div>
+                <div class="img-small2 img-wrapper" (click)="selectActive(1)">
+                    <img [src]="smallItems[1]?.src" [alt]="smallItems[1]?.title" width="300" height="300"
+                        loading="eager">
+                </div>
+            </div>
+            <div class="about-info">
+                <div class="about-info-title">
+                    {{activeItem.title | translate}}
+                </div>
+                <div class="about-info-text" [innerHTML]="activeItem.text | translate"> </div>
+            </div>
+        </div>
+        <div class="about-right-desktop">
+            <div class="about-imgs">
+                <div class="img-wrapper-desktop" [class.active]="selectedIndex==0" (click)="select(0)">
+                    <img src="assets/images/house.gif" alt="architecture" width="300" height="300" loading="eager">
+                </div>
+                <div class="img-wrapper-desktop" [class.active]="selectedIndex==1" (click)="select(1)">
+                    <img src="assets/images/camera.gif" alt="storytelling" width="300" height="300" loading="eager">
+                </div>
+                <div class="img-wrapper-desktop" [class.active]="selectedIndex==2" (click)="select(2)">
+                    <img src="assets/images/duck.gif" alt="personal" width="300" height="300" loading="eager">
+                </div>
+            </div>
+            <div class="about-info">
+                <div class="about-info-title">
+                    {{aboutItems[selectedIndex].title | translate}}
+                </div>
+                <div class="about-info-text" [innerHTML]="aboutItems[selectedIndex].text | translate"> </div>
+            </div>
+        </div>
+    </div>
+</section>

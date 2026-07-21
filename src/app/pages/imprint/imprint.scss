@@ -1,0 +1,52 @@
+#imprint {
+    background-color: white;
+    color: black;
+
+    .head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: calc(4 * var(--dynamic-grid-size));
+        margin-bottom: calc(2 * var(--dynamic-grid-size));
+        padding-left: var(--dynamic-grid-size);
+        font-size: 1.2rem;
+        position: sticky;
+        top: 0;
+        background-color: white;
+
+        .icons {
+            display: flex;
+            gap: 1rem;
+            padding-right: var(--dynamic-grid-size);
+
+            .icon {
+                justify-self: flex-end;
+                height: 2rem;
+                fill: black;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .title {
+        text-align: center;
+    }
+
+    .imprint {
+        padding: var(--dynamic-grid-size);
+
+        .block {
+            background-color: rgba(255, 255, 255, 0.514);
+            color: black;
+            padding: var(--dynamic-grid-size);
+
+            .block-title {
+                font-weight: 700;
+            }
+
+            .block-info {
+                padding-left: var(--dynamic-grid-size);
+            }
+        }
+    }
+}

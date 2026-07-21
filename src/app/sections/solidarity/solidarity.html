@@ -1,0 +1,20 @@
+<section id="solidarity">
+    <div class="title" [ngClass]="{'blur':isBlur}">solidarity.</div>
+    <div class="solidarity" [ngClass]="{'blur':isBlur}">
+        <p class="solidarity-text">
+            I dedicate part of my work to supporting initiatives that fight for dignity and equality. A portion of each
+            project goes to organizations such as Sea-Watch (rescue at sea), Pro Asyl (migrant rights), Queer Refugees
+            Deutschland, and Fridays for Future. I’m also glad to collaborate directly with NGOs and grassroots groups
+            who need design and storytelling support, feel free to reach out.
+        </p>
+        <div class="solidarity-links">
+            @for (link of links; track $index) {
+            <div class="solidarity-link">
+                <img [src]="link.logo" alt="logo" class="logo" loading="lazy">
+                <button class="link-btn" (click)="openLink(link.link,link.organization)">Donate</button>
+            </div>
+            }
+
+        </div>
+    </div>
+</section>

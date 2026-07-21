@@ -1,0 +1,212 @@
+@mixin header-gradient($layer, $opacity) {
+    position: absolute;
+    top: calc($layer * var(--dynamic-grid-size));
+    left: 0;
+    right: 0;
+    opacity: $opacity;
+    background: linear-gradient(90deg, var(--color1), var(--color2));
+}
+
+
+
+header {
+    position: fixed;
+    left: var(--margin);
+    right: var(--margin);
+    z-index: 999;
+
+    .line {
+        height: var(--dynamic-grid-size);
+        width: 100%;
+    }
+
+    @for $i from 1 through 6 {
+        .line#{$i} {
+            z-index: #{7 - $i};
+            @include header-gradient($i - 1, 1 - (($i - 1) * 0.15));
+        }
+    }
+
+    .line1 {
+        background-color: #151717;
+    }
+
+
+    .logo-img {
+        position: absolute;
+        opacity: 0;
+        width: calc(3 * var(--dynamic-grid-size));
+        height: calc(3 * var(--dynamic-grid-size));
+        z-index: 1000;
+        cursor: pointer;
+    }
+
+    .logo {
+        position: absolute;
+        height: calc(3 * var(--dynamic-grid-size));
+        left: var(--dynamic-grid-size);
+        display: flex;
+        align-items: center;
+        font-family: var(--font-title);
+        font-size: var(--size-main-nav);
+        z-index: 8;
+        opacity: 0;
+        user-select: none;
+        transition: all 1s ease;
+
+        .letter {
+            display: inline-block;
+            width: auto;
+        }
+    }
+
+
+
+    nav {
+        position: absolute;
+        top: var(--dynamic-grid-size);
+        right: var(--dynamic-grid-size);
+        display: flex;
+        align-items: center;
+        justify-content: end;
+        gap: var(--dynamic-grid-size);
+        z-index: 11;
+        user-select: none;
+
+
+        p {
+            line-height: var(--dynamic-grid-size);
+            font-family: var(--font-title);
+            font-size: var(--size-main-nav);
+            cursor: pointer;
+            position: relative;
+            padding: 0 0.5rem;
+            font-weight: 200;
+            opacity: 0;
+
+            &:hover::before {
+                position: absolute;
+                content: "";
+                background-color: var(--color3);
+                height: 5px;
+                width: 100%;
+                top: 50%;
+                z-index: -1;
+                margin-left: -0.5rem;
+                animation: blink 0.15s ease-in-out both;
+            }
+        }
+
+        @media (max-width:1200px) {
+            display: none;
+        }
+    }
+
+    .hamburger-menu {
+        position: absolute;
+        top: 0;
+        left: calc(3 * var(--dynamic-grid-size));
+        height: calc(3 * var(--dynamic-grid-size));
+        width: calc(3 * var(--dynamic-grid-size));
+        background-color: #242424;
+        opacity: 0;
+        cursor: pointer;
+
+        .hamburger-menu-lines {
+            width: var(--dynamic-grid-size);
+            height: var(--dynamic-grid-size);
+            margin: var(--dynamic-grid-size);
+            position: relative;
+        }
+
+        .menu-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: white;
+            //transition: all 200ms ease-out;
+            animation: blink 2s ease;
+        }
+    }
+
+    .open {
+        .menu-line1 {
+            transform: translateY(calc(-0.5 * var(--dynamic-grid-size)));
+        }
+
+        .menu-line3 {
+            transform: translateY(calc(0.5 * var(--dynamic-grid-size)));
+        }
+    }
+
+    .close {
+        .menu-line1 {
+            transform: rotate(45deg) translateY(0);
+        }
+
+        .menu-line2 {
+            opacity: 0;
+        }
+
+        .menu-line3 {
+            transform: rotate(-45deg) translateY(0);
+        }
+    }
+
+    .side-nav {
+        position: absolute;
+        top: calc(4 * var(--dynamic-grid-size));
+        width: calc(6 * var(--dynamic-grid-size));
+        height: calc(12 * var(--dynamic-grid-size));
+        background-color: #242424;
+        transform: scale(0);
+        opacity: 0;
+
+        p {
+            display: flex;
+            align-items: center;
+            justify-content: end;
+            height: calc(2 * var(--dynamic-grid-size));
+            padding-right: var(--dynamic-grid-size);
+            cursor: pointer;
+            font-family: var(--font-title);
+            font-size: var(--size-side-nav);
+            user-select: none;
+
+            &:hover {
+                background-color: white;
+                color: #151717;
+            }
+        }
+    }
+}
+
+
+
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    15% {
+        opacity: 0;
+    }
+
+    85% {
+        opacity: 0;
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}

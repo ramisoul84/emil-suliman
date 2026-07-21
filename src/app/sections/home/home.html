@@ -1,0 +1,23 @@
+<section id="home">
+    <!-- Loading state -->
+    <div class="loading" [class.hidden]="!loading">
+        <div class="loading-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+        </div>
+    </div>
+
+    <!-- Home content -->
+    <div [ngClass]="{'blur': isBlur, 'loading-hidden': loading}" 
+         [attr.aria-hidden]="isBlur" 
+         class="home">
+        <div class="text-container">
+            <div #textElement class="current-text" [innerHTML]="currentText">
+            </div>
+        </div>
+        <div class="canvas">
+            <app-blob />
+        </div>
+        <div class="control">
+            <app--control />
+        </div>
+    </div>
+</section>

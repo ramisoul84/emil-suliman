@@ -1,0 +1,48 @@
+<div class="control-wrapper">
+    <button class="toggle-btn" (click)="toggleExpand()" aria-label="Toggle controls">
+        {{ isExpanded ? '−' : '+' }}
+    </button>
+    @if (isExpanded) {
+    <div class="control">
+        <div class="hint">customize the blob using controls</div>
+        <div class="colors">
+            <p class="colors-title">colors</p>
+            <input class="color-btn" type="color" [value]="leftColor"
+                (change)="changeLeftColor(($any($event.target)).value)">
+            <input class="color-btn" type="color" [value]="rightColor"
+                (change)="changeRightColor(($any($event.target)).value)">
+            <input class="color-btn" type="color" [value]="centerColor"
+                (change)="changeCenterColor(($any($event.target)).value)">
+        </div>
+
+        <div class="range-group speed">
+            <input class="range" type="range" id="speed" [value]="params().speed" min="0.20" max="1.50" step="0.05"
+                (input)="onSpeedChange($event)" (change)="onSpeedanalytics($event)" aria-label="Animation speed" />
+        </div>
+        <div class="range-group wobble">
+            <input class="range" type="range" id="wobble" [value]="params().wobble" min="0.50" max="2.00" step="0.01"
+                (input)="onWobbleChange($event)" (change)="onSpeedanalytics($event)" aria-label="Wobble amount" />
+        </div>
+        <div class="range-group intensity">
+            <input class="range" type="range" id="intensity" [value]="params().intensity" min="0.50" max="2.00"
+                step="0.01" (input)="onIntensityChange($event)" (change)="onSpeedanalytics($event)" aria-label="Blob intensity" />
+        </div>
+        <div class="range-group radius">
+            <input class="range" type="range" id="radius" [value]="params().radius" min="0.10" max="0.20" step="0.01"
+                (input)="onRadiusChange($event)" (change)="onSpeedanalytics($event)" aria-label="Blob radius" />
+        </div>
+
+
+        <div (click)="randomize()" class="control-btn randomize">
+            randomize shape
+        </div>
+        <div (click)="togglePixelated()" class="control-btn pixelated">
+            {{isPixelated?"UnPixelated":"Pixelated"}}
+        </div>
+
+        <div (click)="randomizeColor()" class="randomize-color">
+            randomize color
+        </div>
+    </div>
+    }
+</div>

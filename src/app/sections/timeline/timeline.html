@@ -1,0 +1,12 @@
+<section id="timeline">
+    <div class="sticky">
+        <div class="mask"></div>
+        <div class="title timeline-title" [ngClass]="{'blur':isBlur}">timeline.</div>
+        <div class="map-wrapper" [style.height.px]="mapHeight "  [ngClass]="{'blur':isBlur}">
+            <div #mapSection class="map" ></div>
+        </div>
+    </div>
+
+    <div #timelineSection class="timeline" [ngClass]="{'blur':isBlur}">
+    </div>
+</section>

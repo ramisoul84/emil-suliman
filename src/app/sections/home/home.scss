@@ -1,0 +1,122 @@
+#home {
+    padding-top: calc(6 * var(--dynamic-grid-size));
+    position: relative;
+    margin-left: 0;
+    margin-right: 0;
+    transition: all 1s ease;
+    height: calc(round(calc(100vh / var(--dynamic-grid-size))) * var(--dynamic-grid-size));
+    min-height: 500px; // Fallback height
+
+    .loading {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        min-height: inherit;
+        position: relative;
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+        z-index: 2;
+
+        .loading-bar {
+            position: absolute;
+            top: calc(6 * var(--dynamic-grid-size));
+        }
+    }
+
+    .home {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        min-height: inherit;
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+        z-index: 1;
+
+        // Only hide when loading is active
+        &.loading-active {
+            opacity: 0;
+            visibility: hidden;
+        }
+    }
+
+    .change {
+        z-index: 9999999999999;
+        cursor: pointer;
+    }
+
+    .text-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        width: 100%;
+        top: calc(6 * var(--dynamic-grid-size));
+        bottom: calc(8 * var(--dynamic-grid-size));
+        overflow: hidden;
+        user-select: none;
+
+        .current-text {
+            font-size: clamp(1.5rem, 3vw, 3.2rem);
+            font-weight: 300;
+            text-align: center;
+            height: calc(6 * var(--dynamic-grid-size));
+            opacity: 0;
+            width: 80%;
+            font-family: var(--font-title);
+            line-height: calc(3 * var(--dynamic-grid-size));
+            /* Start invisible */
+            mix-blend-mode: difference;
+            opacity: 1;
+
+            will-change: opacity;
+            transform: translateZ(0);
+            /* Force GPU acceleration */
+        }
+    }
+
+    .canvas {
+        height: 100%;
+        margin-bottom: var(--dynamic-grid-size);
+    }
+
+    .control {
+        position: absolute;
+        bottom: var(--dynamic-grid-size);
+        width: 100%;
+    }
+}
+
+.home.loading-hidden {
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+.loading.hidden {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none;
+}
+
+@media (min-width:1200px) {
+    .control {
+        right: calc(7 * var(--dynamic-grid-size));
+    }
+}
+
+@media (min-width:1600px) {
+    .control {
+        right: calc(13 * var(--dynamic-grid-size));
+    }
+}
+
+@media (min-width:2200px) {
+    .control {
+        right: calc(18 * var(--dynamic-grid-size));
+    }
+}

@@ -1,0 +1,160 @@
+{
+  "HEADER": {
+    "ABOUT": "about",
+    "TIMELINE": "timeline",
+    "CASES": "arbeit",
+    "SOLIDARITY": "solidarität",
+    "CONTACT": "kontakt"
+  },
+  "SIDENAV": {
+    "ABOUT": "ABOUT",
+    "TIMELINE": "TIMELINE",
+    "CASES": "ARBEIT",
+    "SOLIDARITY": "SOLIDARITÄT",
+    "CONTACT": "KONTAKT"
+  },
+  "ABOUT": {
+    "ARCH-BTN": "architektur",
+    "VIS-BTN": "storytelling",
+    "PER-BTN": "persönlich",
+    "ARCH": "Ich bin ausgebildeter Architekt und Mitglied der Architektenkammer Berlin. In meiner Laufbahn habe ich in verschiedenen Büros und Ländern gearbeitet, an Projekten aller Größen und Typologien – von Wohnhäusern und kleinen Läden bis zu großen kulturellen, kommerziellen und temporären Bauwerken.<br/><br/>Mein Schwerpunkt liegt auf Konzeptentwicklung, Entwurf, Visualisierung und der Übersetzung von Ideen in gebaute Räume. Bei größeren Aufträgen arbeite ich mit einem vertrauten Team zusammen, um alle Projektphasen abdecken zu können.",
+    "VIS": "Storytelling und der Aufbau narrativer Strukturen prägen meine kreative Arbeit. In Zusammenarbeit mit Künstlern, Agenturen und kulturellen Projekten habe ich als Motion Designer und Art Director daran gearbeitet, wie Geschichten sich in visuellen und klanglichen Medien entfalten.<br/></br/>Meine Erfahrung umfasst Media Architecture, Motion Design und Branding – mit dem Ziel, klare und einprägsame Erzählungen zu entwickeln, sei es in bewegten Bildern oder in immersiven Umgebungen.",
+    "PERS": "Ich bin Emil, lebe in Berlin und liebe elektronische Musik. Ich lerne gerade zu mixen und eigene Tracks zu produzieren, auch wenn ich noch am Anfang stehe. Außerdem übe ich Portugiesisch (Ainda falo muito mal, mas estou a aprender!).<br/><br/>Mir liegen Themen wie Migration, queere Rechte und marginalisierte Communities sehr am Herzen – Werte, die mich privat und beruflich leiten. Berlin ist meine Lieblingsstadt, dicht gefolgt von Lissabon. Und zu Hause kümmere ich mich um 32 Pflanzen… mein Wachstum ist also nicht nur beruflich."
+  },
+  "CASES": {
+    "CASE-1": {
+      "TITLE": "WAHA",
+      "DESCRIPTION": "Diese Aussichtsplattform in der syrischen Wüste feiert die verborgene Vitalität der Landschaft. Inspiriert von den traditionellen Lehmkuppelhäusern Palmyras verbinden die gewölbten Formen aus gebrannten Lehmziegeln natürliche Schönheit mit guter thermischer Leistung. Wasser und Grün schaffen einen kühlen Ort der Ruhe.<br/><br/>Ein Stahl-Lehm-Dach vereint traditionelle Techniken mit moderner Gestaltung. Das Projekt steht als Symbol für Widerstandskraft und als neuer Impuls für Tourismus und Kultur nach Jahren des Konflikts.<br/><br/><strong>Rolle:</strong> Entwurf und Visualisierung."
+    },
+    "CASE-2": {
+      "TITLE": "SWSG Social housing",
+      "DESCRIPTION": "In Stuttgart zeigt dieses Projekt einen neuen Ansatz für bezahlbares Wohnen. Vorfertigte Holzmodule ermöglichen nachhaltige, hochwertige Wohnungen bei geringeren Kosten und schnellerer Bauzeit. Praktikabilität, Gemeinschaft und räumliche Qualität bilden das Grundgerüst dieses Entwurfs.<br/><br/><strong>Projekt:</strong> Werner Sobek AG, Aktivhaus GmbH.<br/><strong>Rolle:</strong> Visualisierung, Fassadengestaltung."
+    },
+    "CASE-3": {
+      "TITLE": "THE INNER LOOP",
+      "DESCRIPTION": "Für die EXPO 2020 in Dubai diente der „Inner Loop“ als zentrale Fußgängerroute, die Schatten spenden und eine klare visuelle Identität schaffen sollte. Die Idee eines Vogelschwarms, ursprünglich von SWA Design entwickelt, wurde von unserem Team weitergeführt und umgesetzt.<br/><br/>Die Installation aus 3.370 Aluminiumvögeln verteilt sich auf zehn Dächer und erzeugt dynamische Schattenspiele im Tagesverlauf.<br/><br/>Meine Aufgaben umfassten die Entwicklung der Formen, die Optimierung der Verteilung und die Unterstützung bei der technischen Umsetzung.<br/><br/><strong>Projekt:</strong> Werner Sobek AG.<br/><strong>Rolle:</strong> Entwurf und Visualisierung."
+    },
+    "CASE-4": {
+      "TITLE": "TWIN HOUSE",
+      "DESCRIPTION": "Zwei identische Wohnhäuser teilen sich einen Garten auf einem schmalen Grundstück in ländlicher Umgebung. Der Entwurf nutzt die begrenzte Fläche effizient und bietet dennoch alle Funktionen eines Familienhauses. Drei Etagen und eine Dachterrasse maximieren Raum, Licht und Bezug nach außen.<br/><br/><strong>Projekt:</strong> pfalzarchitekt-reiter<br/><strong>Rolle:</strong> Entwurf und Visualisierung."
+    },
+    "CASE-5": {
+      "TITLE": "ISENBURG ZENTRUM",
+      "DESCRIPTION": "Dieses Projekt transformiert ein rückläufiges Einkaufszentrum in ein lebendiges Mixed-Use-Ensemble aus Handel, Hotel und Dienstleistungen. Neue Fassaden, ein aktivierter Hof und klare Wegebezüge stärken Identität und Umfeld.<br/><br/><strong>Projekt:</strong> Leonard design architects.<br/><strong>Rolle:</strong> Fassadengestaltung und Visualisierung."
+    },
+    "CASE-6": {
+      "TITLE": "Nottingham Student Dormitory",
+      "DESCRIPTION": "Über einem bestehenden Parkplatz entsteht ein neues Studentenwohnheim in unmittelbarer Bahnhofsnähe. Der Entwurf nutzt urbane Fläche effizient und schafft ein lebendiges Wohnumfeld. Die markante Fassade gibt dem Ort eine neue städtebauliche Präsenz.<br/><br/><strong>Projekt:</strong> Leonard design architects.<br/><strong>Rolle:</strong> Fassadengestaltung und Visualisierung."
+    },
+    "CASE-7": {
+      "TITLE": "NORDIC HUTS",
+      "DESCRIPTION": "In den norwegischen Bergen untersucht dieses Projekt die Tradition der Berg- und Wochenendhütten. Zwei Varianten wurden entwickelt: eine traditionell verwurzelt, die andere zeitgenössisch mit großen Öffnungen zur Landschaft. Beide setzen auf Wärme, Ruhe und klare Einbindung in die Natur.<br/><br/><strong>Projekt:</strong> Teknoparken Helgeland.<br/><strong>Rolle:</strong> Entwurf und Visualisierung."
+    },
+    "CASE-8": {
+      "TITLE": "WOLKENREICH",
+      "DESCRIPTION": "Für die Experimenta Heilbronn wurde eine Installation aus 85 kinetischen Elementen entwickelt, die sich unabhängig bewegen und auf Besucher reagieren. Die gefalteten Strukturen öffnen und schließen sich über Motoren, wodurch komplexe Choreografien entstehen. Ich war für die Gestaltung der Bewegungsabläufe und der visuellen Inhalte verantwortlich.<br/><br/><strong>Projekt:</strong> Werner Sobek AG.<br/><strong>Rolle:</strong> Entwurf und Visualisierung."
+    },
+    "CASE-9": {
+      "TITLE": "Poole thistle seafront",
+      "DESCRIPTION": "Dieses Projekt überarbeitet mehrere markante Gebäude – Hotel, Wohnen und Turm –, um das Stadtbild von Poole zu stärken und seine Attraktivität als Reiseziel auszubauen. Neue Architektur und eine kohärente Identität sollen dem Ort Charakter und neue Sichtbarkeit geben.<br/><br/><strong>Projekt:</strong> Leonard Design Architects<br/><strong>Rolle:</strong> Visualisierung."
+    },
+    "CASE-10": {
+      "TITLE": "ResVR",
+      "DESCRIPTION": "ResVR ist ein cloudbasierter, interaktiver Hauskonfigurator, der die Art und Weise verändert, wie Neubauten online erkundet und individualisiert werden.<br/><br/>Ich habe ResVR 2023 mitgegründet und an der Entwicklung des Kernsystems, der Markenidentität, der Benutzeroberfläche sowie der Marketingmaterialien mitgewirkt. Mein Fokus lag darauf, architektonische Komplexität in eine klare, performante digitale Erfahrung zu übersetzen, die in Produkt, Vertrieb und Kommunikation eingesetzt wird."
+    },
+    "CASE-11": {
+      "TITLE": "Video CV",
+      "DESCRIPTION": "Dieses Projekt untersucht, wie sich architektonisches Denken in Motion Design übersetzen lässt. Ich entwickelte einen Video-Lebenslauf, der räumliche Komposition, Sequenzierung und visuelles Storytelling nutzt, um meinen Hintergrund als Architekt auf eine dynamische und zugänglichere Weise zu vermitteln als ein klassischer Lebenslauf. Das Projekt entstand als Bewerbungswerkzeug und zeigt sowohl meinen gestalterischen Prozess als auch meine interdisziplinäre Arbeitsweise."
+    }
+  },
+  "IMPRINT": {
+    "IMPRINT": "Impressum",
+    "TITLE": "Angaben gemäß § 5 DDG",
+    "ADDRESS": "Anschrift",
+    "GERMANY": "Deutschland",
+    "CONTACT": "Kontakt",
+    "PHONE": "Telefon",
+    "PROFESSIONAL": "Berufsbezeichnung",
+    "PROFESSIONAL-1": "Architekt (eingetragen bei der Architektenkammer Berlin).",
+    "PROFESSIONAL-2": "Freier Designer und Visualisierer.",
+    "PROFESSIONAL-3": "Deutschland / Berlin.",
+    "CHAMBER": "Zuständige Kammer",
+    "CHAMBER-1": "Architektenkammer Berlin.",
+    "CHAMBER-2": "Mitgliedsnummer: 19157.",
+    "RESP": "Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV",
+    "VAT": "USt-IdNr.",
+    "TAX": "Steuernummer",
+    "CONTENT": "Haftung für Inhalte",
+    "CONTENT-1": "Als Anbieter digitaler Dienste bin ich gemäß § 7 DDG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Eine Gewähr für die Richtigkeit, Vollständigkeit oder Aktualität der Inhalte übernehme ich jedoch nicht.",
+    "LINKS": "Haftung für Links",
+    "LINKS-1": "Diese Website enthält Links zu externen Websites Dritter, auf deren Inhalte ich keinen Einfluss habe. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber verantwortlich. Eine dauerhafte inhaltliche Kontrolle der verlinkten Seiten ist ohne konkrete Anhaltspunkte für eine Rechtsverletzung nicht zumutbar.",
+    "COPYRIGHT": "Urheberrecht",
+    "COPYRIGHT-1": "Die durch mich erstellten Inhalte und Werke auf dieser Website unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung oder jede andere Art der Verwertung außerhalb der gesetzlichen Grenzen des Urheberrechts bedarf meiner schriftlichen Zustimmung."
+  },
+  "PRIVACY": {
+    "TITLE": "Datenschutzerklärung",
+    "CONTROLLER": {
+      "TITLE": "Verantwortlicher",
+      "GERMANY": "Deutschland",
+      "PHONE": "Telefon"
+    },
+    "DATA": {
+      "TITLE": "Daten, die wir erfassen",
+      "TEXT": "Beim Besuch dieser Website werden durch den Hosting-Anbieter Namecheap, Inc. automatisch Daten erhoben und in sogenannten Server-Logfiles gespeichert. Dazu gehören:",
+      "DATA-1": "IP-Adresse (ggf. anonymisiert).",
+      "DATA-2": "Datum und Uhrzeit des Zugriffs.",
+      "DATA-3": "Name und URL der abgerufenen Datei.",
+      "DATA-4": "Browsertyp und -version.",
+      "DATA-5": "Betriebssystem.",
+      "DATA-6": "Referrer-URL.",
+      "DATA-7": "Hostname des zugreifenden Rechners.",
+      "TEXT2": "Zweck der Verarbeitung:",
+      "TEXT3": "Sicherstellung eines stabilen, sicheren technischen Betriebs der Website.",
+      "TEXT4": "Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse)."
+    },
+    "HOSTING": {
+      "TEXT1": "Diese Website wird bei Namecheap, Inc., 4600 East Washington Street, Suite 305, Phoenix, AZ 85034, USA gehostet.",
+      "TEXT2": "Die Verarbeitung personenbezogener Daten erfolgt im Rahmen eines Auftragsverarbeitungsvertrags gemäß Art. 28 DSGVO.",
+      "TEXT3": "Da der Anbieter in den USA sitzt, kann eine Datenübertragung in ein Drittland stattfinden. Diese erfolgt auf Basis von:",
+      "TEXT4": "Standardvertragsklauseln der EU-Kommission (SCCs).",
+      "TEXT5": "technischen und organisatorischen Sicherheitsmaßnahmen."
+    },
+    "SHARE": {
+      "TITLE": "Weitergabe von Daten",
+      "TEXT1": "Eine Weitergabe personenbezogener Daten erfolgt nur, wenn:",
+      "TEXT2": "Sie eingewilligt haben.",
+      "TEXT3": "eine gesetzliche Verpflichtung besteht.",
+      "TEXT4": "dies zur Vertragserfüllung erforderlich ist.",
+      "TEXT5": "es im Rahmen der Auftragsverarbeitung erfolgt."
+    },
+    "COOKIES": "Diese Website verwendet keine Cookies, sofern nicht ausdrücklich anders angegeben.",
+    "RIGHTS": {
+      "TITLE": "Ihre Rechte (DSGVO)",
+      "TEXT1": "Sie haben folgende Rechte:",
+      "TEXT2": "Auskunft (Art. 15 DSGVO).",
+      "TEXT3": "Berichtigung (Art. 16 DSGVO).",
+      "TEXT4": "Löschung (Art. 17 DSGVO).",
+      "TEXT5": "Einschränkung (Art. 18 DSGVO).",
+      "TEXT6": "Datenübertragbarkeit (Art. 20 DSGVO).",
+      "TEXT7": "Widerspruch (Art. 21 DSGVO).",
+      "TEXT8": "Beschwerde bei einer Aufsichtsbehörde (Art. 77 DSGVO).",
+      "TEXT9": "Zuständige Behörde: Berliner Beauftragte für Datenschutz und Informationsfreiheit."
+    },
+    "SECURITY": {
+      "TITLE": "Datensicherheit",
+      "TEXT": "Ich setze technische und organisatorische Maßnahmen zur Sicherung Ihrer Daten ein."
+    },
+    "UPDATES": {
+      "TITLE": "Aktualität und Änderung",
+      "TEXT": "Diese Datenschutzerklärung wird bei Bedarf aktualisiert.Stand: 2025"
+    },
+    "CONTACT": {
+      "TITLE": "Kontaktaufnahme",
+      "TEXT1": "Bei Kontakt per Telefon oder E-Mail werden die von Ihnen übermittelten Daten ausschließlich für die Bearbeitung Ihrer Anfrage genutzt.",
+      "TEXT2": "Rechtsgrundlagen:",
+      "TEXT3": "Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen).",
+      "TEXT4": "Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse).",
+      "TEXT5": "Es erfolgt keine Weitergabe der Daten, sofern nicht gesetzlich erforderlich."
+    }
+  }
+}

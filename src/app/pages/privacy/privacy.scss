@@ -1,0 +1,48 @@
+#privacy {
+    background-color: white;
+    color: black;
+
+    .head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: calc(4 * var(--dynamic-grid-size));
+        margin-bottom: calc(2 * var(--dynamic-grid-size));
+        padding-left: var(--dynamic-grid-size);
+        font-size: 1.2rem;
+        position: sticky;
+        top: 0;
+        background-color: white;
+
+        .icons {
+            display: flex;
+            gap: 1rem;
+            padding-right: var(--dynamic-grid-size);
+
+            .icon {
+                justify-self: flex-end;
+                height: 2rem;
+                fill: black;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .policy-sections {
+        display: flex;
+        flex-direction: column;
+
+        section {
+            margin: 0;
+            padding: var(--dynamic-grid-size);
+
+            h2 {
+                margin-bottom: 8px;
+            }
+
+            ul {
+                padding: var(--dynamic-grid-size);
+            }
+        }
+    }
+}

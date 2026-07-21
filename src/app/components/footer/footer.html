@@ -1,0 +1,13 @@
+<footer [ngClass]="{'blur':isBlur}">
+     <div class="whale-container">
+          <img src="assets/images/whale.png" alt="whale" class="whale" loading="eager" (click)="openPage()">
+          <div class="whale-hint">Click if you love whales</div>
+     </div>
+     <div class="footer-btns">
+          <p class="btn" (click)="goToPage('imprint')">imprint</p>
+          <p class="btn" (click)="goToPage('privacy')">privcay policy</p>
+     </div>
+     <div class="copy">
+          &copy; 2026 emilsuliman.com | All rights reserved.
+     </div>
+</footer>

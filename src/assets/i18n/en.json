@@ -1,0 +1,160 @@
+{
+  "HEADER": {
+    "ABOUT": "about",
+    "TIMELINE": "timeline",
+    "CASES": "cases",
+    "SOLIDARITY": "solidarity",
+    "CONTACT": "contact"
+  },
+  "SIDENAV": {
+    "ABOUT": "ABOUT",
+    "TIMELINE": "TIMELINE",
+    "CASES": "CASES",
+    "SOLIDARITY": "SOLIDARITY",
+    "CONTACT": "CONTACT"
+  },
+  "ABOUT": {
+    "ARCH-BTN": "ARCHITECTURE",
+    "VIS-BTN": "STORYTELLING",
+    "PER-BTN": "PERSONAL",
+    "ARCH": "I am a trained architect and a registered member of the Architects’ Chamber of Berlin. Over the course of my career, I have worked in several offices in different countries, across different scales and disciplines, from private houses and small shops to large cultural, commercial, and pavilion projects.<br/><br/>My expertise spans concept creation, design development, visualization, and turning ideas into built spaces. For larger commissions, I collaborate with a trusted team of architects to deliver comprehensive support at every stage.",
+    "VIS": "Storytelling and narrative building are at the core of my creative work, developed through collaborations with artists, agencies, and cultural projects. I have worked as a motion designer and art director, exploring how stories can unfold across visual and sonic media. <br/><br/>My experience spans media architecture, motion design, and branding, with a focus on crafting clear, engaging, and memorable narratives. Whether through moving images or immersive environments.",
+    "PERS": "Hi, I’m Emil. I live in Berlin and love electronic music (obviously). I’m learning to mix and produce my own tracks though I still have a long way to go. I’m also working on my Portuguese (Ainda falo muito mal, mas estou a aprender!).<br/><br/>I care deeply about immigrant rights, queer issues and marginalized communities, values that guide my moral compass in both life and work. Berlin is my favorite place in the world with Lisbon close behind, and at home I care for 32 plants… I guess you could say my career isn’t the only thing I’m growing :)"
+  },
+  "CASES": {
+    "CASE-1": {
+      "TITLE": "WAHA",
+      "DESCRIPTION": "In the heart of the Syrian desert, this viewing platform celebrates the hidden vitality of the landscape. Inspired by Palmyra’s beehive houses, its domed forms—built from fired mud bricks—combine natural beauty with strong thermal performance. Water and greenery create a cool refuge where travelers can pause and take in the vast horizon.<br/><br/>A steel-and-clay canopy hovers above the terrace, blending ancient craftsmanship with modern design. It conveys authenticity and lightness. More than a viewpoint, the project stands as a symbol of resilience—a landmark reimagining the desert as a place of renewal and helping revive Syria’s tourism, culture, and hope after years of conflict.<br/><br/><strong>Role:</strong> Design and visualisation."
+    },
+    "CASE-2": {
+      "TITLE": "SWSG Social housing",
+      "DESCRIPTION": "In Stuttgart, this social housing project introduces a new approach to affordable living. Built from prefabricated wooden modules, it offers sustainable, high-quality homes for people with limited income. The modular system allows rapid construction, reducing costs and environmental impact while creating warm, livable spaces. Designed with practicality and community in mind, it provides a simple, efficient response to the city’s growing housing needs.<br/><br/><strong>Project by:</strong> Werner Sobek AG, Aktivhaus GmbH.<br/><strong>Role:</strong> visualisation, facade design."
+    },
+    "CASE-3": {
+      "TITLE": "THE INNER LOOP",
+      "DESCRIPTION": "At EXPO 2020 Dubai, the inner loop served as the main pedestrian path that needed shading from the intense desert sun while maintaining an engaging visual identity. Originally proposed by SWA Design in Los Angeles, the concept of a flock of birds was developed and executed by our team.<br/><br/>The installation includes 3,370 aluminum birds in three sizes, distributed across ten canopies to evoke a migrating flock. Designed for shading, durability, and lightness, the birds were arranged in two layers to create dynamic, shifting patterns of shadow throughout the day.<br/><br/>The project became a distinctive feature of the EXPO site. My role included developing the bird forms, optimizing their distribution, and supervising the technical design and implementation.<br/><br/><strong>Project by:</strong> Werner Sobek AG.<br/><strong>Role:</strong> Design and visualisation."
+    },
+    "CASE-4": {
+      "TITLE": "TWIN HOUSE",
+      "DESCRIPTION": "Two identical residential homes share a common backyard, designed for two families on a narrow, elongated plot typical of rural Germany. The project makes optimal use of limited land, fitting seamlessly into its surroundings while maintaining comfort and functionality.<br/><br/>Each house is compact yet complete, offering all the essentials of family living within just a few meters of width. Spread across three floors and topped with a private terrace, the design maximizes space, light, and connection to the outdoors—proving that thoughtful architecture can thrive even on the smallest sites.<br/><br/><strong>Project by:</strong> pfalzarchitekt-reiter.<br/><strong>Role:</strong> Design and visualisation."
+    },
+    "CASE-5": {
+      "TITLE": "ISENBURG ZENTRUM",
+      "DESCRIPTION": "This project envisions the transformation of a declining mall in Isenburg into a vibrant mixed-use development combining retail, hospitality, and services. The design reimagines the existing courtyard and façades, giving the complex a renewed identity and stronger connection to its surroundings. By introducing a hotel and activating public spaces, the project seeks to bring new life, character, and purpose to a site once defined by decline.<br/><br/><strong>Project by:</strong> Leonard design architects.<br/><strong>Role:</strong> Facade Design and visualisation."
+    },
+    "CASE-6": {
+      "TITLE": "Nottingham Student Dormitory",
+      "DESCRIPTION": "This dormitory is proposed above an existing parking lot near the train station, responding to the growing demand for student housing. The design makes efficient use of limited urban space while creating a lively and comfortable environment for residents. Its façade is conceived to stand out—bold and expressive—bringing a distinctive identity to the area and rethinking what student accommodation can look like.<br/><br/><strong>Project by:</strong> Leonard design architects.<br/><strong>Role:</strong> Facade Design and visualisation."
+    },
+    "CASE-7": {
+      "TITLE": "NORDIC HUTS",
+      "DESCRIPTION": "Set in the scenic mountains of Norway, this project explores the country’s deep tradition of mountain huts—places where Norwegians retreat to enjoy nature and calm. Based on the same design principles, two distinct versions were developed: one rooted in local vernacular forms, the other expressing a contemporary language with expansive glazing that opens to the surrounding landscape. Both maintain a sense of warmth, comfort, and belonging, blending naturally into their mountain setting.<br/><br/><strong>Project by:</strong> Teknoparken Helgeland.<br/><strong>Role:</strong> Design and visualisation."
+    },
+    "CASE-8": {
+      "TITLE": "WOLKENREICH",
+      "DESCRIPTION": "On the third floor of Experimenta Heilbronn, an interactive installation composed of 85 kinetic elements was proposed. Each unit moves independently yet functions as part of a coordinated whole, responding to visitors’ movements and forming dynamic, ever-changing shapes.<br/><br/>Originally developed with researchers from the University of Stuttgart, Wolkenreich was designed for exhibitions and trade fairs. Its suspended folding structures open and close through a precise motion system driven by small electric motors, allowing complex choreographies and programmed scenarios. My role involved designing the interactive sequences and creating the visual content in collaboration with a colleague.<br/><br/><strong>Project by:</strong> Werner Sobek AG.<br/><strong>Role:</strong> Design and visualisation."
+    },
+    "CASE-9": {
+      "TITLE": "Poole thistle seafront ",
+      "DESCRIPTION": "This project focuses on the redesign of several key buildings, including a hotel, residential complex, and tower, to redefine the city’s image and strengthen its role as a growing tourist destination. Through updated architecture and cohesive urban identity, the development aims to bring new energy, character, and visibility to the area.<br/><br/><strong>Project by:</strong> Leonard design architects.<br/><strong>Role:</strong> Visualisation."
+    },
+    "CASE-10": {
+      "TITLE": "ResVR",
+      "DESCRIPTION": "ResVR is a cloud-based interactive home configurator that transforms how new homes are explored and customized online.<br/><br/>I co-founded ResVR in 2023 and contributed to the development of the core system, brand identity, user interface, and marketing materials. My role focused on translating rchitectural complexity into a clear, high-performance digital experience used across product, sales, and communication."
+    },
+    "CASE-11": {
+      "TITLE": "Video CV",
+      "DESCRIPTION": "This project explores how architectural thinking can be translated into motion design. I created a video CV that uses spatial composition, sequencing, and storytelling to communicate my background as an architect in a more dynamic and engaging way than a traditional résumé. The project was developed as a tool for job applications, highlighting both my design process and my ability to work across disciplines."
+    }
+  },
+  "IMPRINT": {
+    "IMPRINT": "imprint",
+    "TITLE": "Information pursuant to § 5 DDG (German Digital Services Act)",
+    "ADDRESS": "Address",
+    "GERMANY": "Germany",
+    "CONTACT": "Contact",
+    "PHONE": "Phone",
+    "PROFESSIONAL": "Professional Title",
+    "PROFESSIONAL-1": "Architect (registered with the Berlin Chamber of Architects).",
+    "PROFESSIONAL-2": "Freelance designer and visualizer.",
+    "PROFESSIONAL-3": "Germany / Berlin.",
+    "CHAMBER": "Competent Chamber",
+    "CHAMBER-1": "Berlin Chamber of Architects.",
+    "CHAMBER-2": "Member No. 19157.",
+    "RESP": "Responsible for content under § 18 (2) MStV",
+    "VAT": "VAT ID",
+    "TAX": "Tax number",
+    "CONTENT": "Liability for Content",
+    "CONTENT-1": "As a provider of digital services, I am responsible for my own content on these pages in accordance with § 7 DDG and general legislation. However, I assume no liability for the accuracy, completeness, or timeliness of the content.",
+    "LINKS": "Liability for Links",
+    "LINKS-1": "This website contains links to external third-party websites. I have no influence over the content of those sites and therefore assume no liability for such external content. The respective provider or operator is always responsible for the linked pages. Permanent monitoring of linked content without specific indications of legal infringement is not reasonable.",
+    "COPYRIGHT": "Copyright",
+    "COPYRIGHT-1": "All content and works created by me on this website are protected by German copyright law. Any reproduction, editing, distribution, or use outside the limits of copyright requires my written permission."
+  },
+  "PRIVACY": {
+    "TITLE": "Privacy Policy",
+    "CONTROLLER": {
+      "TITLE": "Controller",
+      "GERMANY": "Germany",
+      "PHONE": "Phone"
+    },
+    "DATA": {
+      "TITLE": "Data We Collect",
+      "TEXT": "When you visit this website, certain data is automatically collected and stored by the hosting provider Namecheap, Inc. in server log files. This may include:",
+      "DATA-1": "IP address (anonymized where possible).",
+      "DATA-2": "Date and time of access.",
+      "DATA-3": "Requested file and URL.",
+      "DATA-4": "Browser type and version.",
+      "DATA-5": "Operating system.",
+      "DATA-6": "Referrer URL.",
+      "DATA-7": "Hostname of the accessing device.",
+      "TEXT2": "Purpose:",
+      "TEXT3": "Ensuring stability, security, and functionality of the website.",
+      "TEXT4": "Legal basis: Art. 6(1)(f) GDPR (legitimate interest)."
+    },
+    "HOSTING": {
+      "TEXT1": "This website is hosted by:Namecheap, Inc., 4600 East Washington Street, Suite 305, Phoenix, AZ 85034, USA.",
+      "TEXT2": "Processing is carried out under a Data Processing Agreement pursuant to Art. 28 GDPR.",
+      "TEXT3": "Because Namecheap is located in the USA, data may be transferred to a third country. Such transfers rely on:",
+      "TEXT4": "EU Standard Contractual Clauses (SCCs).",
+      "TEXT5": "appropriate technical and organizational security measures."
+    },
+    "SHARE": {
+      "TITLE": "Data Sharing",
+      "TEXT1": "Personal data is shared only when:",
+      "TEXT2": "required by law.",
+      "TEXT3": "you have given consent.",
+      "TEXT4": "necessary to fulfill a contract.",
+      "TEXT5": "processed by a contracted service provider."
+    },
+    "COOKIES": "This website uses no cookies, unless expressly stated otherwise.",
+    "RIGHTS": {
+      "TITLE": "Your Rights",
+      "TEXT1": "You have the following rights:",
+      "TEXT2": "Right of access.",
+      "TEXT3": "Right to rectification.",
+      "TEXT4": "Right to erasure.",
+      "TEXT5": "Right to restriction of processing.",
+      "TEXT6": "Right to data portability.",
+      "TEXT7": "Right to object.",
+      "TEXT8": "Right to lodge a complaint with a supervisory authority.",
+      "TEXT9": "Supervisory authority: Berlin Commissioner for Data Protection."
+    },
+    "SECURITY": {
+      "TITLE": "Data Security",
+      "TEXT": "Technical and organizational measures are applied to protect your data against unauthorized access, loss, or misuse."
+    },
+    "UPDATES": {
+      "TITLE": "Policy Changes",
+      "TEXT": "This Privacy Policy may be updated periodically. Effective date: 2025"
+    },
+    "CONTACT": {
+      "TITLE": "Contacting Me",
+      "TEXT1": "If you contact me via email or phone, the personal data you provide will be used solely to process your request.",
+      "TEXT2": "Legal basis:",
+      "TEXT3": "Art. 6(1)(b) GDPR (pre-contractual steps).",
+      "TEXT4": "Art. 6(1)(f) GDPR (legitimate interest).",
+      "TEXT5": "Data will not be shared with third parties unless required by law."
+    }
+  }
+}
