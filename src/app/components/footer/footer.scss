@@ -9,6 +9,8 @@ footer {
     align-self: center;
     cursor: pointer;
     position: relative;
+    mix-blend-mode: exclusion;
+    
 
     .whale-hint {
       display: flex;
@@ -80,8 +82,8 @@ footer {
 
     .btn {
       font-size: calc(0.7 * var(--dynamic-grid-size));
-      border: 2px solid white;
-      color: white;
+      border: 2px solid black;
+      color: black;
       width: calc(8 * var(--dynamic-grid-size));
       text-align: center;
 

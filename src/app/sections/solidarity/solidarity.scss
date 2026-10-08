@@ -49,6 +49,7 @@
 
 @media (min-width:1200px) {
     .solidarity {
+        border:2px solid black;
 
         .solidarity-text {
             line-height: calc(1 * var(--dynamic-grid-size));

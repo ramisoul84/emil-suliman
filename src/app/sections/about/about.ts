@@ -18,6 +18,28 @@ import { AnalyticsService } from '../../_services/analytics.service';
 })
 
 export class About implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('aboutVideo') aboutVideo!: ElementRef;
+  isIOS: boolean = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+  ngOnInit() { }
+  ngAfterViewInit() {
+    this.loadVideo()
+   }
+  ngOnDestroy() { }
+
+  loadVideo(): void {
+    const video = this.aboutVideo.nativeElement;
+
+    video.muted = true;
+    video.playsInline = true;
+    video.load();
+    video.play();
+    video.aut
+
+
+  }
+
+  /*
   @ViewChild('emilPhoto') emilPhoto!: ElementRef;
   @ViewChild('emilVideo') emilVideo!: ElementRef;
 
@@ -253,4 +275,5 @@ export class About implements OnInit, AfterViewInit, OnDestroy {
     });
     ScrollTrigger.getAll().forEach(trigger => trigger.kill());
   }
+    */
 }

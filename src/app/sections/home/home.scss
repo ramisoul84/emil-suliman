@@ -71,8 +71,9 @@
             font-family: var(--font-title);
             line-height: calc(3 * var(--dynamic-grid-size));
             /* Start invisible */
-            mix-blend-mode: difference;
+            mix-blend-mode:color-burn;
             opacity: 1;
+            color: black;
 
             will-change: opacity;
             transform: translateZ(0);

@@ -12,9 +12,9 @@
 ;
 
 :root {
-  /* colors */
-  --color-bg-top: #0a1225;
-  --color-bg-bottom: #0a1225;
+  /* colors #0a1225; #0a1225;*/
+  --color-bg-top: white;
+  --color-bg-bottom: white;
 
   --color1: #226b22;
   --color2: #ACC424;
@@ -25,7 +25,7 @@
   --gradient-title: linear-gradient(135deg, var(--color-header-left), var(--color-header-right));
 
   /* grid */
-  --grid-stroke-color: rgba(196, 202, 196, 0.1);
+  --grid-stroke-color: rgba(196, 202, 196, 0.6);
   --grid-stroke-width: 1px;
   --margin: 0;
 
@@ -60,7 +60,7 @@ body {
   margin: 0 var(--margin);
   background: linear-gradient(to bottom, var(--color-bg-top), var(--color-bg-bottom));
   font-family: var(--font-main);
-  color: white;
+  color: black;
   text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   -moz-text-size-adjust: 100%;
@@ -84,10 +84,11 @@ section {
     width: calc(25 * var(--dynamic-grid-size));
     height: calc(2 * var(--dynamic-grid-size));
     margin-bottom: var(--dynamic-grid-size);
-    background: var(--gradient-title);
+    //background: var(--gradient-title);
     font-family: var(--font-title);
     font-size: var(--size-title);
     user-select: none;
+    border: 2px solid black;
   }
 }
 
@@ -110,6 +111,7 @@ video {
 
 
 .blur {
+  /*
   filter:
     url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg"><filter id="pixelate"><feFlood x="0" y="0" height="2" width="2"/><feComposite width="12" height="12"/><feTile result="a"/><feComposite in="SourceGraphic" in2="a" operator="in"/><feMorphology operator="dilate" radius="4"/></filter></svg>#pixelate') blur(2px) contrast(1);
   image-rendering: pixelated;
@@ -121,6 +123,17 @@ video {
   user-select: none;
   pointer-events: none;
   opacity: 0.5;
+  transform: translateZ(0);
+  */
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+  -ms-interpolation-mode: nearest-neighbor;
+  user-select: none;
+  pointer-events: none;
+  opacity: 0.2;
   transform: translateZ(0);
 }
 
