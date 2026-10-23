@@ -1,0 +1,26 @@
+@use "sass:math";
+@use "sass:list";
+
+/* 12 frames per second, like the reference video: motion is shown in whole 1/12 s frames,
+   still following its easing (ease-out by default; `in` is ease-out played backwards, for
+   exits that mirror an entry). Returns a stepped linear() curve. */
+@function fps12($dur, $ease: out, $fps: 12) {
+  $n: math.max(1, math.round(math.div($dur, 1s) * $fps));
+  $pts: (0 0%,);
+  @for $k from 0 to $n {
+    $t: math.div($k + 1, $n);
+    $v: $t;
+    @if $ease == out { $v: 1 - math.pow(1 - $t, 3); }
+    @if $ease == in { $v: math.pow($t, 3); }          // ease-out played backwards
+    @if $ease == inout and $t < .5 { $v: 4 * $t * $t * $t; }
+    @if $ease == inout and $t >= .5 { $v: 1 - math.div(math.pow(-2 * $t + 2, 3), 2); }
+    $v: math.div(math.round($v * 1000), 1000);
+    // the first frame shows just after 0, not at 0: at 0 (and all through a delay before
+    // the motion starts) the curve must still read 0
+    $from: math.percentage(math.div($k, $n));
+    @if $k == 0 { $from: 0.1%; }
+    $pts: list.append($pts, #{$v} $from, comma);
+    $pts: list.append($pts, #{$v} math.percentage(math.div($k + 1, $n)), comma);
+  }
+  @return linear(#{$pts});
+}

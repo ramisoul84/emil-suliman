@@ -1,0 +1,97 @@
+.fx-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.main {
+  background-image:
+    linear-gradient(var(--grid-stroke-color) var(--grid-stroke-width), transparent var(--grid-stroke-width)),
+    linear-gradient(90deg, var(--grid-stroke-color) var(--grid-stroke-width), transparent var(--grid-stroke-width));
+  background-size: var(--dynamic-grid-size) var(--dynamic-grid-size);
+
+  /* the first thing: the grid fades in, fast (3 frames at 12 fps), before the header's rows */
+  animation: grid-in .25s steps(3, end) both;
+
+  will-change: background-size;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  transform: translateZ(0);
+  transition: background-size 0.1s ease;
+  &.blurred {
+    transform: translateZ(0); 
+    transition: filter 0.3s ease;
+  }
+}
+
+@keyframes grid-in {
+  from { --grid-stroke-color: rgba(196, 202, 196, 0); }
+  to { --grid-stroke-color: rgba(196, 202, 196, .6); }
+}
+
+
+/* ---------- phones: the curtain (main.ts; Emil's Comp 13, 12 fps) ----------
+   White over everything at first; the panel in the third colour comes down from the top
+   (frames 2-8, easing out), covers the screen for 3 frames, then its top edge runs down the
+   screen (frames 11-19, easing out) and the page is there. The name stays where it is while
+   the panel's edges pass over it. */
+.curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: #fff;
+  pointer-events: none;
+  --g: var(--dynamic-grid-size);
+}
+.curtain-panel {
+  position: absolute;
+  inset: 0;
+  background: var(--color3);
+  clip-path: inset(0 0 100% 0);
+}
+.curtain-text {
+  position: absolute;
+  left: 0;
+  right: 0;
+  /* the block's middle a little above the screen's (the sketch: rows at 41, 50, 55 %) */
+  top: 46.5%;
+  transform: translateY(-50%);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #fff;
+  font-family: var(--font-title);
+  font-size: calc(2 * var(--g));
+  line-height: calc(3 * var(--g));
+  white-space: nowrap;
+}
+.curtain-text span { height: calc(3 * var(--g)); }
+.curtain.play { animation: curtain-white calc(20s / 12) step-end forwards; }
+.curtain.play .curtain-panel { animation: curtain-panel calc(20s / 12) step-end forwards; }
+@keyframes curtain-white {
+  0% { background-color: #fff; }
+  50%, 100% { background-color: transparent; }
+}
+@keyframes curtain-panel {
+  0% { clip-path: inset(0 0 100% 0); }
+  5% { clip-path: inset(0 0 89.8% 0); }
+  10% { clip-path: inset(0 0 41.5% 0); }
+  15% { clip-path: inset(0 0 19.6% 0); }
+  20% { clip-path: inset(0 0 9.1% 0); }
+  25% { clip-path: inset(0 0 3.5% 0); }
+  30% { clip-path: inset(0 0 .8% 0); }
+  35%, 45% { clip-path: inset(0 0 0 0); }
+  50% { clip-path: inset(12.6% 0 0 0); }
+  55% { clip-path: inset(42.5% 0 0 0); }
+  60% { clip-path: inset(61.3% 0 0 0); }
+  65% { clip-path: inset(73.5% 0 0 0); }
+  70% { clip-path: inset(82.1% 0 0 0); }
+  75% { clip-path: inset(88.5% 0 0 0); }
+  80% { clip-path: inset(93.4% 0 0 0); }
+  85% { clip-path: inset(96.9% 0 0 0); }
+  90% { clip-path: inset(99.5% 0 0 0); }
+  95%, 100% { clip-path: inset(100% 0 0 0); }
+}
+@media (min-width: 576px) { .curtain { display: none; } }

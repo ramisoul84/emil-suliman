@@ -1,0 +1,200 @@
+footer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  .whale-container {
+    width: calc(25 * var(--dynamic-grid-size));
+    justify-self: center;
+    align-self: center;
+    cursor: pointer;
+    position: relative;
+
+    /* the whale (a white animation) shown in grey: the game's whale's (whale-game.ts) */
+    .whale {
+      filter: brightness(0) invert(47%);
+    }
+
+
+    .whale-hint {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      height: calc(1.3 * var(--dynamic-grid-size));
+      transform: translateX(-50%) translateY(10px);
+      background: var(--gradient-title);
+      padding: 0 calc(1.3 * var(--dynamic-grid-size));
+      color: white;
+      font-size: var(--dynamic-grid-size);   /* a cell, like the titles */
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      font-family: var(--font-title);
+      user-select: none;
+      pointer-events: none;
+    }
+
+    &:focus-visible {
+      outline: none;
+    }
+
+    /* the game is on: its whale swims in the sea under the page instead */
+    &.playing {
+      visibility: hidden;
+    }
+
+    /* over the whale, or when the page is reached (footer.ts: .hint-on, a few seconds) */
+    &:hover .whale-hint,
+    &:focus-visible .whale-hint,
+    &.hint-on .whale-hint {
+      opacity: 1;
+      visibility: visible;
+      //transform: translateX(-50%) translateY(0);
+      /* fades in over 3 frames at 12 fps (it used to flash) */
+      animation: hint-in .25s steps(3, jump-start) both;
+    }
+  }
+
+  @keyframes hint-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+
+  .footer-btns {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    line-height: var(--dynamic-grid-size);
+    gap: calc(1 * var(--dynamic-grid-size));
+    font-family: var(--font-title);
+
+    .btn {
+      font-size: calc(0.7 * var(--dynamic-grid-size));
+      outline: var(--frame);
+      outline-offset: -1px;
+      border: 0;
+      color: black;
+      width: calc(6 * var(--dynamic-grid-size));
+      text-align: center;
+
+      &:last-child {
+        width: calc(7 * var(--dynamic-grid-size));
+      }
+
+      box-shadow: var(--shadow-0);
+      transition: var(--lift);
+
+      &:hover,
+      &:focus-visible {
+        cursor: pointer;
+        box-shadow: var(--shadow)
+      }
+    }
+
+
+  }
+
+  .copy {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-title);
+    width: 100%;
+    height: calc(3 * var(--dynamic-grid-size));
+    font-size: calc(0.7 * var(--dynamic-grid-size));
+  }
+
+  .colors{
+      position: absolute;
+      right: var(--dynamic-grid-size);
+      bottom: var(--dynamic-grid-size);
+  }
+}
+
+@media (min-width:1200px) {
+  footer {
+    position: relative;
+    /* at the bottom of the page the window rests on the grid's whole cells, but the window is
+       rarely a whole number of cells tall: the part cell left over goes under the footer, so
+       the buttons and the copyright sit on grid rows (and level with the colours and EN / DE
+       in the corner) */
+    padding-bottom: mod(100vh, var(--dynamic-grid-size));
+
+    /* the whale floats above the buttons on the right, taking no height of its own, so
+       contact and the footer still fit in one window */
+    .whale-container {
+      position: absolute;
+      right: calc(8 * var(--dynamic-grid-size));
+      /* on the footer's top grid line (its cells on the grid's cells) */
+      bottom: calc(4 * var(--dynamic-grid-size) + mod(100vh, var(--dynamic-grid-size)));
+    }
+
+    /* from a cell after the logo, like the contact page: imprint 6 cells, a gap, privacy
+       policy to the line the titles end on (styles.scss: --title-end) */
+    .footer-btns {
+      justify-content: start;
+      padding-left: calc(4 * var(--dynamic-grid-size));
+
+      .btn:last-child {
+        width: calc((var(--title-end) - 4 - 6 - 1) * var(--dynamic-grid-size));
+      }
+    }
+
+    .copy {
+      justify-content: start;
+      padding-left: calc(4 * var(--dynamic-grid-size));
+    }
+  }
+}
+
+@media (min-width:1600px) {
+  footer {
+
+    .whale-container {
+      right: calc(13 * var(--dynamic-grid-size));
+    }
+
+  }
+}
+
+@media (min-width:2200px) {
+  footer {
+    .whale-container {
+      right: calc(18 * var(--dynamic-grid-size));
+    }
+  }
+}
+/* phones: no whale game for now (Emil 22 Oct): the whale and its line go, the footer stays */
+@media (max-width: 575.98px) {
+  /* the whale swims here too, just the animation: no game, no hint (Emil 22 Oct) */
+  footer .whale-container { cursor: default; }
+  footer .whale-container .whale-hint { display: none; }
+  /* the footer takes the page's room under the contact form; the whale in the middle of it,
+     between the form's links and imprint / privacy (Emil 23 Oct) */
+  footer { flex: 1 1 auto; }
+  footer .whale-container { margin: auto; }
+  /* imprint and privacy across the whole column (25 cells, a cell between them), two cells
+     tall; the copyright under them, the window's last row free (Emil 22 / 23 Oct) */
+  footer .copy { height: calc(2 * var(--dynamic-grid-size)); line-height: calc(2 * var(--dynamic-grid-size)); margin-bottom: var(--dynamic-grid-size); }
+  footer .footer-btns {
+    gap: var(--dynamic-grid-size);
+    padding: 0 calc(2 * var(--dynamic-grid-size));
+    margin-bottom: 0;
+    line-height: calc(2 * var(--dynamic-grid-size));
+
+    .btn, .btn:last-child {
+      flex: 1 1 0;
+      width: auto;
+      height: calc(2 * var(--dynamic-grid-size));
+      font-size: calc(.9 * var(--dynamic-grid-size));
+    }
+  }
+}

@@ -1,0 +1,74 @@
+<div class="tl" role="list" [attr.lang]="lang.currentLang()" [class.has-sel]="selected() !== null" [style.--rows]="rows">
+    <!-- year axis: grows down to the reading line -->
+    <div class="axis" aria-hidden="true" [style.--x]="axis.x" [style.--y0]="axis.y0" [style.--y1]="axis.y1"
+        [attr.data-y0]="axis.y0" [attr.data-y1]="axis.y1"></div>
+
+    @for (y of years; track y.label) {
+    <div class="tick" aria-hidden="true" [style.--y]="y.y" [attr.data-at]="y.y" data-time></div>
+    <div class="year" aria-hidden="true" [class.in]="inSpan(y.y)" [style.--y]="y.y" [attr.data-at]="y.y" data-time>{{ y.label }}</div>
+    }
+    <div class="icon birth" aria-hidden="true" [style.--y]="years[0].y" [attr.data-at]="years[0].y" data-time></div>
+
+    <!-- connectors: country heading → axis -->
+    @for (c of connectors; track c.at) {
+    <div class="connector" aria-hidden="true" [attr.data-at]="c.at" [attr.data-place]="c.until">
+        @if (c.node) {
+        <span class="node" [style.--y]="c.node"></span>
+        }
+        @for (g of c.segs; track $index) {
+        <span class="seg" [class.v]="g.v" [style.--x]="g.x" [style.--x2]="g.x2" [style.--ra]="g.ra" [style.--y]="g.y" [style.--len]="g.len"
+            [style.transform-origin]="g.origin" [style.--delay.s]="g.delay" [style.--dur.s]="g.dur" [style.--n]="g.n"></span>
+        }
+    </div>
+    }
+
+    @for (h of headings; track h.y) {
+    <h3 class="heading" [class.city]="h.city" [style.--y]="h.y" [style.--delay.s]="headingDelay(h.at)"
+        [attr.data-at]="h.at" [attr.data-place]="h.until">{{ tx(h.label) }}</h3>
+    }
+
+    @for (c of cards; track c.y) {
+    <article class="card" role="listitem" [class]="c.kind" [class.big]="!!c.desc" [class.sel]="selected() === $index"
+        [style.--y]="c.y" [attr.data-at]="c.y + 2" [attr.data-place]="c.place" tabindex="0" [attr.aria-pressed]="selected() === $index"
+        (click)="toggle($index)" (pointerleave)="leave($index, $event)" (pointerenter)="enter($index)"
+        (keydown.enter)="toggle($index)" (keydown.space)="$event.preventDefault(); toggle($index)">
+        <img appFadeIn class="logo" [class.fill]="c.logo === 'es' || c.logo === 'resvr'" [src]="c.logo === 'es' ? esLogo() : 'assets/images/timeline/' + c.logo + '.webp'" alt="" loading="lazy" decoding="async">
+        <div class="box">
+            <p class="c-title">{{ tx(c.title) }}</p>
+            <p class="c-sub">{{ tx(c.sub) }}</p>
+            @if (c.desc) {
+            <p class="c-desc">{{ tx(c.desc) }}</p>
+            }
+        </div>
+        <!-- opened: a close button beside it, and its text in a framed box under it (over it
+             when there is no room below), unfolding in whole 1/12 s frames -->
+        @if (selected() === $index && (c.more || c.desc)) {
+        <button type="button" class="close" [attr.aria-label]="lang.currentLang() === 'de' ? 'Schließen' : 'Close'"
+            (click)="$event.stopPropagation(); toggle($index)" (keydown)="$event.stopPropagation()"></button>
+        <div class="more" [class.up]="openUp()" [style.--more-rows]="moreRows()" (click)="$event.stopPropagation()">
+            <p #moreText>{{ tx(c.more ?? c.desc!) }}</p>
+        </div>
+        }
+    </article>
+    }
+
+    <!-- duration bars: grow down to the reading line -->
+    @for (b of bars; track $index) {
+    <div class="bar" aria-hidden="true" [class]="b.kind" [class.sel]="selBar() === b" [style.--col]="b.col"
+        [style.--y0]="b.y0" [style.--y1]="b.y1" [attr.data-y0]="b.y0" [attr.data-y1]="b.y1" [attr.data-card]="barCard[$index]" [attr.data-place]="cards[barCard[$index]].place"
+        (click)="toggle(barCard[$index])" (pointerleave)="leave(barCard[$index], $event)" (pointerenter)="enter(barCard[$index])"></div>
+    }
+    <!-- arrows: began before the axis (on top of the bar) / still going (riding its end as it
+         grows); shown, grown and dimmed with their bar -->
+    @for (c of caps; track $index) {
+    <div class="cap" aria-hidden="true" [class]="c.kind" [class.up]="c.dir === 'up'" [class.down]="c.dir === 'down'"
+        [class.sel]="selBar() === bars[c.bar]" [style.--col]="c.col" [style.--y0]="c.y0" [style.--y1]="c.y1"
+        [attr.data-y0]="c.y0" [attr.data-y1]="c.y1" [attr.data-card]="c.card" [attr.data-place]="cards[c.card].place"></div>
+    }
+    <!-- the selected card's time span, drawn on along the axis -->
+    @if (selBar(); as b) {
+    <div class="span" aria-hidden="true" [style.--y0]="b.y0" [style.--y1]="b.y1"></div>
+    }
+    <div class="icon graduation" aria-hidden="true" [style.--col]="graduation.col" [style.--y]="graduation.y"
+        [attr.data-at]="graduation.y + 1" data-time></div>
+</div>

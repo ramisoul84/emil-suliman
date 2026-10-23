@@ -1,0 +1,456 @@
+@use "../../_styles/motion" as *;
+
+#timeline {
+    position: relative;
+
+    .sticky {
+        position: sticky;
+        top: calc(-3 * var(--dynamic-grid-size));
+        z-index: 30;
+
+        .mask {
+            margin-bottom: calc(-13 * var(--dynamic-grid-size));
+            margin-left: calc(-1 * var(--dynamic-grid-size));
+            height: calc(17 * var(--dynamic-grid-size));
+            width: calc(27* var(--dynamic-grid-size));
+            background-color: #fff;
+            z-index: 3;
+            background-image:
+                linear-gradient(var(--grid-stroke-color) var(--grid-stroke-width), transparent var(--grid-stroke-width)),
+                linear-gradient(90deg, var(--grid-stroke-color) var(--grid-stroke-width), transparent var(--grid-stroke-width));
+            background-size: var(--dynamic-grid-size) var(--dynamic-grid-size);
+        }
+
+        .timeline-title {
+            margin-left: calc(6 * var(--dynamic-grid-size));
+            width: calc(19 * var(--dynamic-grid-size))
+        }
+
+        .map-wrapper {
+            position: relative;
+            /* its own stacking layer: the map (z-index -2, under the pin and the label) stays in
+               it, above the mask's white (phones and tablets showed an empty frame) */
+            z-index: 0;
+            overflow: hidden;
+            /* an odd number of cells each way, so there is a true middle cell for the pin */
+            width: calc(25 * var(--dynamic-grid-size));
+            height: calc(9 * var(--dynamic-grid-size));
+            margin-bottom: var(--dynamic-grid-size);
+            --map-zoom: 2;
+            outline: var(--frame);
+            outline-offset: -1px;
+            border: 0;
+            /* The animation keeps the current place in the middle of its canvas. A square canvas
+               as wide as the panel, centred in it and zoomed in (--map-zoom), so the place sits
+               in the middle of the window however tall it is, with the map running on above and
+               below. Its own black marker is switched off in map.json; .map-pin marks the spot. */
+            .map {
+                position: absolute;
+                left: calc(-1 * var(--map-half, 0) * var(--dynamic-grid-size));
+                top: 50%;
+                width: 100%;
+                aspect-ratio: 1;
+                translate: 0 -50%;
+                /* the zoom glides on the wrapper; only the drawing takes it each frame */
+                --map-zoom: inherit;
+                z-index: -2;
+
+                /* the animation's <svg> is inline by default: the line gap under it made the
+                   box taller than wide and pushed the centre (and the marker) up. It may draw
+                   past its box: the zoom below, cut by the wrapper */
+                ::ng-deep svg { display: block; overflow: visible; --map-zoom: inherit; }
+
+                /* the zoom: the drawing scaled about its middle inside its <svg> (not the box
+                   with a css scale), so every frame of a zoom is drawn at its true size: the
+                   borders stay 1px on screen all the way, with nothing to catch up after */
+                ::ng-deep svg > g {
+                    --map-zoom: inherit;   /* registered not to inherit (styles.scss): passed down */
+                    transform: scale(var(--map-zoom));
+                    transform-box: view-box;
+                    transform-origin: 50% 50%;
+                    /* the lit countries' edge as wide as the drawing is big on the screen: 3px
+                       on a phone (its map 350px at 2x), more where it is drawn bigger (the
+                       desktop's, Germany zoomed in): a country's shape and the black borders
+                       don't match exactly, and drawn bigger the black showed past a 3px edge
+                       (Emil 23 Oct) */
+                    --lit-edge: calc(100cqw * var(--map-zoom) * .0043);
+                }
+
+                /* country borders (class set in map.json): crisp black lines, 1px on screen
+                   whatever the zoom (a scale inside the svg doesn't widen them) */
+                ::ng-deep .borders path {
+                    vector-effect: non-scaling-stroke;
+                    stroke-width: 1px;
+                }
+
+                /* a lit country's edge, in its own gradient over the borders (map-cities.ts
+                   litCountries): 3px on screen, so no black line shows around it */
+                ::ng-deep .country path[stroke^="url"] {
+                    vector-effect: non-scaling-stroke;
+                    stroke-width: 3px;
+                    stroke-linejoin: round;
+                }
+                @supports (width: 1cqw) {
+                    container-type: inline-size;
+                    ::ng-deep .country path[stroke^="url"] { stroke-width: var(--lit-edge, 3px); }
+                }
+            }
+
+            .map-pin {
+                position: absolute;
+                left: calc(50% - (.5 + var(--map-half, 0)) * var(--dynamic-grid-size));
+                top: calc(50% - var(--dynamic-grid-size) / 2);
+                width: var(--dynamic-grid-size);
+                height: var(--dynamic-grid-size);
+                background: #fff;
+                outline: var(--frame);
+                outline-offset: -1px;
+                /* its frame as every other frame (Emil 22 Oct), the same as the route's square */
+                z-index: 1;
+                /* hidden while the map travels between places (it would float loose from the
+                   route); shrinks to a dot / grows back in 3 frames at 12 fps, ease-out */
+                transition: transform .25s linear(.704 0%, .704 33.333%, .963 33.333%, .963 66.667%, 1 66.667%, 1 100%);
+
+                &.away { transform: scale(0); }
+            }
+
+            /* the place's name: a framed box whole cells wide, its corner on the pin's corner
+               (above it, to the right), unfolding from the pin like the timeline's cards
+               (in 12 fps frames) and folding back when the map travels */
+            .map-label {
+                position: absolute;
+                left: calc(50% + (.5 - var(--map-half, 0)) * var(--dynamic-grid-size));
+                top: calc(50% - 1.5 * var(--dynamic-grid-size));
+                width: 0;
+                height: var(--dynamic-grid-size);
+                overflow: hidden;
+                z-index: 1;
+                background: #fff;
+                outline: var(--frame);
+                outline-offset: -1px;
+                visibility: hidden;
+                opacity: 0;
+                pointer-events: none;
+                /* going: it fades out (then folds away unseen, ready to unfold again) */
+                transition: opacity .25s #{fps12(.25s, linear)}, visibility 0s .25s, width 0s .25s;
+
+                /* the name as big as the hero's menu, the same room on its left and right as
+                   the menu's highlight (not cut to the grid) */
+                span {
+                    display: inline-block;
+                    padding: 0 calc(.75 * var(--dynamic-grid-size));
+                    font-family: var(--font-title);
+                    font-size: calc(.9 * var(--dynamic-grid-size));
+                    line-height: var(--dynamic-grid-size);
+                    white-space: nowrap;
+                    color: #000;
+                }
+
+                /* a long name on two lines, a cell each */
+                &.two {
+                    top: calc(50% - 2.5 * var(--dynamic-grid-size));
+                    height: calc(2 * var(--dynamic-grid-size));
+                }
+
+                &.on {
+                    width: var(--label-w, 0px);
+                    visibility: visible;
+                    opacity: 1;
+                    transition: width .4167s #{fps12(.4167s)} .0833s, visibility 0s .0833s, opacity 0s .0833s;
+                }
+            }
+
+            /* the move between German cities, drawn over the map (timeline.ts: drawRoute) */
+            .map-route {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 1;
+                overflow: visible;
+                pointer-events: none;
+                visibility: hidden;
+
+                line { stroke: #000; stroke-width: 4.8px; }
+                rect { fill: #fff; stroke: #000; stroke-width: 2px; shape-rendering: crispEdges; }
+                circle { fill: #000; }
+                circle.ring { fill: #fff; stroke: #000; stroke-width: 3px; }
+            }
+
+            /* in Germany the map comes closer, so its cities stand apart. Eased in and out
+               over the whole move: the map's own camera zooms in the middle of the move, so
+               the two make one zoom (quick at first, they came one after the other) */
+            transition: --map-zoom 1.8s cubic-bezier(.45, 0, .55, 1);
+            &.germany { --map-zoom: 3.2; }
+        }
+    }
+
+
+    .timeline {
+        width: calc(25 * var(--dynamic-grid-size));
+        /* as tall as the story (timeline-html sets its rows) */
+    }
+
+    .timeline-title {
+        /* sits on top of the sticky mask on small screens */
+        background-color: #fff;
+    }
+}
+
+@media (min-width:576px) {
+    #timeline {
+        margin-left: calc(6 * var(--dynamic-grid-size));
+
+        .sticky {
+            .mask {
+                margin-bottom: calc(-13 * var(--dynamic-grid-size));
+                margin-left: calc(-6 * var(--dynamic-grid-size));
+                height: calc(17 * var(--dynamic-grid-size));
+                width: calc(37* var(--dynamic-grid-size));
+            }
+        }
+    }
+}
+
+@media (min-width:1200px) {
+    #timeline {
+        display: grid;
+        /* the map from the left edge of the page (23 cells, odd: a true middle cell), then the
+           story as wide as it can be, up to the right edge of the other sections */
+        /* the map from the left edge to the line the titles end on (styles.scss: --title-end) */
+        grid-template-columns: calc(var(--title-end) * var(--dynamic-grid-size)) minmax(0, 1fr);
+        gap: calc(2 * var(--dynamic-grid-size));
+        margin-left: 0;
+        padding: 0;
+
+        .sticky {
+            align-self: self-start;
+            /* title on the logo's row, like every page */
+            top: var(--dynamic-grid-size);
+
+            .mask {
+                display: none;
+            }
+
+            /* the title beside the logo, a cell after it (desktop has no menu button there),
+               ending with the map */
+            .timeline-title {
+                margin-left: calc(4 * var(--dynamic-grid-size));
+                width: calc((var(--title-end) - 4) * var(--dynamic-grid-size));
+            }
+
+            .map-wrapper {
+                /* full window height: set from the window size in timeline.ts (whole cells);
+                   an even number of cells wide has no middle cell: the place and its pin sit
+                   in the cell left of the middle */
+                --map-half: calc((1 - mod(var(--title-end), 2)) / 2);
+                width: calc(var(--title-end) * var(--dynamic-grid-size));
+                background-color: transparent;
+                margin-bottom: 0;
+                --map-zoom: 2.4;   /* was 4.8: zoomed out to show about twice the area */
+                &.germany { --map-zoom: 3.8; }
+                /* before the story starts: the Middle East, a little further away */
+                &.far { --map-zoom: 1.7; }
+            }
+        }
+
+        /* the story's window: from the title's row to one cell above the bottom; the page
+           stands still while the story moves inside it (timeline.ts) */
+        .tl-window {
+            position: relative;
+            align-self: start;
+            height: calc(100vh - 2 * var(--dynamic-grid-size));
+            overflow: hidden;
+        }
+
+        /* on the empty page: "scroll down to see my story" between two double chevrons that
+           nod downwards, on the map pin's row (top set in timeline.ts); 3 frames in / out */
+        /* "SCROLL DOWN TO / FOLLOW MY STORY": two lines in capitals, each a cell tall with a
+           free row between, the last one just above the map pin's row; three chevrons beside */
+        .story-hint {
+            display: flex;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: calc(var(--hint-top, 50%) - 3 * var(--dynamic-grid-size));
+            height: calc(3 * var(--dynamic-grid-size));
+            margin: 0;
+            align-items: center;
+            justify-content: center;
+            gap: var(--dynamic-grid-size);
+            font-family: var(--font-title);
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity .25s steps(3, jump-start);
+
+            &.on { opacity: 1; }
+            /* hidden, the chevrons hold still where they are */
+            &:not(.on) .chev { animation-play-state: paused; }
+
+            .hint-text {
+                display: flex;
+                flex-direction: column;
+                gap: var(--dynamic-grid-size);
+                text-transform: uppercase;
+                /* every tutorial in this type and size (the landing's, about's): Emil 22 Oct,
+                   a fifth smaller than it was */
+                font-size: calc(1.12 * var(--dynamic-grid-size));
+                line-height: var(--dynamic-grid-size);
+
+                span {
+                    height: var(--dynamic-grid-size);
+                    /* the letters in the middle of their row */
+                    transform: translateY(calc(.06 * var(--dynamic-grid-size)));
+                }
+            }
+
+            .chev {
+                width: calc(1.12 * var(--dynamic-grid-size));
+                height: calc(1.44 * var(--dynamic-grid-size));
+                background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 13' fill='none' stroke='%23000' stroke-width='1.25' stroke-linecap='square'%3E%3Cpath d='M1.5 1.2l3.5 3.5 3.5-3.5M1.5 5.2l3.5 3.5 3.5-3.5M1.5 9.2l3.5 3.5 3.5-3.5'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+                animation: tl-nod 1s steps(1, end) infinite;
+            }
+        }
+
+        .timeline {
+            width: 100%;
+            will-change: transform;
+        }
+    }
+}
+
+/* the map always starts at the left edge of the page */
+
+/* the hint's chevrons nod down a little and back, in whole 1/12 s frames */
+@keyframes tl-nod {
+    0%, 50% { transform: none; }
+    58.33% { transform: translateY(calc(.1 * var(--dynamic-grid-size))); }
+    66.67%, 75% { transform: translateY(calc(.2 * var(--dynamic-grid-size))); }
+    83.33% { transform: translateY(calc(.1 * var(--dynamic-grid-size))); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .story-hint .chev { animation: none; }
+}
+
+/* phones (Emil 22 Oct): the timeline is one screen and tells its story a place per swipe,
+   like the desktop's (timeline.ts): the title beside the logo and the menu, the map under them,
+   and under the map the window the story moves in. The window reaches into the page's right
+   margin, where the years are */
+@media (max-width: 575.98px) {
+    #timeline {
+        /* to the window's last whole row (the skip button ends on it) */
+        height: var(--ph-floor, 100svh);
+        display: flex;
+        flex-direction: column;
+
+        .sticky {
+            position: relative;
+            top: auto;
+            flex: none;
+
+            .mask { display: none; }
+
+            /* as about's (Emil's mockup): a cell down, three tall, ending with the logo */
+            .timeline-title {
+                margin-top: var(--dynamic-grid-size);
+                margin-left: calc(9 * var(--dynamic-grid-size));
+                width: calc(16 * var(--dynamic-grid-size));
+                height: calc(3 * var(--dynamic-grid-size));
+                font-size: calc(1.6 * var(--dynamic-grid-size));
+            }
+
+            /* before the story starts: the Middle East, further away (as the desktop's) */
+            .map-wrapper.far { --map-zoom: 1.4; }
+            /* the zoom is set with each drawing of the map, 12 a second (timeline.ts setZoom):
+               every step repaints the svg, an iPhone can't do it more often (Emil 23 Oct) */
+            .map-wrapper { transition: none; }
+            /* the drawing cut to its square: zoomed in it ran far past the window, and all of
+               it was painted again each frame */
+            .map-wrapper .map { contain: paint; }
+            .map-wrapper .map ::ng-deep svg { overflow: hidden; }
+            /* zoomed out past its square (the story's start): the drawing beyond it shows */
+            .map-wrapper.zoom-out .map { contain: none; }
+            .map-wrapper.zoom-out .map ::ng-deep svg { overflow: visible; }
+        }
+
+        .tl-window {
+            position: relative;
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow: hidden;
+            margin-right: calc(-1 * var(--dynamic-grid-size));
+        }
+
+        /* "skip timeline" across the column, two rows tall, a free row under it */
+        .tl-skip {
+            display: block;
+            flex: none;
+            margin-bottom: var(--dynamic-grid-size);
+            width: 100%;
+            height: calc(2 * var(--dynamic-grid-size));
+            padding: 0;
+            border: 0;
+            outline: var(--frame);
+            outline-offset: -1px;
+            background: #fff;
+            color: #000;
+            font-family: var(--font-title);
+            font-size: calc(.9 * var(--dynamic-grid-size));
+            cursor: pointer;
+            box-shadow: var(--shadow-0);
+            transition: var(--lift);
+            &:active { box-shadow: var(--shadow); }
+        }
+
+        .timeline { will-change: transform; }
+
+        /* "SCROLL DOWN TO / FOLLOW MY STORY" in the empty window, as on the desktop */
+        .story-hint {
+            display: flex;
+            position: absolute;
+            left: 0;
+            width: calc(25 * var(--dynamic-grid-size));
+            top: calc(var(--hint-top, 40%) - 1.5 * var(--dynamic-grid-size));
+            height: calc(3 * var(--dynamic-grid-size));
+            margin: 0;
+            align-items: center;
+            justify-content: center;
+            gap: var(--dynamic-grid-size);
+            font-family: var(--font-title);
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity .25s steps(3, jump-start);
+
+            &.on { opacity: 1; }
+            &:not(.on) .chev { animation-play-state: paused; }
+
+            .hint-text {
+                display: flex;
+                flex-direction: column;
+                gap: var(--dynamic-grid-size);
+                text-transform: uppercase;
+                font-size: calc(1.12 * var(--dynamic-grid-size));
+                line-height: var(--dynamic-grid-size);
+
+                span {
+                    height: var(--dynamic-grid-size);
+                    transform: translateY(calc(.06 * var(--dynamic-grid-size)));
+                }
+            }
+
+            .chev {
+                width: calc(1.12 * var(--dynamic-grid-size));
+                height: calc(1.44 * var(--dynamic-grid-size));
+                background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 13' fill='none' stroke='%23000' stroke-width='1.25' stroke-linecap='square'%3E%3Cpath d='M1.5 1.2l3.5 3.5 3.5-3.5M1.5 5.2l3.5 3.5 3.5-3.5M1.5 9.2l3.5 3.5 3.5-3.5'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+                animation: tl-nod 1s steps(1, end) infinite;
+            }
+        }
+    }
+}
+
+/* the skip button: phones only */
+.tl-skip { display: none; }

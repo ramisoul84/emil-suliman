@@ -1,0 +1,470 @@
+@use "../../../_styles/motion" as *;
+
+/* fading a place back once it has been told: slow and smooth */
+$fade: .8s cubic-bezier(.45, 0, .55, 1);
+/* bars (and their arrows) grow and shrink in 3 frames to each new length */
+$grow: transform .25s #{fps12(.25s)};
+/* going back, everything leaves twice as fast as it came; lines just fade, gently */
+$gone: .3s cubic-bezier(.4, 0, .6, 1);
+
+/* The timeline panel: everything placed in grid cells (see timeline-data.ts), 136 rows tall.
+   It is at least 25 cells wide; when it is wider (desktop) the cards grow to the left edge
+   and the bars, axis and years keep to the right edge: --R is the extra width, added to
+   every x on the right side. Boxes start on grid lines; lines are 2px centred on grid lines. */
+:host {
+  --g: var(--dynamic-grid-size, 21px);
+  --ink: #000;
+  /* the card / bar greens: the site's colours (follow the chosen palette) */
+  --green-a: var(--color1);
+  --green-b: color-mix(in srgb, var(--color1), var(--color2));
+  --green-c: var(--color2);
+  --grey-box: #cccccc;   /* education cards */
+  --grey-bar: #808080;   /* education bars  */
+  --icon: #313538;       /* dark marker squares */
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.tl {
+  position: relative;
+  width: 100%;
+  height: calc(var(--rows, 95) * var(--g));
+  color: var(--ink);
+  container-type: inline-size;
+  --R: calc(100cqw - 25 * var(--g));
+}
+
+.tl > * { position: absolute; margin: 0; }
+
+/* ---------- reveal (scroll-triggered, drawn on like the reference animation) ----------
+   Each part appears when the reading line reaches it and draws itself on:
+   node grows → connector line draws out from the axis → heading fades in;
+   year fades in; card: logo appears, then its box grows from left to right.
+   Scrolling back plays it in reverse, twice as fast: the box folds back, then the logo goes;
+   years and icons go; a heading and its line (and node) simply fade away together. */
+[data-at]:not(.on) { pointer-events: none; }
+
+.year, .tick { opacity: 0; transition: opacity .125s #{fps12(.125s, linear)}; }
+.year.on, .tick.on { opacity: 1; transition: opacity .25s #{fps12(.25s, linear)}; }
+.heading { opacity: 0; transition: opacity $gone, filter $fade; }
+.heading.on { opacity: 1; transition: opacity .25s #{fps12(.25s, linear)} var(--delay, 0s), filter $fade; }
+
+.icon { transform: scale(0); transition: transform .125s #{fps12(.125s, in)}; }
+.icon.on { transform: none; transition: transform .25s #{fps12(.25s)}; }
+
+/* ---------- axis, years ---------- */
+.axis {
+  left: calc(var(--R) + var(--x) * var(--g) - 1px);
+  top: calc(var(--y0) * var(--g));
+  width: 2px;
+  height: calc((var(--y1) - var(--y0)) * var(--g));
+  background: var(--ink);
+  transform: scaleY(var(--grow, 0));
+  transform-origin: top;
+}
+.tick {
+  left: calc(var(--R) + 21.5 * var(--g) - .125 * var(--g));
+  top: calc(var(--y) * var(--g) - .125 * var(--g));
+  width: calc(.25 * var(--g));
+  height: calc(.25 * var(--g));
+  background: var(--ink);
+}
+.year {
+  left: calc(var(--R) + 22.5 * var(--g));
+  top: calc((var(--y) - .5) * var(--g));
+  height: var(--g);
+  line-height: var(--g);
+  font-family: var(--font-title);
+  font-size: calc(.9 * var(--g));
+  white-space: nowrap;
+}
+
+/* ---------- connectors ---------- */
+.connector { inset: 0; pointer-events: none; }
+.seg {
+  position: absolute;
+  left: calc(var(--ra) * var(--R) + var(--x) * var(--g) - 1px);
+  top: calc(var(--y) * var(--g) - 1px);
+  /* from its left end (left edge or right side) to its right end (always the right side) */
+  width: calc(var(--R) + var(--x2) * var(--g) - var(--ra) * var(--R) - var(--x) * var(--g) + 2px);
+  height: 2px;
+  background: var(--ink);
+  transform: scaleX(0);
+  opacity: 0;
+  /* going back: the line fades away as drawn, then folds up unseen for next time */
+  transition: opacity $gone, transform 0s .3s, filter $fade;
+}
+.seg.v {
+  width: 2px;
+  height: calc(var(--len) * var(--g) + 2px);
+  transform: scaleY(0);
+}
+.connector.on .seg {
+  transform: none;
+  opacity: 1;
+  /* --n frames of 1/12 s each (set per segment from its length) */
+  transition: transform var(--dur, .25s) steps(var(--n, 3), jump-start) var(--delay, 0s), opacity 0s, filter $fade;
+}
+/* the square where the line meets the axis: grows from a dot, before the line draws */
+.node {
+  position: absolute;
+  left: calc(var(--R) + 22 * var(--g) - .19 * var(--g));
+  top: calc(var(--y) * var(--g) - .19 * var(--g));
+  width: calc(.38 * var(--g));
+  height: calc(.38 * var(--g));
+  background: var(--icon);
+  outline: 2px solid var(--ink);
+  outline-offset: -1px;
+  transform: scale(0);
+  opacity: 0;
+  transition: opacity $gone, transform 0s .3s, filter $fade;
+}
+.connector.on .node { transform: none; opacity: 1; transition: transform .1667s #{fps12(.1667s)}, opacity 0s, filter $fade; }
+
+/* ---------- headings ---------- */
+.heading {
+  left: 0;
+  top: calc((var(--y) - .18) * var(--g));   /* sit just above the underline, like the original */
+  height: var(--g);
+  line-height: var(--g);
+  font-family: var(--font-title);
+  font-weight: normal;
+  font-size: var(--g);   /* titles: a cell */
+  white-space: nowrap;
+}
+/* the cities as big as the countries */
+.heading.city { top: calc((var(--y) - .18) * var(--g)); font-size: var(--g); }
+
+/* ---------- cards ---------- */
+.card {
+  left: 0;
+  top: calc(var(--y) * var(--g));
+  width: calc(var(--R) + 14 * var(--g));
+  height: calc(4 * var(--g));
+}
+.logo {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(4 * var(--g));
+  height: calc(4 * var(--g));
+  max-width: none;
+  object-fit: contain;
+  /* framed like every other box: 2px on the grid lines, a little air inside (the logos
+     themselves sit in one square, all at the same size: assets/images/timeline) */
+  padding: calc(.25 * var(--g));
+  background: #fff;
+  outline: var(--frame, 2px solid #000);
+  outline-offset: -1px;
+}
+/* logos that are a full square of their own (Emil's, ResVR): the whole box, up to its frame */
+.logo.fill { padding: 0; }
+.box {
+  position: absolute;
+  left: calc(5 * var(--g));
+  top: 0;
+  --box-w: calc(var(--R) + 9 * var(--g));
+  width: var(--box-w);
+  height: 100%;
+  padding: 0 calc(.5 * var(--g));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: calc(.32 * var(--g));
+  font-family: var(--font-main);
+  overflow: hidden;
+}
+.box p { margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: calc(var(--box-w) - var(--g)); flex: none; }
+
+/* the logo drops into its cell from a third of a cell above, easing out over 4 frames, at
+   two-thirds strength on the first (reference video); the box then grows out of it.
+   Going back (twice as fast): the box folds back to the logo, then the logo goes. */
+.card .logo { opacity: 0; transition: opacity .0417s linear .2083s; }
+.card.on .logo {
+  opacity: 1;
+  transition: opacity .1667s linear(.65 0%, .65 50%, 1 50%, 1 100%);
+  animation: tl-logo-in .3333s step-end both;
+}
+@keyframes tl-logo-in {
+  0% { transform: translateY(calc(-.33 * var(--g))); }
+  25% { transform: translateY(calc(-.17 * var(--g))); }
+  50% { transform: translateY(calc(-.08 * var(--g))); }
+  75% { transform: translateY(calc(-.02 * var(--g))); }
+  100% { transform: none; }
+}
+.card .box { width: 0; visibility: hidden; transition: width .2083s #{fps12(.2083s, in)}, visibility 0s .2083s; }
+.card.on .box { width: var(--box-w); visibility: visible; transition: width .4167s #{fps12(.4167s)} .0833s, visibility 0s .0833s; }
+.c-title {
+  font-size: max(calc(.9 * var(--g)), 15px);
+  line-height: 1.15;
+  font-weight: 600;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+.c-sub {
+  font-size: max(calc(.85 * var(--g)), 13px);
+  line-height: 1.25;
+  letter-spacing: .05em;
+}
+
+.edu .box { background: var(--grey-box); }
+.work .box {
+  /* black words, white where the site's colours make black unreadable (theme.service.ts) */
+  color: var(--ink-cards, #000);
+  /* gradient sized to the full box, so it doesn't squeeze while the box grows */
+  background: linear-gradient(90deg, var(--green-a), var(--green-b) 50%, var(--green-c)) 0 0 / var(--box-w) 100% no-repeat;
+}
+.other .box { background: #fff; outline: var(--frame, 2px solid #000); outline-offset: -1px; }
+
+/* big cards: a picture rather than a logo, and title + role + short text */
+.big .logo { object-fit: cover; padding: 0; }
+.big .box {
+  justify-content: flex-start;
+  padding-top: calc(.35 * var(--g));
+  gap: 0;
+}
+.big .box p { width: calc(var(--box-w) - var(--g)); }
+.big .c-title { font-size: max(calc(.9 * var(--g)), 15px); line-height: 1.15; }
+.big .c-sub {
+  font-size: max(calc(.8 * var(--g)), 11px);
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+.big .c-desc {
+  margin-top: calc(.15 * var(--g));
+  font-size: max(calc(.8 * var(--g)), 12.5px);
+  line-height: 1.3;
+  letter-spacing: .04em;
+  white-space: normal;
+  /* at .8 of a cell one line fits under the title and role; the whole text opens with the card */
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+/* ---------- selecting a card: its time span and place ---------- */
+.card { cursor: pointer; transition: opacity .25s #{fps12(.25s)}, filter $fade; }
+.card:focus-visible { outline: 2px solid var(--green-a); outline-offset: 2px; }
+.has-sel .card:not(.sel),
+.has-sel .bar:not(.sel),
+.has-sel .cap.on:not(.sel),
+.has-sel .year.on:not(.in) { opacity: .25; }
+/* the opened card reads in full, over what lies under it */
+.card.sel { z-index: 5; filter: none; }
+.has-sel .year.in { font-weight: bold; }
+.card.sel .box { outline: var(--frame, 2px solid #000); outline-offset: -1px; }
+/* the span on the axis: the black line turns green from its start year to its end, drawn on
+   in even 12 fps frames like the lines */
+.span {
+  left: calc(var(--R) + 22 * var(--g) - 3px);
+  top: calc(var(--y0) * var(--g));
+  width: 6px;
+  height: calc((var(--y1) - var(--y0)) * var(--g));
+  background: var(--green-a);
+  transform-origin: top;
+  animation: tl-draw .5s #{fps12(.5s, linear)} both;
+}
+@keyframes tl-draw { from { transform: scaleY(0); } }
+
+/* ---------- duration bars ---------- */
+.bar {
+  left: calc(var(--R) + var(--col) * var(--g));
+  top: calc(var(--y0) * var(--g));
+  width: var(--g);
+  height: calc((var(--y1) - var(--y0)) * var(--g));
+  transform: scaleY(var(--grow, 0));
+  transform-origin: top;
+  transition: opacity .25s #{fps12(.25s)}, $grow, filter $fade;
+  cursor: pointer;          /* click a bar: opens its card */
+}
+/* one green gradient running down the whole timeline, so later jobs are lighter */
+.bar.work,
+.cap.work {
+  background: linear-gradient(180deg, var(--green-a), var(--green-b) 50%, var(--green-c))
+    0 calc(var(--y0) * -1 * var(--g)) / 100% calc(var(--rows, 95) * var(--g)) no-repeat;
+}
+.bar.edu,
+.cap.edu { background: var(--grey-bar); }
+.bar.other { background: #fff; outline: var(--frame, 2px solid #000); outline-offset: -1px; }
+
+/* arrows, touching the end of their bar but separate from it, so never stretched: pointing
+   up on top of a bar that began before the axis; pointing down under one still going,
+   riding its end while it grows (and back). Shown, grown and dimmed with their bar. */
+.cap {
+  left: calc(var(--R) + var(--col) * var(--g));
+  width: var(--g);
+  height: calc(.5 * var(--g));
+  opacity: 0;
+  transition: opacity .25s #{fps12(.25s, linear)}, $grow, filter $fade;
+}
+.cap.on { opacity: 1; }
+.cap.up {
+  top: calc((var(--y0) - .5) * var(--g));
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+.cap.down {
+  top: calc(var(--y0) * var(--g));
+  transform: translateY(calc(var(--grow, 0) * (var(--y1) - var(--y0)) * var(--g)));
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+.cap.down.work { background-position-y: calc(var(--y1) * -1 * var(--g)); }
+
+/* places already told fade back with their time bars, so the current one reads and the axis
+   and years stay: a slow,
+   smooth fade ($fade), on filter so it never fights the reveal and selection (opacity) */
+.card.past,
+.heading.past,
+.connector.past .seg,
+.connector.past .node,
+.bar.past,
+.cap.past { filter: opacity(.3); }
+/* an opened card's time bar reads in full too */
+.bar.sel, .cap.sel { filter: none; }
+/* only the place being told opens; on a wide screen a card already told takes the story back
+   to its place (timeline.ts), on a phone it can't be clicked */
+.card.past, .bar.past { pointer-events: none; }
+@media (min-width: 1200px) {
+  .card.past, .bar.past { pointer-events: auto; }
+  .card.past:hover, .bar.past:hover { filter: opacity(.6); }
+}
+
+/* ---------- marker icons ---------- */
+.icon {
+  background: var(--icon) center / 60% 60% no-repeat;
+  outline: 2px solid var(--ink);
+  outline-offset: -1px;
+}
+/* 1989: born — small house */
+.icon.birth {
+  left: calc(var(--R) + 22 * var(--g) - .31 * var(--g));
+  top: calc(var(--y) * var(--g) - .31 * var(--g));
+  width: calc(.62 * var(--g));
+  height: calc(.62 * var(--g));
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath fill='%23fff' d='M5 1 9 5v4H1V5z'/%3E%3C/svg%3E");
+}
+/* graduated — mortarboard, in the grey of the degree's line */
+.icon.graduation {
+  left: calc(var(--R) + var(--col) * var(--g));
+  top: calc(var(--y) * var(--g));
+  width: var(--g);
+  height: var(--g);
+  background-color: var(--grey-bar);
+  outline-color: var(--grey-bar);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23fff' stroke-width='1.6'%3E%3Cpath d='M1 6h18M5 6v6h10V6M17 6v5'/%3E%3C/svg%3E");
+}
+
+/* ---------- an opened card (reference video, 12 fps) ----------
+   the close button fades in over 2 frames; the text box unfolds in 3 (one cell, nearly all,
+   all of it) one cell under the card — over it when there is no room below — then its text
+   fades in over 2 */
+.close {
+  position: absolute;
+  left: calc(100% + .5 * var(--g));
+  top: calc(1.5 * var(--g));
+  width: var(--g);
+  height: var(--g);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  animation: tl-close .5s step-end both;
+}
+.close::before,
+.close::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(.8 * var(--g));
+  height: 2px;
+  background: var(--ink);
+  translate: -50% -50%;
+  rotate: 45deg;
+}
+.close::after { rotate: -45deg; }
+.close:focus-visible { outline: 2px solid var(--green-a); }
+.more {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(5 * var(--g));
+  height: calc(var(--more-rows, 4) * var(--g));
+  background: #fff;
+  outline: var(--frame, 2px solid #000);
+  outline-offset: -1px;
+  overflow: hidden;
+  cursor: auto;
+  animation: tl-more .5s step-end both;
+}
+.more.up { top: auto; bottom: calc(5 * var(--g)); }     /* unfolds upwards */
+.more p {
+  margin: 0;
+  padding: calc(.5 * var(--g)) calc(.6 * var(--g));
+  max-width: 70ch;
+  font-family: var(--font-main);
+  font-size: max(calc(.85 * var(--g)), 13px);
+  line-height: 1.4;
+  letter-spacing: .03em;
+  animation: tl-more-text .5s step-end both;
+}
+@keyframes tl-close { 0% { opacity: 0; } 16.667% { opacity: .4; } 33.333%, 100% { opacity: 1; } }
+@keyframes tl-more {
+  0% { height: 0; opacity: 0; }
+  16.667% { height: var(--g); opacity: 1; }
+  33.333% { height: calc((var(--more-rows, 4) - 1) * var(--g)); opacity: 1; }
+  50%, 100% { height: calc(var(--more-rows, 4) * var(--g)); opacity: 1; }
+}
+@keyframes tl-more-text { 0%, 50% { opacity: 0; } 66.667% { opacity: .45; } 83.333%, 100% { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .tl *, .tl *.on { transition: none !important; }
+  .tl * { animation: none !important; }
+}
+
+/* phones: the places told fade back in 12 fps steps (6 repaints, not a smooth 0.8 s of them),
+   by their opacity, not a filter: an iPhone paints a filter again by hand each time the panel
+   is repainted, opacity costs it next to nothing (Emil 22 / 23 Oct) */
+@media (max-width: 575.98px) {
+  .card, .heading, .seg, .node, .bar, .cap { --fade: .5s #{fps12(.5s, inout)}; }
+  .card.past,
+  .heading.past,
+  .connector.past .seg,
+  .connector.past .node,
+  .bar.past,
+  .cap.past { filter: none; }
+  .card { transition: opacity var(--fade); }
+  .card.past { opacity: .3; }
+  .heading.on.past { opacity: .3; transition: opacity var(--fade); }
+  .connector.on.past .seg,
+  .connector.on.past .node { opacity: .3; transition: opacity var(--fade); }
+  .bar { transition: opacity var(--fade), $grow; }
+  .bar.past { opacity: .3; }
+  .cap { transition: opacity var(--fade), $grow; }
+  .cap.on.past { opacity: .3; }
+}
+
+/* phones (Emil 22 Oct): the axis on the map's right line, the bars with it and the cards three
+   cells wider; the years as their last two figures right of the axis, in the page's margin */
+@media (max-width: 575.98px) {
+  .tl { --R: calc(100cqw - 22 * var(--g)); }
+  /* the cards a cell longer, a cell clear of the first bars' column (Emil 22 Oct) */
+  .card { width: calc(var(--R) + 15 * var(--g)); }
+  .box { --box-w: calc(var(--R) + 10 * var(--g)); }
+  .year {
+    left: calc(var(--R) + 22.2 * var(--g));
+    font-size: calc(.72 * var(--g));
+    letter-spacing: -.02em;
+  }
+}
+
+/* wider screens (Emil 22 Oct): every frame's line alike (2px), only the axis and the lines
+   under the countries' names stronger: 3px, still centred on their grid line */
+@media (min-width: 576px) {
+  .axis { width: 3px; }
+  .seg {
+    height: 3px;
+    width: calc(var(--R) + var(--x2) * var(--g) - var(--ra) * var(--R) - var(--x) * var(--g) + 3px);
+  }
+  .seg.v { width: 3px; height: calc(var(--len) * var(--g) + 3px); }
+}

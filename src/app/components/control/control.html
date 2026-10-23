@@ -1,0 +1,76 @@
+<div class="control-wrapper" #wrap>
+    <!-- folded: "customize the blob" across the whole row of buttons; opened: its left edge has
+         run to the right and it is the square that folds them again (control.ts UNFOLD) -->
+    <button type="button" class="toggle-btn" (click)="toggleExpand()" [attr.aria-expanded]="open()"
+        [attr.aria-label]="open() || !startFolded ? (lang.currentLang() === 'de' ? (open() ? 'Regler einklappen' : 'Regler zeigen') : (open() ? 'fold the controls' : 'show the controls')) : null">
+        <span class="uf-text">{{ unfoldWords() }}</span>
+        <!-- "+" until the controls are all there, then "−" (it folds them again) -->
+        <span class="uf-sign plus" aria-hidden="true">+</span>
+        <span class="uf-sign minus" aria-hidden="true">−</span>
+    </button>
+    <div class="control" #panel [attr.inert]="open() ? null : ''">
+        <!-- back to Emil's colours -->
+        <div (click)="resetColors()" class="reset-color">reset<br>colors</div>
+        <!-- the three colours: one picked opens the colour card above (control.ts), and while
+             it is being changed a white hatch runs over it -->
+        <div class="colors" (pointerenter)="warm()" (focusin)="warm()">
+            @for (i of slots; track i) {
+            <button type="button" class="color-btn" [class.editing]="editing() === i"
+                [style.background-color]="palette()[i]" [attr.aria-label]="slotNames[i]"
+                [attr.aria-expanded]="editing() === i" (click)="openPicker(i)"></button>
+            }
+        </div>
+
+        <!-- the colour card: colours on the page's grid, the eyedropper, a colour of your own -->
+        @if (editing() !== null) {
+        <div class="picker" [class.out]="pickerOut()" role="dialog" aria-label="colours"
+            [style.left.px]="pickerAt().left" [style.bottom.px]="pickerAt().bottom">
+            <div class="pick-in">
+            <button type="button" class="pick-eye" (click)="eyedrop()" aria-label="pick a colour from the screen">
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10.5 2.5l3 3M9 4l3 3M11.5 5.5L5 12H3.5v-1.5L10 4" /></svg>
+            </button>
+            <button type="button" class="pick-custom" (click)="custom()">custom color</button>
+            <input #customInput class="pick-input" type="color" tabindex="-1" aria-hidden="true"
+                [value]="palette()[editing()!]" (change)="choose(($any($event.target)).value)">
+            <div class="pick-grid">
+                @for (c of swatches; track $index) {
+                <button type="button" class="pick-cell" [style.background-color]="c"
+                    [class.on]="c === palette()[editing()!]" [attr.aria-label]="c" (click)="choose(c)"></button>
+                }
+            </div>
+            </div>
+        </div>
+        }
+
+        @for (s of sliders; track s.key) {
+        <label class="range-group" [class]="s.key" [class.held]="held() === s.key">
+            @if (s.key === 'intensity') {
+            <!-- phones (Emil 23 Oct): reset, left of the "i": the blob and its colours as they came -->
+            <button type="button" class="reset-all" (click)="resetAll()"
+                [attr.aria-label]="lang.currentLang() === 'de' ? 'alles zurücksetzen' : 'reset everything'">reset</button>
+            <!-- "i": what the controls do (the tutorial, control.ts), and its words beside it -->
+            <button type="button" class="info" (click)="info()"
+                [attr.aria-label]="lang.currentLang() === 'de' ? 'Was die Regler tun' : 'what the controls do'">i</button>
+            @if (tutOn()) {
+            <span class="hint" aria-live="polite">{{ tutWords() }}</span>
+            }
+            }
+            <span class="range-label"><span>{{ s.name }}</span><span>{{ percent(s) }}%</span></span>
+            <!-- min/max/step before value: bindings apply in this order, and a value set
+                 first would be clamped to the default 0-100 range -->
+            <input class="range" type="range" (pointerdown)="held.set(s.key)" [id]="s.key" [min]="s.min" [max]="s.max" [step]="s.step"
+                [value]="params()[s.key]" (input)="onSlider(s, $event)" (change)="onSpeedanalytics($event)" [attr.aria-label]="s.aria" />
+        </label>
+        }
+
+
+        <div (click)="randomize()" class="control-btn randomize">
+            randomize shape
+        </div>
+        <div (click)="togglePixelated()" class="control-btn pixelated">
+            {{ isPixelated ? "unpixelate" : "pixelate" }}
+        </div>
+
+        <div (click)="randomizeColor()" (pointerenter)="warm()" class="randomize-color">randomize<br>colors</div>
+    </div>
+</div>

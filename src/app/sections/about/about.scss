@@ -1,0 +1,600 @@
+@use "../../_styles/motion" as *;
+
+/* ------------------------------------------------------------------
+   About-me collage — HTML/CSS rebuild of about.webm, laid out on the page grid.
+   --g is the site's grid cell (--dynamic-grid-size). Tiles sit on whole cells,
+   every line is 2px (like the buttons) and centred on a grid line, and the
+   collage is 51 x 19 cells: the content column of every section on desktop.
+   Narrower screens keep the same cell size and scroll the collage sideways.
+   ------------------------------------------------------------------ */
+.stage {
+  --ink: #000;
+  --paper: #fff;
+  /* background patterns: kept faint so they read as texture, not compete with the words */
+  --line: rgba(0, 0, 0, .07);    /* diagonal hatch        */
+  --grid: rgba(0, 0, 0, .07);    /* grid lines            */
+  --gridf: rgba(0, 0, 0, .06);   /* faint grid (dot-grid) */
+  --dot: rgba(0, 0, 0, .18);     /* grid dots             */
+  --b: 2px;                      /* line width, same as the site's buttons */
+  --u: calc(var(--g) / 37.647);  /* one canvas px of the original video   */
+  --third: calc(var(--g) / 3);   /* pattern cell: 3 per grid cell          */
+  position: relative;
+  width: calc(51 * var(--g) + var(--b));
+  height: calc(19 * var(--g) + var(--b));
+}
+.stage > * { position: absolute; }
+
+/* cell-placed boxes: --c/--r = first column/row, --cs/--rs = span in cells */
+.t, .blink {
+  left: calc(var(--c) * var(--g));
+  top: calc(var(--r) * var(--g));
+  width: calc(var(--cs, 1) * var(--g) + var(--b));
+  height: calc(var(--rs, 1) * var(--g) + var(--b));
+}
+/* motif boxes: inside the 2px lines of their cell region */
+.mr {
+  left: calc(var(--c) * var(--g) + var(--b));
+  top: calc(var(--r) * var(--g) + var(--b));
+  width: calc(var(--cs) * var(--g) - var(--b));
+  height: calc(var(--rs) * var(--g) - var(--b));
+}
+.mx {
+  left: calc(var(--c) * var(--g) + var(--b));
+  width: calc(var(--cs) * var(--g) - var(--b));
+  top: calc(var(--fy) * var(--g));
+  height: calc(var(--fh) * var(--g));
+}
+.my {
+  top: calc(var(--r) * var(--g) + var(--b));
+  height: calc(var(--rs) * var(--g) - var(--b));
+  left: calc(var(--fx) * var(--g));
+  width: calc(var(--fw) * var(--g));
+}
+.sprite {
+  left: calc(var(--fx) * var(--g));
+  top: calc(var(--fy) * var(--g));
+  width: calc(var(--fw) * var(--g));
+  height: calc(var(--fh) * var(--g));
+}
+
+/* ---------- tiles ---------- */
+.t {
+  box-sizing: border-box;
+  border: var(--b) solid var(--ink);
+  background-color: var(--paper);
+  /* patterns start on the tile's grid line, so every third pattern line is a page grid line */
+  background-origin: border-box;
+  --diag: repeating-linear-gradient(45deg, var(--line) 0 1px, transparent 0 calc(var(--g) * .4714));
+  --vl: linear-gradient(90deg, var(--grid) 0 1px, transparent 1px);
+  --hl: linear-gradient(180deg, var(--grid) 0 1px, transparent 1px);
+  --vlf: linear-gradient(90deg, var(--gridf) 0 1px, transparent 1px);
+  --hlf: linear-gradient(180deg, var(--gridf) 0 1px, transparent 1px);
+  --dt: radial-gradient(circle, var(--dot) 0 max(1px, calc(var(--g) * .06)), transparent max(1.5px, calc(var(--g) * .09)));
+  --cell: var(--third) var(--third);
+  --dpos: calc(var(--third) / -2) calc(var(--third) / -2);
+}
+.t.clear { background-color: transparent; border-color: transparent; }
+.t.clear.ot { border-top-color: var(--ink); }
+.t.clear.or { border-right-color: var(--ink); }
+.t.clear.ob { border-bottom-color: var(--ink); }
+.t.clear.ol { border-left-color: var(--ink); }
+
+.p-diag           { background-image: var(--diag); }
+.p-diag-h         { background-image: var(--hl), var(--diag); background-size: var(--cell), auto; }
+.p-diag-grid      { background-image: var(--vl), var(--hl), var(--diag); background-size: var(--cell), var(--cell), auto; }
+.p-diag-grid-dots { background-image: var(--dt), var(--vl), var(--hl), var(--diag); background-size: var(--cell), var(--cell), var(--cell), auto; background-position: var(--dpos), 0 0, 0 0, 0 0; }
+.p-vdiag          { background-image: var(--vl), var(--diag); background-size: var(--cell), auto; }
+.p-dotgrid        { background-image: var(--dt), var(--vlf), var(--hlf); background-size: var(--cell); background-position: var(--dpos), 0 0, 0 0; }
+.p-colors         { background-image: var(--dt), var(--hl); background-size: var(--cell); background-position: var(--dpos), 0 0; }
+.p-hlines         { background-image: var(--hl); background-size: var(--cell); }
+.p-vlines         { background-image: var(--vl); background-size: var(--cell); }
+.p-dots           { background-image: var(--dt); background-size: var(--cell); background-position: var(--dpos); }
+
+/* off screen the collage holds still (about.ts: .still), so it costs nothing there */
+.still *, .still *::before, .still *::after { animation-play-state: paused !important; }
+
+/* ---------- spinning icons: 24-frame sprite sheets, 2 s loop ---------- */
+.sprite { overflow: hidden; z-index: 4; }
+.sprite::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 2400%;
+  background: var(--img) 0 0 / 100% 100% no-repeat;
+  animation: c-spin 2s steps(24) infinite;
+}
+@keyframes c-spin { to { transform: translateX(-100%); } }
+/* in other colours than Emil's the sheet is drawn re-coloured into a canvas (about.ts) */
+.sprite canvas {
+  display: none;
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 2400%;
+  height: 100%;
+  animation: c-spin 2s steps(24) infinite;
+}
+.sprite.recolored::before { display: none; }
+.sprite.recolored canvas { display: block; }
+.s-tree { --img: url("../../../assets/images/collage/tree.webp"); }
+.s-house { --img: url("../../../assets/images/collage/house.webp"); }
+.s-cam { --img: url("../../../assets/images/collage/cam.webp"); }
+.s-duck { --img: url("../../../assets/images/collage/duck.webp"); }
+
+/* ---------- moving motifs (sizes in --u = one px of the original 1920 canvas) ----------
+   Each box shows its pattern on a layer one repeat bigger than the box on the side the
+   pattern comes from; the layer slides by one repeat and starts over (the same picture, so
+   no seam). Sliding a layer (transform) moves it smoothly by fractions of a pixel, where
+   moving the background itself jumps in whole pixels and looked jittery. */
+.m { z-index: 5; overflow: hidden; }
+.m::before {
+  content: "";
+  position: absolute;
+  top: calc(-1 * var(--ey, 0px));
+  left: calc(-1 * var(--ex, 0px));
+  right: calc(-1 * var(--ex2, 0px));
+  bottom: 0;
+  animation: m-slide 2s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+.m.rev::before { animation-direction: reverse; }
+@keyframes m-slide { to { transform: translate3d(var(--tx, 0px), var(--ty, 0px), 0); } }
+/* out of the window (main.ts marks the page resting) the loops stop and their layers go, so
+   the other pages don't carry 27 moving layers; back in view they start again, unseen, while
+   the page is still coming in at the edge */
+section.resting .m::before,
+section.resting .sprite::before,
+section.resting .sprite canvas { animation-name: none; will-change: auto; }
+
+/* diagonal stripes, sliding right one 28 px repeat in 1.25 s */
+.stripes {
+  --bg2: var(--paper);
+  --ex: calc(28 * var(--u));
+  --tx: calc(28 * var(--u));
+}
+.stripes::before {
+  background: repeating-linear-gradient(45deg, var(--ink) 0 calc(11.31 * var(--u)), var(--bg2) 0 calc(19.8 * var(--u)))
+    calc(var(--o) * var(--u)) 0 / calc(28 * var(--u)) calc(28 * var(--u));
+  animation-duration: 1.25s;
+}
+.stripes.clear { --bg2: transparent; }
+
+/* rows of dots: sideways (left) or down, one 22.3 px repeat in 2 s */
+.dots { --dotc: radial-gradient(circle, var(--ink) 0 calc(5.3 * var(--u)), transparent calc(5.9 * var(--u))); }
+.dots.x { --ex2: calc(22.3 * var(--u)); --tx: calc(-22.3 * var(--u)); }
+.dots.x::before { background: var(--dotc) calc(var(--o) * var(--u)) 50% / calc(22.3 * var(--u)) 100% repeat-x; }
+.dots.y { --ey: calc(22.3 * var(--u)); --ty: calc(22.3 * var(--u)); }
+.dots.y::before { background: var(--dotc) 50% calc(var(--o) * var(--u)) / 100% calc(22.3 * var(--u)) repeat-y; }
+
+/* the dot lattice drifts down-right by half a repeat (it looks the same from there) */
+.lattice {
+  --dotc: radial-gradient(circle, var(--ink) 0 calc(5.3 * var(--u)), transparent calc(5.9 * var(--u)));
+  --ex: calc(15.8 * var(--u));
+  --ey: calc(15 * var(--u));
+  --tx: calc(15.8 * var(--u));
+  --ty: calc(15 * var(--u));
+}
+.lattice::before {
+  background-image: var(--dotc), var(--dotc);
+  background-size: calc(31.6 * var(--u)) calc(30 * var(--u));
+  background-position:
+    calc((var(--ox) - 7.9) * var(--u)) calc((var(--oy) - 7.5) * var(--u)),
+    calc((var(--ox) + 7.9) * var(--u)) calc((var(--oy) + 7.5) * var(--u));
+}
+
+/* bars running down: straight ones (--p repeat), slanted ones (20 px repeat) */
+.hbars, .sbars-l, .sbars-r { --ey: calc(var(--p) * var(--u)); --ty: calc(var(--p) * var(--u)); }
+.hbars::before {
+  background: linear-gradient(180deg, var(--ink) 0 calc(var(--bar) * var(--u)), transparent 0)
+    0 calc(var(--o) * var(--u)) / 100% calc(var(--p) * var(--u));
+}
+.sbars-l, .sbars-r { --p: 20; }
+.sbars-l::before, .sbars-r::before {
+  background: var(--svg) 0 calc(var(--o) * var(--u)) / 100% calc(20 * var(--u)) repeat-y;
+}
+.sbars-l { --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 73 20' preserveAspectRatio='none'%3E%3Cpolygon points='0,0 73,0 73,12 13,12'/%3E%3C/svg%3E"); }
+.sbars-r { --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 35 20' preserveAspectRatio='none'%3E%3Cpolygon points='0,0 35,0 24,11 0,11'/%3E%3C/svg%3E"); }
+
+/* "boots" walking right, one 20 px repeat in 1.44 s */
+.vboots { --ex: calc(20 * var(--u)); --tx: calc(20 * var(--u)); }
+.vboots::before {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 33' preserveAspectRatio='none'%3E%3Cpolygon points='0,0 12,0 12,21 0,33'/%3E%3C/svg%3E") calc(var(--o) * var(--u)) 0 / calc(20 * var(--u)) 100% repeat-x;
+  animation-duration: 1.44s;
+}
+
+/* ---------- pulsing squares: fill a 2 x 2 cell, 1 s loop ----------
+   drawn as an SVG square (about.html, SMIL): its edges grow by fractions of a pixel, so the
+   square swells and hollows out smoothly instead of in whole-pixel steps */
+.pulse {
+  z-index: 5;
+  left: calc(var(--c) * var(--g) + var(--b));
+  top: calc(var(--r) * var(--g) + var(--b));
+  width: calc(2 * var(--g) - var(--b));
+  height: calc(2 * var(--g) - var(--b));
+  overflow: visible;
+}
+.pulse rect { fill: none; stroke: var(--ink); }
+
+/* ---------- blinking block beside "safety": one cell, 2 s loop ---------- */
+/* the small black squares: fade out and back in (3 frames each way, 12 fps); they used to
+   switch on and off */
+.blink { z-index: 5; background: var(--ink); animation: c-blink 2s step-end infinite; }
+@keyframes c-blink {
+  0% { opacity: 1; }
+  45.83% { opacity: .67; }
+  50% { opacity: .33; }
+  54.17% { opacity: 0; }
+  87.5% { opacity: .33; }
+  91.67% { opacity: .67; }
+  95.83% { opacity: 1; }
+}
+
+/* ---------- words ---------- */
+.labels {
+  left: calc(var(--b) / 2);
+  top: calc(var(--b) / 2);
+  width: calc(51 * var(--g));
+  height: calc(19 * var(--g));
+  z-index: 10;
+  font-family: "League Spartan", "Futura", "Century Gothic", sans-serif;
+  fill: var(--ink);
+  pointer-events: none;
+}
+
+/* the bars between the title and the photo (desktop): the collage's own, outside it */
+.top-bars {
+  --ink: #000;
+  --b: 2px;
+  --u: calc(var(--g) / 37.647);
+  display: none;
+}
+@media (min-width: 1200px) {
+  .top-bars { display: block; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage *, .stage *::before, .top-bars { animation-play-state: paused !important; }
+}
+
+/* ================================================================
+   About section layout + topic picker (design: 9999.mp4)
+   ================================================================ */
+#about {
+  --g: var(--dynamic-grid-size, 21px);
+  padding-top: var(--g);
+}
+.about-layout {
+  /* every topic's words in the same pale tint of the middle colour (follows the chosen palette) */
+  --tint-lit: color-mix(in srgb, var(--color2) 25%, #fff);
+  --tint-urban: var(--tint-lit);
+  --tint-arch: var(--tint-lit);
+  --tint-story: var(--tint-lit);
+  --tint-personal: var(--tint-lit);
+  display: flex;
+  flex-direction: column;
+  gap: var(--g);
+}
+
+.about-title { margin-bottom: 0; }
+
+.photo {
+  position: relative;
+  width: min(100%, calc(16 * var(--g)));
+  aspect-ratio: 1;
+  outline: var(--frame, 2px solid #000);
+  outline-offset: -1px;
+  overflow: hidden;
+  background: #fff;
+}
+.photo img, .photo .reveal {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+}
+
+.panel {
+  outline: var(--frame, 2px solid #000);
+  outline-offset: -1px;
+  background: #fff;
+  padding: var(--g);
+  /* text-driven height: --snap (main page) tops it up to whole cells */
+  padding-bottom: calc(var(--g) + var(--snap, 0px));
+  font-family: var(--font-main);
+  font-size: var(--size-text);
+  line-height: 1.3;
+}
+.panel .intro { margin: 0; }
+.switcher {
+  display: flex;
+  align-items: center;
+  gap: var(--g);
+  margin: calc(1.5 * var(--g)) 0 var(--g);
+  font-family: var(--font-title);
+  font-size: var(--size-title);
+  user-select: none;
+}
+.switcher .topic { text-transform: lowercase; min-width: 0; }
+/* the two arrows side by side, before the topic */
+.switcher .arrows { display: flex; flex: none; gap: 0; }
+.switcher { gap: calc(.6 * var(--g)); }
+/* the topic arrows: a triangle 1.2 cells in a box that takes the click (the box is the
+   button, so the whole square and a little around it can be pressed, not only the triangle) */
+.arrow {
+  position: relative;
+  flex: none;
+  width: calc(1.2 * var(--g));
+  height: calc(1.2 * var(--g));
+  border: 0;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+}
+.arrow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #808080;
+  transition: background-color .15s;
+}
+/* a little more room to hit, above and below */
+.arrow::after { content: ""; position: absolute; inset: calc(-.3 * var(--g)) 0; }
+.arrow.prev::before { clip-path: polygon(80% 10%, 80% 90%, 20% 50%); }
+.arrow.next::before { clip-path: polygon(20% 10%, 20% 90%, 80% 50%); }
+.arrow:hover::before { background: #000; }
+.arrow:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
+.panel .text { margin: 0; }
+.panel .text ::ng-deep p { margin: 0; }
+.panel .text ::ng-deep p + p { margin-top: calc(.35 * var(--g)); }
+
+.scroller {
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* the collage is drawn "line + 1px right/below"; nudge it 1px up-left so its lines sit
+     centred on the grid lines, and give the scroll box 1px so that edge is not clipped */
+  margin: -1px 0 0 -1px;
+  padding: 1px 0 var(--g) 1px;
+}
+.stage { transform: translate(-1px, -1px); }
+
+/* desktop: compose everything on the grid like the design */
+@media (min-width: 1200px) {
+  .about-layout {
+    display: block;
+    position: relative;
+    width: calc(51 * var(--g) + 2px);
+    height: calc(36 * var(--g) + 2px);
+    /* see .scroller: same 1px nudge for the whole desktop composition */
+    transform: translate(-1px, -1px);
+  }
+  .stage { transform: none; }
+  .photo, .panel, .about-title { outline: 0; border: 2px solid #000; }
+  .about-layout > * { position: absolute; margin: 0; }
+  .about-title { left: 0; top: 0; width: calc(16 * var(--g) + 2px) !important; height: calc(2 * var(--g) + 2px); }
+  .photo { left: 0; top: calc(3 * var(--g)); width: calc(16 * var(--g) + 2px); height: calc(16 * var(--g) + 2px); }
+  .panel {
+    left: calc(17 * var(--g));
+    top: 0;
+    width: calc(34 * var(--g) + 2px);
+    height: calc(19 * var(--g) + 2px);
+    padding: var(--g) calc(3 * var(--g)) 0 calc(4 * var(--g));
+    padding-bottom: 0;
+    /* body text (type chart): a cell on 1.2 cells; cut to its room (about.ts) */
+    font-size: var(--g);
+    line-height: calc(1.2 * var(--g));
+  }
+  .switcher { margin: calc(1.4 * var(--g)) 0 calc(.6 * var(--g)) calc(-.24 * var(--g)); height: calc(2 * var(--g)); }
+  .scroller { left: 0; top: calc(17 * var(--g)); overflow: visible; padding: 0; margin: 0; z-index: 2; }
+}
+
+/* ---------- picking a topic ---------- */
+.pick { cursor: pointer; }
+.pick:focus-visible { outline: 3px solid var(--color3); outline-offset: -5px; }
+.sprite, .m, .pulse, .blink { pointer-events: none; }
+/* a topic changing: its words' tint fades over and the text fades out and in, at 12 fps */
+.t { transition: background-color .5s steps(6, end); }
+/* arriving (about.ts lit): the tints go in 2 frames while the symbols lift */
+.run .t { transition-duration: calc(2s / 12); transition-timing-function: steps(2, end); }
+.swap { transition: opacity .25s steps(3, end); }
+.swap.out { opacity: 0; }
+
+[data-active="urban"] .g-urban { --paper: var(--tint-urban); }
+[data-active="arch"] .g-arch { --paper: var(--tint-arch); }
+[data-active="story"] .g-story { --paper: var(--tint-story); }
+[data-active="personal"] .g-personal { --paper: var(--tint-personal); }
+[data-active="urban"] .t.clear.g-urban { background-color: color-mix(in srgb, var(--tint-urban) 80%, transparent); }
+[data-active="arch"] .t.clear.g-arch { background-color: color-mix(in srgb, var(--tint-arch) 80%, transparent); }
+[data-active="story"] .t.clear.g-story { background-color: color-mix(in srgb, var(--tint-story) 80%, transparent); }
+[data-active="personal"] .t.clear.g-personal { background-color: color-mix(in srgb, var(--tint-personal) 80%, transparent); }
+
+/* ---------- arriving on the page (about.ts: .arrive) ----------
+   The four symbol tiles lift like the landing's buttons in its tutorial (control.ts TUT lift):
+   the same black shadow, as big and as fast, in 12 fps steps; raised over their neighbours
+   meanwhile so it shows. Only then: picking a symbol has no animation. */
+.stage.arrive .t.pick {
+  z-index: 3 !important;
+  animation: about-lift 3s step-end both;
+}
+/* up in 4 frames, held, down in the last 3: 3 s in all, with the tutorial line beside them
+   (Emil 21 Oct; it was 1.25 s) */
+@keyframes about-lift {
+  0%      { box-shadow: 0 0 0 #000; }
+  2.778%  { box-shadow: calc(.225 * var(--g)) calc(.225 * var(--g)) 0 #000; }
+  5.556%  { box-shadow: calc(.301 * var(--g)) calc(.301 * var(--g)) 0 #000; }
+  8.333%  { box-shadow: calc(.327 * var(--g)) calc(.327 * var(--g)) 0 #000; }
+  11.111% { box-shadow: calc(.329 * var(--g)) calc(.329 * var(--g)) 0 #000; }
+  91.667% { box-shadow: calc(.321 * var(--g)) calc(.321 * var(--g)) 0 #000; }
+  94.444% { box-shadow: calc(.223 * var(--g)) calc(.223 * var(--g)) 0 #000; }
+  97.222% { box-shadow: calc(.098 * var(--g)) calc(.098 * var(--g)) 0 #000; }
+  100%    { box-shadow: 0 0 0 #000; }
+}
+
+
+
+/* ================================================================
+   Phones (Emil's ttt.mp4, 22 Oct), in page cells (the section is 25 wide, a cell in from the
+   page's edge): "about me." in its box beside the logo and the menu; the photo a little
+   landscape (23 x 15), pressed it fades back with the intro over it; under it the three topics
+   in frames, each its symbol, its name and its text's first two lines, opening to the whole
+   text when tapped (Emil's sketch, 23 Oct).
+   ================================================================ */
+.ph-photo, .ph-topics { display: none; }
+@media (max-width: 575.98px) {
+  #about { padding-top: 0; }
+  .about-layout {
+    display: grid;
+    grid-template-columns: repeat(25, var(--g));
+    /* 1 the title, 2 a cell, 3 the photo, 4 a cell, 5 the three frames, a cell apart, 6 a cell
+       under them; the page at least the window's whole cells (about.ts sizeCards makes the
+       frames fill it) */
+    grid-template-rows: calc(4 * var(--g)) var(--g) calc(15 * var(--g)) var(--g) auto var(--g);
+    align-content: start;
+    min-height: var(--ph-floor, 100svh);
+    gap: 0;
+  }
+  .about-title {
+    grid-area: 1 / 10 / 2 / 26;
+    width: auto !important;
+    height: calc(3 * var(--g));
+    margin: var(--g) 0 0;
+    font-size: calc(1.6 * var(--g));
+  }
+  .photo, .panel .intro, .scroller, .top-bars { display: none; }
+  .ph-photo {
+    display: block;
+    position: relative;
+    /* its right edge on the title box's, from the column's left edge (Emil 22 Oct) */
+    grid-area: 3 / 1 / 4 / 26;
+    padding: 0;
+    border: 0;
+    background: #fff;
+    outline: 2px solid #000;
+    outline-offset: -1px;
+    cursor: pointer;
+    overflow: hidden;
+    color: #000;
+    text-align: left;
+    -webkit-tap-highlight-color: transparent;
+
+    img {
+      width: 100%;
+      height: 100%;
+      /* Emil's own picture for it, 8:5 like the frame (24 x 15 cells) */
+      object-fit: cover;
+      object-position: 50% 50%;
+      /* fading back and in: 3 frames at 12 fps */
+      transition: opacity .25s steps(3, end);
+    }
+  }
+  .ph-intro {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    padding: 0 var(--g);
+    font-family: var(--font-main);
+    font-size: calc(1.15 * var(--g));
+    line-height: calc(1.6 * var(--g));
+    opacity: 0;
+    transition: opacity .25s steps(3, end);
+  }
+  .ph-photo.open img { opacity: .15; }
+  .ph-photo.open .ph-intro { opacity: 1; }
+  .ph-photo:focus-visible { outline: 2px solid var(--color3); }
+  /* no arrows, no symbol row (Emil's sketches, 23 Oct): the topics are in the frames */
+  .panel { display: none; }
+  /* the four frames, --card-rows cells each (about.ts sizeCards), a cell apart; placed, so an
+     opened one comes over the others and nothing else moves */
+  .ph-topics {
+    --R: var(--card-rows, 6);
+    grid-area: 5 / 1 / 6 / 26;
+    display: block;
+    position: relative;
+    height: calc((4 * var(--R) + 3) * var(--g));
+  }
+  .ph-card { display: contents; }
+  .ph-card-btn {
+    /* Emil's mockup (23 Oct) is a 6-cell frame: a smaller one has it all a little smaller */
+    --k: min(1, calc(var(--R) / 6));
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(var(--i, 0) * (var(--R) + 1) * var(--g));
+    height: calc(var(--R) * var(--g));
+    background: #fff;
+    outline: var(--frame, 2px solid #000);
+    outline-offset: -1px;
+    overflow: hidden;
+    cursor: pointer;
+    z-index: 1;
+    -webkit-tap-highlight-color: transparent;
+    /* opening and folding: 6 frames at 12 fps, eased in and out (Emil 23 Oct) */
+    transition: top .5s #{fps12(.5s, inout)}, height .5s #{fps12(.5s, inout)}, opacity .5s #{fps12(.5s, inout)};
+  }
+  .ph-card-btn.closing { z-index: 2; }
+  /* one open: the others fade back, so it reads on its own (Emil 23 Oct) */
+  .ph-topics.has-open .ph-card-btn:not(.open) { opacity: .3; }
+  .ph-card-btn.open {
+    top: calc(var(--open-top, 0) * var(--g));
+    height: calc(var(--open-rows, 6) * var(--g));
+    z-index: 3;
+  }
+  .ph-card-btn:focus-visible { outline: 2px solid var(--color3); }
+  /* Emil's mockup (23 Oct), cells from the frame's left edge: the symbol in the middle of the
+     frame's height, each placed and sized as he set it (about.ts symbols.card); the name from
+     7.5 cells, in the middle; the + at 23 cells, level with it */
+  .ph-band {
+    position: absolute;
+    left: 0;
+    top: calc((var(--R) - 6 * var(--k)) / 2 * var(--g));
+    width: calc(8 * var(--k) * var(--g));
+    height: calc(6 * var(--k) * var(--g));
+  }
+  .ph-band .sprite {
+    position: absolute;
+    left: calc(var(--cx) * var(--k) * var(--g));
+    top: calc(var(--cy) * var(--k) * var(--g));
+    width: calc(var(--ch) * var(--ca) * var(--k) * var(--g));
+    height: calc(var(--ch) * var(--k) * var(--g));
+  }
+  .ph-name, .ph-sign { position: absolute; }
+  .ph-name {
+    left: calc(7.5 * var(--g));
+    top: calc((var(--R) - 2) / 2 * var(--g));
+    font-family: var(--font-title);
+    font-size: calc(1.3 * var(--g));
+    line-height: calc(2 * var(--g));
+    text-transform: lowercase;
+    white-space: nowrap;
+  }
+  .ph-sign {
+    left: calc(23 * var(--g));
+    top: calc((var(--R) - 1) / 2 * var(--g));
+    width: var(--g);
+    height: var(--g);
+    &::before, &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: calc(.75 * var(--g));
+      height: 2px;
+      margin-top: -1px;
+      background: #000;
+    }
+    &::after { transform: rotate(90deg); transition: opacity .17s steps(2, end); }
+  }
+  .ph-card-btn.open .ph-sign::after { opacity: 0; }
+  /* the text: under the frame's closed height, so only an opened frame shows it */
+  .ph-text {
+    position: absolute;
+    left: var(--g);
+    right: var(--g);
+    top: calc(var(--R) * var(--g));
+    font-family: var(--font-main);
+    font-size: calc(1.15 * var(--g));
+    line-height: calc(1.6 * var(--g));
+  }
+}

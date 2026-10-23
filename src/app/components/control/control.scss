@@ -1,0 +1,835 @@
+@use "../../_styles/motion" as *;
+
+/* The green shadow slides out at 12 frames a second (3 frames), and back on leave. Touch
+   screens have no hover: a phone kept the last pressed button lifted (a tap leaves it
+   "hovered"); there a press only flashes it, half a second (control.ts flash, Emil 23 Oct) */
+@mixin lift {
+    box-shadow: 0 0 0 var(--color2);
+    transition: box-shadow .25s #{fps12(.25s, linear)};
+
+    @media (hover: hover) {
+        &:hover,
+        &:focus-visible {
+            box-shadow: var(--shadow);
+        }
+    }
+    &.flash { box-shadow: var(--shadow); }
+}
+
+.control-wrapper {
+    width: 100%;
+    height: calc(3 * var(--dynamic-grid-size));
+    position: relative;
+    user-select: none;
+    font-size: calc(0.7 * var(--dynamic-grid-size));
+    font-family: var(--font-title);
+
+    /* folded: "customize the blob" across the bottom row (--uf-w, control.ts), over the buttons;
+       opening, its left edge runs right (--uf-p, 12 fps) until it is the 3-cell fold square,
+       the buttons under it showing as it passes and the sliders fading in (--uf-ctl) */
+    --uf-p: 0;
+    --uf-text: 1;
+    --uf-ctl: 0;
+
+    .toggle-btn {
+        width: calc(3 * var(--dynamic-grid-size)
+            + (1 - var(--uf-p)) * (var(--uf-w, calc(3 * var(--dynamic-grid-size))) - 3 * var(--dynamic-grid-size)));
+        height: calc(3 * var(--dynamic-grid-size));
+        padding: 0;
+        outline: var(--frame);
+        outline-offset: -1px;
+        border: 0;
+        background-color: #fff;
+        color: #000;
+        position: absolute;
+        right: var(--dynamic-grid-size);
+        bottom: 0;
+        font-family: var(--font-main);
+        font-size: 1.2rem;
+        cursor: pointer;
+        z-index: 4;
+        /* the words stay inside while it narrows (they made a phone's page wider) */
+        overflow: hidden;
+        @include lift;
+
+        &:active {
+            background-color: white;
+            color: black;
+        }
+
+        /* the words, as big as in the video (1.6 cells), centred on the whole row */
+        .uf-text {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-title);
+            font-size: calc(1.6 * var(--dynamic-grid-size));
+            line-height: 1;
+            white-space: nowrap;
+            opacity: var(--uf-text);
+            pointer-events: none;
+        }
+
+        /* the sign in the fold square, at the button's right end: "+" until the controls
+           are all there (folded, it is already at the end of "press to customize": phones,
+           Emil's ttt.mp4), then "−" */
+        .uf-sign {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: calc(3 * var(--dynamic-grid-size));
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+        .uf-sign.minus { opacity: 0; }
+    }
+    &.unfolded .toggle-btn .uf-sign.plus { opacity: 0; }
+    &.unfolded .toggle-btn .uf-sign.minus { opacity: 1; }
+    /* folded: nothing of the controls but the button; they come in as it opens */
+    &:not(.plain) .control { opacity: var(--uf-ctl); }
+
+    /* without "customize the blob" (control.ts START_FOLDED): the square folds them away (+) */
+    &.plain {
+        .toggle-btn { width: calc(3 * var(--dynamic-grid-size)); }
+        .toggle-btn .uf-text { display: none; }
+        &:not(.unfolded) .control { visibility: hidden; }
+    }
+
+    .control .range-group { opacity: var(--uf-ctl); }
+
+    .control {
+        position: absolute;
+        left: 0;
+        right: inherit;
+        height: 100%;
+
+        &:not(.expanded) {
+            right: 0;
+        }
+
+        /* the tutorial (control.ts, Emil's 89.mp4 frame by frame), played by the "i" button
+           in two parts: the blob (the sliders' line, the shape buttons) and then the colours
+           (the colour buttons). control.ts sets, each frame: --t1o / --t1y the words (opacity,
+           cells below their place), --tsw how far the black line has run along the sliders,
+           --tlh its thickness (cells), --tlift the buttons' black shadow (cells). All in black */
+        .info {
+            position: absolute;
+            left: 0;
+            /* two cells, a free row above the slider's name */
+            bottom: calc(100% + 2 * var(--dynamic-grid-size));
+            width: calc(2 * var(--dynamic-grid-size));
+            height: calc(2 * var(--dynamic-grid-size));
+            padding: 0;
+            border: 0;
+            outline: var(--frame);
+            outline-offset: -1px;
+            background: #fff;
+            color: #000;
+            font-family: var(--font-title);
+            font-size: calc(1.4 * var(--dynamic-grid-size));
+            line-height: calc(2 * var(--dynamic-grid-size));
+            text-align: center;
+            cursor: pointer;
+            @include lift;
+        }
+
+        /* once, after the way in: it lifts like the tutorial's buttons (the same black shadow,
+           as big and as fast, in 12 fps steps; control.ts hello) */
+        .info.hello { animation: info-lift calc(30s / 24) step-end both; }
+
+        /* reset (phones only): left of the "i" */
+        .reset-all { display: none; }
+
+        /* the words beside the "i", a cell after it */
+        .hint {
+            position: absolute;
+            left: calc(3 * var(--dynamic-grid-size));
+            bottom: calc(100% + 2 * var(--dynamic-grid-size));
+            height: calc(2 * var(--dynamic-grid-size));
+            display: flex;
+            align-items: center;
+            /* the callout size, as it was (Emil 22 Oct: the landing's own, not the timeline's) */
+            font-size: calc(1.4 * var(--dynamic-grid-size));
+            line-height: 1;
+            white-space: nowrap;
+            color: #000;
+            pointer-events: none;
+            opacity: var(--t1o, 0);
+            transform: translateY(calc(var(--t1y, 0) * var(--dynamic-grid-size)));
+        }
+
+        /* the black line on the sliders: over the track, its middle 1.5 px (at 22 px cells) below the
+           track's */
+        &.tut-a .range-group .range {
+            --tut-line: #000;
+            background:
+                linear-gradient(var(--tut-line), var(--tut-line)) no-repeat
+                    0 calc(round(down, calc((var(--dynamic-grid-size) - 2px) / 2), 1px) + 1px
+                        + (.068 - var(--tlh, 0) / 2) * var(--dynamic-grid-size))
+                    / calc(var(--tsw, 0) * 100%) calc(var(--tlh, 0) * var(--dynamic-grid-size)),
+                linear-gradient(var(--track), var(--track)) no-repeat
+                    0 round(down, calc((var(--dynamic-grid-size) - var(--track-w)) / 2), 1px) / 100% var(--track-w);
+        }
+
+        /* first the blob's buttons lift, then the colours' */
+        &.tut-a .control-btn,
+        &.tut-b .reset-color,
+        &.tut-b .colors,
+        &.tut-b .randomize-color {
+            &, &:hover, &:focus-visible {
+                transition: none;
+                box-shadow: calc(var(--tlift, 0) * var(--tlift-k, 1) * var(--dynamic-grid-size)) calc(var(--tlift, 0) * var(--tlift-k, 1) * var(--dynamic-grid-size)) 0 #000;
+            }
+        }
+
+        .colors {
+            display: flex;
+            align-items: center;
+            gap: var(--dynamic-grid-size);
+            position: absolute;
+            top: calc(-3 * var(--dynamic-grid-size));
+            right: var(--dynamic-grid-size);
+            height: calc(3 * var(--dynamic-grid-size));
+            width: calc(17 * var(--dynamic-grid-size));
+            background-color: #fff;
+
+            .colors-title {
+                width: calc(4 * var(--dynamic-grid-size));
+
+                @media (max-width:576px) {
+                    display: none;
+                }
+            }
+
+            .color-btn {
+                width: calc(5 * var(--dynamic-grid-size));
+                height: calc(1 * var(--dynamic-grid-size));
+                cursor: pointer;
+                border: 0;
+                outline: none;
+                padding: 0;
+                margin: 0;
+                -webkit-appearance: none;
+                appearance: none;
+                border-radius: 0;
+
+                /* being changed: white stripes run over it to the right, 24 frames a second
+                   (a stripe and its gap 0.69 cells across, 0.61 cells a second) */
+                &.editing {
+                    --hp: calc(.9723 * var(--dynamic-grid-size));
+                    background-image: repeating-linear-gradient(-45deg, transparent 0 calc(.34375 * var(--dynamic-grid-size)),
+                        #fff calc(.34375 * var(--dynamic-grid-size)) calc(.6875 * var(--dynamic-grid-size)));
+                    background-size: var(--hp) var(--hp);
+                    animation: hatch-run calc(19s / 12) steps(38) infinite;
+                }
+            }
+        }
+
+        /* the colour card (control.ts): over the sliders, from the reset button to the colours;
+           it grows upwards out of the buttons in 12 fps steps, its frame all round at every step
+           (the inside stays put and shows as it grows), and folds back the same way */
+        .picker {
+            position: absolute;
+            width: calc(15 * var(--dynamic-grid-size));
+            height: calc(7.5 * var(--dynamic-grid-size));
+            background: #fff;
+            outline: var(--frame);
+            outline-offset: -1px;
+            overflow: hidden;
+            z-index: 5;
+            animation: picker-open .5s step-end both;
+
+            &.out { animation: picker-close .25s step-end both; }
+
+            .pick-in {
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                height: calc(7.5 * var(--dynamic-grid-size));
+            }
+
+            .pick-eye,
+            .pick-custom {
+                position: absolute;
+                top: var(--dynamic-grid-size);
+                height: calc(1.5 * var(--dynamic-grid-size));
+                border: 0;
+                padding: 0;
+                background: #fff;
+                color: #000;
+                outline: var(--frame);
+                outline-offset: -1px;
+                cursor: pointer;
+                @include lift;
+            }
+
+            .pick-eye {
+                left: var(--dynamic-grid-size);
+                width: calc(1.5 * var(--dynamic-grid-size));
+                display: grid;
+                place-items: center;
+
+                svg {
+                    width: calc(.9 * var(--dynamic-grid-size));
+                    height: calc(.9 * var(--dynamic-grid-size));
+                    fill: none;
+                    stroke: #000;
+                    stroke-width: 1.6;
+                    stroke-linecap: square;
+                }
+            }
+
+            .pick-custom {
+                left: calc(3 * var(--dynamic-grid-size));
+                width: calc(11 * var(--dynamic-grid-size));
+                font-family: var(--font-title);
+                font-size: calc(.9 * var(--dynamic-grid-size));
+            }
+
+            /* the browser's own picker opens from here, under "custom color" */
+            .pick-input {
+                position: absolute;
+                left: calc(3 * var(--dynamic-grid-size));
+                top: calc(2.5 * var(--dynamic-grid-size));
+                width: calc(11 * var(--dynamic-grid-size));
+                height: 1px;
+                padding: 0;
+                border: 0;
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            /* the colours: a cell of the page's grid each, its lines over them */
+            .pick-grid {
+                position: absolute;
+                left: var(--dynamic-grid-size);
+                top: calc(3 * var(--dynamic-grid-size));
+                display: grid;
+                grid-template-columns: repeat(13, var(--dynamic-grid-size));
+                grid-auto-rows: var(--dynamic-grid-size);
+            }
+
+            .pick-cell {
+                width: var(--dynamic-grid-size);
+                height: var(--dynamic-grid-size);
+                padding: 0;
+                border: 0;
+                cursor: pointer;
+
+                &:hover,
+                &:focus-visible,
+                &.on {
+                    position: relative;
+                    z-index: 1;
+                    outline: 2px solid #000;
+                    outline-offset: -1px;
+                }
+            }
+        }
+
+        .reset-color {
+            display: none;
+        }
+
+        .randomize-color,
+        .reset-color {
+            align-items: center;
+            justify-content: center;
+            line-height: var(--dynamic-grid-size);
+        }
+
+        .randomize-color {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: calc(-2 * var(--dynamic-grid-size));
+            left: var(--dynamic-grid-size);
+            outline: var(--frame);
+            outline-offset: -1px;
+            border: 0;
+            background-color: #fff;
+            width: calc(7 * var(--dynamic-grid-size));
+            height: calc(5 * var(--dynamic-grid-size));
+            cursor: pointer;
+            text-align: center;
+            padding: 0 8px;
+            @include lift;
+        }
+
+        .range-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            bottom: 0;
+            height: var(--dynamic-grid-size);
+            width: calc(12 * var(--dynamic-grid-size));
+
+            /* name left, percentage right, in the row above the slider */
+            .range-label {
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 100%;
+                height: var(--dynamic-grid-size);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                line-height: 1;
+                font-variant-numeric: tabular-nums;
+                pointer-events: none;
+            }
+
+            /* the slider: a cell tall (so its square thumb sits on the cell exactly), its track
+               a 2px line like every other line, on whole pixels (a line on a half pixel is
+               drawn grey across three rows and looks thinner) */
+            .range {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 100%;
+                height: var(--dynamic-grid-size);
+                --track: #000;
+                --track-w: 2px;
+                background: linear-gradient(var(--track), var(--track)) no-repeat
+                    0 round(down, calc((var(--dynamic-grid-size) - var(--track-w)) / 2), 1px) / 100% var(--track-w);
+                outline: none;
+                cursor: pointer;
+
+                /* the line turns green under the mouse and thickens while pressed, eased in
+                   whole 1/12 s frames (3 for the colour; 2 for the width: 3px, then 4px), and
+                   back the same way */
+                transition: --track .25s #{fps12(.25s, linear)}, --track-w .1667s #{fps12(.1667s, linear)};
+
+                &:hover {
+                    --track: var(--color2);
+                }
+
+                &:active {
+                    --track-w: 4px;
+                }
+
+                &::-webkit-slider-thumb {
+                    -webkit-appearance: none;
+                    appearance: none;
+                    width: var(--dynamic-grid-size);
+                    height: var(--dynamic-grid-size);
+                    border: 0;
+                    border-radius: 0;
+                    /* 2px frame centred on the cell edge, like every other frame */
+                    box-shadow: 0 0 0 1px #000, inset 0 0 0 1px #000;
+                    cursor: pointer;
+                    background-color: var(--color-bg-top);
+                }
+
+                /* Firefox */
+                &::-moz-range-thumb {
+                    box-sizing: border-box;
+                    width: var(--dynamic-grid-size);
+                    height: var(--dynamic-grid-size);
+                    border: 0;
+                    border-radius: 0;
+                    box-shadow: 0 0 0 1px #000, inset 0 0 0 1px #000;
+                    cursor: pointer;
+                    background-color: var(--color-bg-top);
+                }
+            }
+        }
+
+        .speed {
+            top: calc(-6 * var(--dynamic-grid-size));
+            right: var(--dynamic-grid-size);
+        }
+
+        .wobble {
+            top: calc(-4 * var(--dynamic-grid-size));
+            right: var(--dynamic-grid-size);
+        }
+
+        .intensity {
+            top: calc(-4 * var(--dynamic-grid-size));
+            right: calc(14 * var(--dynamic-grid-size));
+        }
+
+        .radius {
+            top: calc(-6 * var(--dynamic-grid-size));
+            right: calc(14 * var(--dynamic-grid-size));
+        }
+
+        .control-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: absolute;
+            width: calc(6 * var(--dynamic-grid-size));
+            height: var(--dynamic-grid-size);
+            cursor: pointer;
+            background-color: #fff;
+            color: black;
+            outline: none;
+            outline: var(--frame);
+            outline-offset: -1px;
+            border: 0;
+            @include lift;
+        }
+
+        .randomize {
+            right: calc(12 * var(--dynamic-grid-size));
+            height: calc(3 * var(--dynamic-grid-size));
+        }
+
+        .pixelated {
+            right: calc(5 * var(--dynamic-grid-size));
+            height: calc(3 * var(--dynamic-grid-size));
+            bottom: 0;
+        }
+    }
+}
+
+
+@media (min-width:576px) {
+    .control-wrapper {
+        .control {
+            /* the capitals' tops 7.22 cells above the colour buttons */
+            .colors {
+                gap: var(--dynamic-grid-size);
+                position: absolute;
+                top: 0;
+                left: var(--dynamic-grid-size);
+                outline: var(--frame);
+                outline-offset: -1px;
+                border: 0;
+                height: calc(3 * var(--dynamic-grid-size));
+                width: calc(10 * var(--dynamic-grid-size));
+                padding: calc(1 * var(--dynamic-grid-size));
+
+                .color-btn {
+                    width: calc(1 * var(--dynamic-grid-size));
+                }
+
+                .colors-title {
+                    width: calc(2 * var(--dynamic-grid-size));
+                }
+
+                .color-btn {
+                    width: calc(3 * var(--dynamic-grid-size));
+                }
+            }
+
+            .randomize-color {
+                height: calc(3 * var(--dynamic-grid-size));
+                width: calc(5 * var(--dynamic-grid-size));
+                left: calc(12 * var(--dynamic-grid-size));
+                top: 0;
+            }
+
+            .range-group {
+                width: calc(16 * var(--dynamic-grid-size));
+            }
+
+            .speed {
+                top: calc(-4 * var(--dynamic-grid-size));
+                right: calc(1 * var(--dynamic-grid-size));
+            }
+
+            .wobble {
+                top: calc(-2 * var(--dynamic-grid-size));
+                right: calc(1 * var(--dynamic-grid-size));
+            }
+
+            .intensity {
+                top: calc(-4 * var(--dynamic-grid-size));
+                right: calc(20 * var(--dynamic-grid-size));
+            }
+
+            .radius {
+                top: calc(-2 * var(--dynamic-grid-size));
+                right: calc(20 * var(--dynamic-grid-size));
+            }
+
+            .randomize {
+                width: calc(12 * var(--dynamic-grid-size));
+                right: calc(5 * var(--dynamic-grid-size));
+                height: var(--dynamic-grid-size);
+            }
+
+            .pixelated {
+                width: calc(12 * var(--dynamic-grid-size));
+                right: calc(5 * var(--dynamic-grid-size));
+                height: var(--dynamic-grid-size);
+                bottom: 0;
+            }
+        }
+    }
+}
+
+@media (min-width:1200px) {
+    .control-wrapper {
+        .control {
+            .range-group {
+                width: calc(24 * var(--dynamic-grid-size));
+            }
+
+            .speed {
+                top: calc(-4 * var(--dynamic-grid-size));
+                right: calc(1 * var(--dynamic-grid-size));
+            }
+
+            .wobble {
+                top: calc(-2 * var(--dynamic-grid-size));
+                right: calc(1 * var(--dynamic-grid-size));
+            }
+
+            .intensity {
+                top: calc(-4 * var(--dynamic-grid-size));
+                right: calc(28 * var(--dynamic-grid-size));
+            }
+
+            .radius {
+                top: calc(-2 * var(--dynamic-grid-size));
+                right: calc(28 * var(--dynamic-grid-size));
+            }
+
+            /* reset colours (5 cells), the three colours (9 cells: 2 x 2 squares, evenly
+               spaced), randomize colours (8 cells), a cell apart; all text one size */
+            .reset-color {
+                display: flex;
+                position: absolute;
+                top: 0;
+                left: calc(15 * var(--dynamic-grid-size));
+                width: calc(5 * var(--dynamic-grid-size));
+                height: calc(3 * var(--dynamic-grid-size));
+                text-align: center;
+                background-color: #fff;
+                outline: var(--frame);
+                outline-offset: -1px;
+                cursor: pointer;
+                @include lift;
+            }
+
+            .colors {
+                left: calc(21 * var(--dynamic-grid-size));
+                width: calc(9 * var(--dynamic-grid-size));
+                padding: 0;
+                gap: 0;
+                justify-content: space-evenly;
+
+                .color-btn {
+                    width: calc(2 * var(--dynamic-grid-size));
+                    height: calc(2 * var(--dynamic-grid-size));
+                }
+            }
+
+            .randomize-color {
+                left: calc(31 * var(--dynamic-grid-size));
+                outline: var(--frame);
+                outline-offset: -1px;
+                border: 0;
+                width: calc(8 * var(--dynamic-grid-size));
+            }
+
+            .control-btn {
+                width: calc(19 * var(--dynamic-grid-size));
+            }
+
+            .randomize {
+                right: calc(6 * var(--dynamic-grid-size));
+            }
+
+            .pixelated {
+                right: calc(6 * var(--dynamic-grid-size));
+            }
+        }
+    }
+}
+
+@media (min-width:1600px) {
+    .control-wrapper {
+
+        .toggle-btn {
+            right: 0;
+        }
+
+        .control {
+            .range-group {
+                width: calc(24 * var(--dynamic-grid-size));
+            }
+
+            .speed {
+                top: calc(-4 * var(--dynamic-grid-size));
+                right: 0;
+            }
+
+            .wobble {
+                top: calc(-2 * var(--dynamic-grid-size));
+                right: 0;
+            }
+
+            .intensity {
+                top: calc(-4 * var(--dynamic-grid-size));
+                right: calc(28 * var(--dynamic-grid-size));
+            }
+
+            .radius {
+                top: calc(-2 * var(--dynamic-grid-size));
+                right: calc(28 * var(--dynamic-grid-size));
+            }
+
+            .reset-color {
+                left: calc(25 * var(--dynamic-grid-size));
+            }
+
+            .colors {
+                left: calc(31 * var(--dynamic-grid-size));
+            }
+
+            .randomize-color {
+                left: calc(41 * var(--dynamic-grid-size));
+                outline: var(--frame);
+                outline-offset: -1px;
+                border: 0;
+                width: calc(8 * var(--dynamic-grid-size));
+            }
+
+            .control-btn {
+                width: calc(19 * var(--dynamic-grid-size));
+            }
+
+            .randomize {
+                right: calc(5 * var(--dynamic-grid-size));
+            }
+
+            .pixelated {
+                right: calc(5 * var(--dynamic-grid-size));
+            }
+        }
+    }
+}
+
+@media (min-width:2200px) {
+    .control-wrapper {
+        .control {
+            .reset-color {
+                left: calc(35 * var(--dynamic-grid-size));
+            }
+
+            .colors {
+                left: calc(41 * var(--dynamic-grid-size));
+            }
+
+            .randomize-color {
+                left: calc(51 * var(--dynamic-grid-size));
+                outline: var(--frame);
+                outline-offset: -1px;
+                border: 0;
+                width: calc(8 * var(--dynamic-grid-size));
+            }
+        }
+    }
+}
+
+@keyframes hatch-run { to { background-position: var(--hp) 0; } }
+/* out of the buttons upwards (its bottom stays), in 6 steps */
+@keyframes picker-open {
+    0%     { height: calc(.05 * 7.5 * var(--dynamic-grid-size)); }
+    16.67% { height: calc(.625 * 7.5 * var(--dynamic-grid-size)); }
+    33.33% { height: calc(.869 * 7.5 * var(--dynamic-grid-size)); }
+    50%    { height: calc(.962 * 7.5 * var(--dynamic-grid-size)); }
+    66.67% { height: calc(.997 * 7.5 * var(--dynamic-grid-size)); }
+    83.33%, 100% { height: calc(7.5 * var(--dynamic-grid-size)); }
+}
+@keyframes picker-close {
+    0%     { height: calc(.869 * 7.5 * var(--dynamic-grid-size)); }
+    33.33% { height: calc(.375 * 7.5 * var(--dynamic-grid-size)); }
+    66.67%, 100% { height: 0; outline-color: transparent; }
+}
+
+/* the "i" saying hello (as About's symbols and the tutorial's buttons lift) */
+@keyframes info-lift {
+    0%      { box-shadow: 0 0 0 #000; }
+    6.667%  { box-shadow: calc(.225 * var(--dynamic-grid-size)) calc(.225 * var(--dynamic-grid-size)) 0 #000; }
+    13.333% { box-shadow: calc(.301 * var(--dynamic-grid-size)) calc(.301 * var(--dynamic-grid-size)) 0 #000; }
+    20%     { box-shadow: calc(.327 * var(--dynamic-grid-size)) calc(.327 * var(--dynamic-grid-size)) 0 #000; }
+    26.667% { box-shadow: calc(.329 * var(--dynamic-grid-size)) calc(.329 * var(--dynamic-grid-size)) 0 #000; }
+    80%     { box-shadow: calc(.321 * var(--dynamic-grid-size)) calc(.321 * var(--dynamic-grid-size)) 0 #000; }
+    86.667% { box-shadow: calc(.223 * var(--dynamic-grid-size)) calc(.223 * var(--dynamic-grid-size)) 0 #000; }
+    93.333% { box-shadow: calc(.098 * var(--dynamic-grid-size)) calc(.098 * var(--dynamic-grid-size)) 0 #000; }
+    100%    { box-shadow: 0 0 0 #000; }
+}
+
+/* phones: the sliders sit two by two (size, speed above intensity, wobble), so the "i" and its
+   words go a free row above the first pair, not onto it */
+@media (max-width: 575.98px) {
+    /* "PRESS TO CUSTOMIZE" (Emil's ttt.mp4): the words a little smaller, the sign bigger */
+    .control-wrapper .toggle-btn .uf-text {
+        font-size: calc(1.1 * var(--dynamic-grid-size));
+        text-transform: uppercase;
+    }
+    /* the + and − drawn (two 2px bars), exactly in the middle of the square (a letter sits on
+       its font's baseline, a little off) */
+    .control-wrapper .toggle-btn .uf-sign {
+        font-size: 0;
+        &::before, &::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: calc(1.2 * var(--dynamic-grid-size));
+            height: 2px;
+            background: #000;
+            transform: translate(-50%, -50%);
+        }
+        &.plus::after { transform: translate(-50%, -50%) rotate(90deg); }
+        &.minus::after { display: none; }
+    }
+    /* the sliders' names and values only while one is held (less on the screen) */
+    .control-wrapper .control .range-label { visibility: hidden; }
+    .control-wrapper .control .range-group.held .range-label { visibility: visible; }
+    /* the buttons' words a little bigger */
+    .control-wrapper .control .control-btn,
+    .control-wrapper .control .randomize-color { font-size: calc(.85 * var(--dynamic-grid-size)); }
+    /* the tutorial's black lift as deep as the phones' shadow (half a cell at its deepest) */
+    .control-wrapper .control { --tlift-k: 1.52; }
+    .control-wrapper .control .info,
+    .control-wrapper .control .hint,
+    .control-wrapper .control .reset-all {
+        bottom: calc(100% + 4 * var(--dynamic-grid-size));
+    }
+    /* reset on the left, the "i" a cell after it, its words a cell after that (Emil 23 Oct) */
+    .control-wrapper .control .reset-all {
+        display: block;
+        position: absolute;
+        left: 0;
+        width: calc(5 * var(--dynamic-grid-size));
+        height: calc(2 * var(--dynamic-grid-size));
+        padding: 0;
+        border: 0;
+        outline: var(--frame);
+        outline-offset: -1px;
+        background: #fff;
+        color: #000;
+        font-family: var(--font-title);
+        font-size: calc(.85 * var(--dynamic-grid-size));
+        line-height: calc(2 * var(--dynamic-grid-size));
+        text-align: center;
+        cursor: pointer;
+        @include lift;
+    }
+    .control-wrapper .control .info { left: calc(6 * var(--dynamic-grid-size)); }
+    /* its words from 9 cells, on two lines when they are long (the colours' were cut off) */
+    .control-wrapper .control .hint {
+        left: calc(9 * var(--dynamic-grid-size));
+        width: calc(17 * var(--dynamic-grid-size));
+        white-space: normal;
+        font-size: calc(1.2 * var(--dynamic-grid-size));
+        line-height: var(--dynamic-grid-size);
+    }
+}

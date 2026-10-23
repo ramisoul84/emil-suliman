@@ -1,0 +1,37 @@
+<section id="timeline">
+    <div class="sticky">
+        <div class="mask"></div>
+        <div class="title timeline-title" [ngClass]="{'blur':isBlur}">timeline.</div>
+        <div class="map-wrapper" [style.height.px]="mapHeight "  [ngClass]="{'blur':isBlur}">
+            <div #mapSection class="map" ></div>
+            <!-- current place: one white grid cell, always in the exact middle of the window -->
+            <div #mapPin class="map-pin" aria-hidden="true"></div>
+            <!-- the place's name beside the pin (timeline.ts) -->
+            <div #mapLabel class="map-label" aria-hidden="true"><span></span></div>
+            <!-- between German cities: the square, the dashed line, the dot (timeline.ts) -->
+            <svg #mapRoute class="map-route" aria-hidden="true">
+                <line class="r-line" />
+                <g class="r-a"><rect /><circle /></g>
+                <g class="r-b"><rect /><circle /></g>
+            </svg>
+        </div>
+    </div>
+
+    <!-- the whole page stands still while scrolling unfolds the story (desktop; phones: a
+         swipe a place); the panel shows through this window and moves up under it -->
+    <div class="tl-window">
+        <!-- the empty page, before the story starts: a nudge to scroll -->
+        <p #storyHint class="story-hint" aria-hidden="true">
+            <span class="chev"></span>
+            <span class="hint-text">
+                <span>{{ lang.currentLang() === 'de' ? 'scrolle nach unten' : 'scroll down to' }}</span>
+                <span>{{ lang.currentLang() === 'de' ? 'und folge meiner geschichte' : 'follow my story' }}</span>
+            </span>
+        </p>
+        <div #timelineSection class="timeline" [ngClass]="{'blur':isBlur}">
+            <app-timeline-html #htmlTimeline (place)="showPlace($event)" (goTo)="goToPlace($event)" />
+        </div>
+    </div>
+    <!-- phones: always there on the timeline's last two rows, straight on to the cases -->
+    <button type="button" class="tl-skip" (click)="skip()">{{ lang.currentLang() === 'de' ? 'timeline überspringen' : 'skip timeline' }}</button>
+</section>

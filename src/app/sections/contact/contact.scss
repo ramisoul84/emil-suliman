@@ -1,0 +1,226 @@
+#contact {
+    position: relative;
+    margin-bottom: 0;
+    user-select: none;
+
+    .msg {
+        position: absolute;
+        top: calc(3 * var(--dynamic-grid-size));
+        height: calc(11 * var(--dynamic-grid-size));
+        width: 100%;
+      
+        left: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .text {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: var(--dynamic-grid-size);
+            height: 100%;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.932);
+            color: black;
+        }
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: var(--dynamic-grid-size);
+        
+
+        .input-group {
+            display: grid;
+            grid-template-columns: calc(5 * var(--dynamic-grid-size)) 1fr;
+            align-items: center;
+
+            label {
+                line-height: var(--dynamic-grid-size);
+                font-family: var(--font-title);
+                font-size: var(--size-title);
+            }
+
+            input {
+                height: calc(2 * var(--dynamic-grid-size));
+                width: 100%;
+                outline: none;
+                background-color: transparent;
+                font-family: var(--font-main);
+                font-size: var(--size-title);
+                padding-left: var(--dynamic-grid-size);
+                color: black; // was white from the old dark theme: typed text was invisible
+                border-radius: 0;
+                outline: var(--frame);
+                outline-offset: -1px;
+                border: 0;
+                box-shadow: var(--shadow-0);
+                transition: var(--lift);
+                &:focus {
+                    background: var(--color-bg-bottom);
+                    color: var(--color-header-right);
+                    box-shadow: var(--shadow);
+                }
+
+            }
+        }
+
+        textarea {
+            width: 100%;
+            background-color: transparent;
+            height: calc(5 * var(--dynamic-grid-size));
+            font-family: var(--font-main);
+            font-size: var(--size-title);
+            resize: vertical;
+            outline: none;
+            padding: var(--dynamic-grid-size);
+            color: black;
+            outline: var(--frame);
+            outline-offset: -1px;
+            border: 0;
+            box-shadow: var(--shadow-0);
+            transition: var(--lift);
+            &:focus {
+                background: var(--color-bg-bottom);
+                color: var(--color-header-right);
+                box-shadow: var(--shadow);
+            }
+        }
+
+        .submit {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-title);
+            font-size: var(--size-title);
+            width: calc(6 * var(--dynamic-grid-size));
+            height: calc(2 * var(--dynamic-grid-size));
+            outline: none;
+            align-self: end;
+            cursor: pointer;
+            background-color: #fff;
+            color: black;
+            outline: var(--frame);
+            outline-offset: -1px;
+            border: 0;
+            box-shadow: var(--shadow-0);
+            transition: var(--lift);
+            /* not ready to send yet: quiet — a black frame on white, the word grey */
+            &:disabled {
+                background-color: #fff;
+                color: #9a9a9a;
+                outline: var(--frame, 2px solid #000);
+                outline-offset: -1px;
+                cursor: not-allowed;
+            }
+
+            &:hover:not(:disabled) {
+                box-shadow: var(--shadow);
+            }
+
+            &.loading {
+                position: relative;
+                color: transparent;
+
+                &::after {
+                    content: '';
+                    position: absolute;
+                    width: 20px;
+                    height: 20px;
+                    top: 50%;
+                    left: 50%;
+                    margin: -10px 0 0 -10px;
+                    border: 2px solid transparent;
+                    border-top: 2px solid white;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                }
+            }
+
+
+        }
+    }
+
+
+    .links {
+        position: absolute;
+        bottom: 0;
+        display: flex;
+        gap: var(--dynamic-grid-size);
+        
+
+        .link {
+            cursor: pointer;
+            width: calc(2 * var(--dynamic-grid-size));
+            height: calc(2 * var(--dynamic-grid-size));
+
+            .icon {
+                padding: 15%;
+                outline: var(--frame);
+                outline-offset: -1px;
+                border: 0;
+                fill: black;
+                box-shadow: var(--shadow-0);
+                transition: var(--lift);
+
+                &:hover {
+                   box-shadow: var(--shadow);
+                }
+            }
+
+            /* reached with the keyboard: it lifts, as under the mouse */
+            &:focus-visible { outline: none; }
+            &:focus-visible .icon { box-shadow: var(--shadow); }
+        }
+    }
+
+    .info {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-title);
+        width: calc(14 * var(--dynamic-grid-size));
+        height: var(--dynamic-grid-size);
+        background: var(--gradient-title);
+        margin-top: var(--dynamic-grid-size);
+    }
+}
+
+/* desktop: the title from a cell after the logo to the line (styles.scss: --title-end), with
+   the footer buttons below ending there too (the form stays full width) */
+@media (min-width: 1200px) {
+    #contact .contact-title {
+        width: calc((var(--title-end) - 4) * var(--dynamic-grid-size));
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+/* phones: the title beside the logo and the menu, like the other pages (Emil's sketches) */
+@media (max-width: 575.98px) {
+    #contact { scroll-margin-top: 0; }
+    /* 16px at least: an iPhone zooms the page in on a smaller field and stays zoomed */
+    /* (it lost to the form's own sizes until now: the fields were 13px, the iPhone zoomed in,
+       Emil 23 Oct) */
+    #contact form input, #contact form textarea { font-size: max(16px, var(--size-title)) !important; }
+    /* the message's box bigger: nine cells (Emil 23 Oct; it was five) */
+    #contact form textarea { height: calc(9 * var(--dynamic-grid-size)); }
+    #contact .contact-title {
+        margin-top: var(--dynamic-grid-size);
+        margin-left: calc(9 * var(--dynamic-grid-size));
+        width: calc(16 * var(--dynamic-grid-size));
+        height: calc(3 * var(--dynamic-grid-size));
+        font-size: calc(1.6 * var(--dynamic-grid-size));
+    }
+}

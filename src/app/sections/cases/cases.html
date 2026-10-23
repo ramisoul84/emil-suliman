@@ -1,0 +1,217 @@
+<section id="cases">
+    <!-- on the logo's row: the page title, then the categories (click to switch on / off) -->
+    <div class="cases-head">
+        <div class="title cases-title">
+            {{ lang.currentLang() === 'de' ? 'arbeit' : 'cases' }}
+            <!-- show / hide the category filters -->
+            <button type="button" class="filter-btn" [class.on]="filtersOpen()" (click)="filtersOpen.set(!filtersOpen())"
+                [attr.aria-expanded]="filtersOpen()" [attr.aria-label]="lang.currentLang() === 'de' ? 'Filter' : 'Filters'">
+                <!-- sliders: three lines, a knob on each -->
+                <svg viewBox="0 0 16 14" aria-hidden="true">
+                    <path d="M1 2.5h7.5M13.5 2.5h1.5M1 7h1.5M7.5 7h7.5M1 11.5h7.5M13.5 11.5h1.5" />
+                    <circle cx="11" cy="2.5" r="2.1" /><circle cx="5" cy="7" r="2.1" /><circle cx="11" cy="11.5" r="2.1" />
+                </svg>
+            </button>
+        </div>
+        <div class="tabs" role="group" aria-label="Categories" [class.closed]="!filtersOpen()">
+            @for (t of tags; track t.tag) {
+            <button type="button" class="tab" [class.off]="!active().has(t.tag)" [attr.aria-pressed]="active().has(t.tag)"
+                (click)="toggleTag(t.tag)"><span class="tab-label">{{ lang.currentLang() === 'de' ? t.de : t.en }}</span></button>
+            }
+        </div>
+    </div>
+
+    @if (phone) {
+    <!-- phones (Emil's mockup, 23 Oct): the case in one frame: its name between the arrows, year
+         and place, role, a short text (cut to its room), and its pictures in a square that is
+         always in the same place at the frame's bottom; under the frame, which case of how many -->
+    <div class="stage ph">
+        @for (c of (current() ? [current()!] : []); track c.id) {
+        <article class="case">
+            <div class="ph-title">
+                <button type="button" class="ph-arrow prev" (click)="go(-1)" [attr.aria-label]="lang.currentLang() === 'de' ? 'Vorheriges Projekt' : 'Previous project'"></button>
+                <h2 class="ph-name">{{ tx(c.title) }}</h2>
+                <button type="button" class="ph-arrow next" (click)="go(1)" [attr.aria-label]="lang.currentLang() === 'de' ? 'Nächstes Projekt' : 'Next project'"></button>
+            </div>
+            <div class="ph-text">
+                @if (c.year || c.location) {
+                <p class="ph-meta">
+                    @if (c.year) { <span>{{ meta('Year', 'Jahr', shortYears(c.year)) }}</span> }
+                    @if (c.year && c.location) { <span aria-hidden="true">&nbsp;&nbsp;|&nbsp;&nbsp;</span> }
+                    @if (c.location) { <span>{{ meta('Location', 'Ort', tx(c.location)) }}</span> }
+                </p>
+                }
+                @if (c.role) {
+                <p class="c-role"><b>{{ lang.currentLang() === 'de' ? 'Rolle' : 'Role' }}</b>: {{ tx(c.role) }}</p>
+                }
+                <!-- the office it was made with, under the role (Emil 23 Oct) -->
+                @if (c.project) {
+                <p class="c-project"><b>{{ lang.currentLang() === 'de' ? 'Projekt' : 'Project' }}</b>: {{ tx(c.project) }}</p>
+                }
+                @if (isKey(c.text)) {
+                <div class="c-desc" [innerHTML]="c.text | translate"></div>
+                } @else {
+                <div class="c-desc">{{ tx(c.text) }}</div>
+                }
+            </div>
+            <div class="ph-frame">
+                <!-- a new element for each picture: its pan starts from its left edge -->
+                @for (m of (shownMedia(c) ? [shownMedia(c)!] : []); track m.src) {
+                @if (m.video) {
+                <video appFadeIn [class.video]="m.main" [class.piece]="!m.main" [src]="m.src" muted loop playsinline [muted]="true"
+                    [attr.poster]="m.poster ?? null" [attr.aria-label]="tx(c.title)"></video>
+                } @else {
+                <img appFadeIn [src]="m.src" [alt]="tx(c.title)" decoding="async" [class.pan]="!!m.pan" [style.--ar]="m.pan ?? null">
+                }
+                @if (media(c).length > 1) {
+                <button type="button" class="ph-arrow prev" (click)="stepMedia(c, -1)" [attr.aria-label]="lang.currentLang() === 'de' ? 'Voriges Bild' : 'Previous picture'"></button>
+                <button type="button" class="ph-arrow next" (click)="stepMedia(c, 1)" [attr.aria-label]="lang.currentLang() === 'de' ? 'Nächstes Bild' : 'Next picture'"></button>
+                }
+                }
+                <!-- only with the film itself: flipped on to its other pictures they go (Emil 23 Oct) -->
+                @if ((c.youtube || c.film) && (shownMedia(c)?.main ?? true)) {
+                <div class="ph-buttons">
+                    @if (c.youtube) {
+                    <a class="yt-link" [href]="c.youtube" target="_blank" rel="noopener">{{ lang.currentLang() === 'de' ? 'video auf youtube ansehen' : 'watch video on youtube' }}</a>
+                    }
+                    @if (c.film) {
+                    <button type="button" class="sound-btn" [class.on]="soundOn()" (click)="toggleSound()"
+                        [attr.aria-pressed]="soundOn()" [attr.aria-label]="lang.currentLang() === 'de' ? 'Ton' : 'Sound'">
+                        <svg viewBox="0 0 16 16" aria-hidden="true">
+                            <path class="spk" d="M2 6h3l4-3.2v10.4L5 10H2z" />
+                            @if (soundOn()) {
+                            <path d="M11.2 5.6a3.4 3.4 0 0 1 0 4.8M13.2 3.6a6.2 6.2 0 0 1 0 8.8" />
+                            } @else {
+                            <path d="M11 6l4 4M15 6l-4 4" />
+                            }
+                        </svg>
+                    </button>
+                    }
+                </div>
+                }
+            </div>
+            <p class="ph-count" aria-live="polite">{{ caseNo() }}/{{ list().length }}</p>
+        </article>
+        } @empty {
+        <p class="empty">{{ lang.currentLang() === 'de' ? 'Wähle eine Kategorie' : 'Select a category' }}</p>
+        }
+    </div>
+    } @else {
+    <!-- the frame: one case at a time, as a slide of the pitch deck -->
+    <div class="stage">
+        @for (c of (current() ? [current()!] : []); track c.id) {
+        <article class="case">
+            <div class="slide">
+                <!-- the deck's slide as a video (the place for the text left white); its own
+                     progress line is cropped off and drawn here instead: hover it to stop the
+                     video and move through it -->
+                @if (c.video) {
+                <div class="screen" [class.film]="c.film" [class.placed]="c.place" [style.--px]="c.place?.[0] ?? null"
+                    [style.--py]="c.place?.[1] ?? null" [style.--pw]="c.place?.[2] ?? null" [style.--ph]="c.place?.[3] ?? null"
+                    [style.--fade-0]="c.film?.fade?.[0] ?? null"
+                    [style.--fade-1]="c.film?.fade?.[1] ?? null" [style.--film-shift]="c.film?.shift ?? null">
+                    <video appFadeIn class="video" [src]="c.video" muted loop playsinline [attr.preload]="preloaded ? 'auto' : 'none'" [muted]="true"
+                        [attr.poster]="c.poster ?? null" [attr.aria-label]="tx(c.title)"></video>
+                    @if (c.film) { <span class="wash film-fade" aria-hidden="true"></span> }
+                    <!-- the time line (video-bar.ts): hover it to open the bar -->
+                    <div class="scrub">
+                        <span class="scrub-fill" aria-hidden="true"></span>
+                        <span class="scrub-cursor" aria-hidden="true"></span>
+                        <button type="button" class="scrub-toggle" aria-label="Play / pause">press to stop</button>
+                    </div>
+                </div>
+                } @else if (c.image) {
+                <!-- a still in the frame, white behind the text -->
+                <div class="screen still" [class.whole]="c.image.whole" [class.fit]="c.image.ratio"
+                    [style.--ratio]="c.image.ratio ?? null" [style.--still-left]="c.image.left ?? 0"
+                    [style.--wash-a]="c.image.wash ? c.image.wash[0] + 'deg' : null"
+                    [style.--wash-0]="c.image.wash?.[1] ?? null" [style.--wash-1]="c.image.wash?.[2] ?? null">
+                    <img appFadeIn class="still-img" [src]="c.image.src" [alt]="tx(c.title)" decoding="async"
+                        [style.object-position]="c.image.pos ?? (c.image.whole ? '100% 50%' : '50% 50%')">
+                    @if (c.image.wash) { <span class="wash" aria-hidden="true"></span> }
+                    @for (b of c.image.box ?? []; track $index) {
+                    <span class="wash box" aria-hidden="true" [style.--bx0]="b[0]" [style.--bx1]="b[1]"
+                        [style.--by0]="b[2]" [style.--by1]="b[3]"></span>
+                    }
+                </div>
+                }
+
+                <!-- the web text, in the deck's places -->
+                <h2 class="c-title">{{ tx(c.title) }}</h2>
+                @if (c.year || c.location) {
+                <p class="c-meta">
+                    @if (c.year) { <span>{{ meta('Year', 'Jahr', c.year) }}</span> }
+                    @if (c.year && c.location) { <span class="c-divider" aria-hidden="true"></span> }
+                    @if (c.location) { <span>{{ meta('Location', 'Ort', tx(c.location)) }}</span> }
+                    <!-- the project's mark, after the line, as tall as the title and this line -->
+                    @if (c.logo && isFilm(c.logo)) {
+                    <video class="c-logo" [src]="c.logo" muted loop playsinline preload="auto" [muted]="true" aria-hidden="true"
+                        [attr.poster]="c.logo.replace('.mp4', '-poster.webp')"></video>
+                    } @else if (c.logo) { <img appFadeIn class="c-logo" [src]="c.logo" alt="" aria-hidden="true"> }
+                </p>
+                }
+                <div class="c-body" [style.--w]="c.textWidth ?? null" [style.--bottom]="c.textBottom ?? (c.video && !c.film ? 520 : null)">
+                    @if (c.role) {
+                    <p class="c-role" [class.then-project]="!!c.project"><b>{{ lang.currentLang() === 'de' ? 'Rolle' : 'Role' }}</b>: {{ tx(c.role) }}</p>
+                    }
+                    <!-- the office it was made with, under the role (Emil 23 Oct) -->
+                    @if (c.project) {
+                    <p class="c-project"><b>{{ lang.currentLang() === 'de' ? 'Projekt' : 'Project' }}</b>: {{ tx(c.project) }}</p>
+                    }
+                    @if (isKey(c.text)) {
+                    <div class="c-desc" [innerHTML]="c.text | translate"></div>
+                    } @else {
+                    <div class="c-desc">{{ tx(c.text) }}</div>
+                    }
+                </div>
+
+                <!-- drawings and animations on the slide -->
+                @for (p of c.pieces ?? []; track p.src) {
+                @if (p.video) {
+                <video appFadeIn class="piece" [class.framed]="p.framed" [src]="p.src" muted loop playsinline preload="auto"
+                    [muted]="true" aria-hidden="true" [attr.poster]="p.poster ?? null" [style.--x]="p.x" [style.--y]="p.y" [style.--w]="p.w"
+                    [style.--h]="p.h"></video>
+                } @else {
+                <img appFadeIn class="piece" [class.framed]="p.framed" [src]="p.src" alt="" aria-hidden="true" decoding="async"
+                    [style.--x]="p.x" [style.--y]="p.y" [style.--w]="p.w" [style.--h]="p.h">
+                }
+                }
+            </div>
+        </article>
+        } @empty {
+        <p class="empty">{{ lang.currentLang() === 'de' ? 'Wähle eine Kategorie' : 'Select a category' }}</p>
+        }
+
+        @if (list().length > 1) {
+        <!-- under the frame, below the title: previous / which project / next -->
+        <div class="case-nav">
+            <button type="button" class="nav-step prev" (click)="go(-1)" [attr.aria-label]="lang.currentLang() === 'de' ? 'Vorheriges Projekt' : 'Previous project'">
+                <span class="tri" aria-hidden="true"></span>{{ lang.currentLang() === 'de' ? 'zurück' : 'previous' }}
+            </button>
+            <span class="nav-count">{{ lang.currentLang() === 'de' ? 'projekt' : 'project' }} {{ caseNo() }}/{{ list().length }}</span>
+            <button type="button" class="nav-step next" (click)="go(1)" [attr.aria-label]="lang.currentLang() === 'de' ? 'Nächstes Projekt' : 'Next project'">
+                {{ lang.currentLang() === 'de' ? 'weiter' : 'next' }}<span class="tri" aria-hidden="true"></span>
+            </button>
+        </div>
+        }
+
+        <!-- a film: watch it on YouTube, and its sound on / off (under DE in the corner) -->
+        @if (current()?.youtube) {
+        <a class="yt-link" [href]="current()!.youtube" target="_blank" rel="noopener">{{ lang.currentLang() === 'de' ? 'video auf youtube ansehen' : 'watch video on youtube' }}</a>
+        }
+        @if (current()?.film) {
+        <button type="button" class="sound-btn" [class.on]="soundOn()" (click)="toggleSound()"
+            [attr.aria-pressed]="soundOn()" [attr.aria-label]="lang.currentLang() === 'de' ? 'Ton' : 'Sound'">
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path class="spk" d="M2 6h3l4-3.2v10.4L5 10H2z" />
+                @if (soundOn()) {
+                <path d="M11.2 5.6a3.4 3.4 0 0 1 0 4.8M13.2 3.6a6.2 6.2 0 0 1 0 8.8" />
+                } @else {
+                <path d="M11 6l4 4M15 6l-4 4" />
+                }
+            </svg>
+        </button>
+        }
+    </div>
+    }
+</section>

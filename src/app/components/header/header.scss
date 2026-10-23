@@ -1,0 +1,433 @@
+@use "sass:math";
+@use "../../_styles/motion" as *;
+/* a row of the bar: the two colours left to right; where they meet drifts slowly to and fro,
+   each row a little later than the one above, so the colour flows down the bar (12 fps steps,
+   like the rest of the site; styles.scss registers --hmid) */
+@mixin header-gradient($layer, $opacity) {
+    position: absolute;
+    top: calc($layer * var(--dynamic-grid-size));
+    left: 0;
+    right: 0;
+    opacity: $opacity;
+    background: linear-gradient(90deg, var(--color1), var(--hmid, 50%), var(--color2));
+    /* the meeting point flows (--hmid): set 12 times a second by header.ts startFlow, each row
+       8 frames after the one above */
+}
+
+
+
+
+header {
+    position: fixed;
+    left: var(--margin);
+    right: var(--margin-right, var(--margin));
+    z-index: 999;
+
+    .line {
+        height: var(--dynamic-grid-size);
+        width: 100%;
+    }
+
+    @for $i from 1 through 6 {
+        .line#{$i} {
+            z-index: #{7 - $i};
+            @include header-gradient($i - 1, 1 - (($i - 1) * 0.15));
+        }
+    }
+
+    .line1 {
+        background-color: #151717;
+    }
+
+
+    /* the way in (header.ts, intro.service.ts; Emil's qweqeqeqeqeqeqeqeqeqe.mp4, 12 fps): a pink
+       bar on the second row runs out over the name, stays, and runs off to the right, leaving
+       the name; one does the same over the menu, two frames later */
+    .wipe {
+        position: absolute;
+        top: var(--dynamic-grid-size);
+        height: var(--dynamic-grid-size);
+        background: var(--color3);
+        z-index: 1001;
+        pointer-events: none;
+        clip-path: inset(0 100% 0 0);
+    }
+    .wipe-a { left: var(--wa-l, 0); width: var(--wa-w, 0); }
+    .wipe-b { left: var(--wb-l, 0); width: var(--wb-w, 0); }
+    &.intro .wipe-a { animation: header-wipe-a calc(8s / 12) step-end calc(2s / 12 - var(--wipe-lag, 0ms)) forwards; }
+    &.intro .wipe-b { animation: header-wipe-b calc(11s / 12) step-end calc(4s / 12 - var(--wipe-lag, 0ms)) forwards; }
+
+    /* the e's logo in the top-left 3 x 3 cells, on the bar (open) or in its box (compact) */
+    .logo-img {
+        position: absolute;
+        opacity: 0;   /* faded in on load */
+        width: calc(3 * var(--dynamic-grid-size));
+        height: calc(3 * var(--dynamic-grid-size));
+        z-index: 1000;
+        cursor: pointer;
+
+        /* the name / e's: drawn over the top-left 10 x 3 cells (the logo box is the first 3),
+           as two masks of the same 14-frame strip: white, and the accent colour where the
+           name breaks up */
+        .logo-anim {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: calc(10 * var(--dynamic-grid-size));
+            height: calc(3 * var(--dynamic-grid-size));
+            pointer-events: none;
+        }
+
+        .layer {
+            position: absolute;
+            inset: 0;
+            -webkit-mask: var(--strip) 0 0 / 1400% 100% no-repeat;
+            mask: var(--strip) 0 0 / 1400% 100% no-repeat;
+        }
+
+        .ink {
+            --strip: url("../../../assets/images/logo/name-white.webp");
+            background: #fff;
+        }
+
+        .accent {
+            --strip: url("../../../assets/images/logo/name-pink.webp");
+            background: var(--color3);
+        }
+
+        /* two animations (not one played backwards), so each change of the bar starts its own */
+        .to-logo .layer {
+            animation: logo-collapse calc(14s / 12) steps(14, jump-none) forwards;
+        }
+
+        .to-name .layer {
+            animation: logo-open calc(14s / 12) steps(14, jump-none) forwards;
+        }
+
+        /* phones start on the logo itself (header.ts phoneLoad) */
+        .still .layer {
+            animation-duration: 0s;
+        }
+    }
+
+
+
+    nav {
+        position: absolute;
+        top: var(--dynamic-grid-size);
+        /* on a grid line: the bar is the page's width, which is whole cells and a pixel */
+        right: calc(var(--dynamic-grid-size) + 1px);
+        display: flex;
+        align-items: center;
+        justify-content: end;
+        gap: var(--dynamic-grid-size);
+        z-index: 11;
+        user-select: none;
+
+
+        p {
+            line-height: var(--dynamic-grid-size);
+            font-family: var(--font-title);
+            /* 0.9 of a cell (type chart). The name on the left is a drawing of this font
+               at 0.856 cells, so it is a pixel shorter now */
+            font-size: calc(.9 * var(--dynamic-grid-size));
+            color: #fff;
+            cursor: pointer;
+            position: relative;
+            padding: 0 0.5rem;
+            font-weight: 200;
+            opacity: 0;
+            /* each word in whole cells, centred (header.ts sets the widths), in the middle of
+               the row like the name */
+            text-align: center;
+            white-space: nowrap;
+            transform: translateY(calc(.02 * var(--dynamic-grid-size)));
+
+            &.hot {
+                color: #fff;
+            }
+        }
+
+        /* the magenta box behind the word under the mouse (placed and moved by header.ts) */
+        .nav-marker {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 0;
+            height: var(--dynamic-grid-size);
+            background: var(--color3);
+            z-index: -1;
+            pointer-events: none;
+            visibility: hidden;
+        }
+
+        @media (max-width:1200px) {
+            display: none;
+        }
+    }
+
+    .hamburger-menu {
+        position: absolute;
+        top: 0;
+        left: calc(3 * var(--dynamic-grid-size));
+        height: calc(3 * var(--dynamic-grid-size));
+        width: calc(3 * var(--dynamic-grid-size));
+        background-color: #fff;
+        outline: var(--frame);
+        outline-offset: -1px;
+        border: 0;
+        cursor: pointer;
+        z-index: 11;
+        /* folded into the logo's right edge; unfolds left to right in 3 frames at 12 fps once
+           the bar has shrunk into the logo box (1 s in), folds back at once on the way up */
+        clip-path: inset(-2px 100% -2px 0);
+        transition: clip-path .25s steps(3, jump-start);
+
+        &.shown {
+            clip-path: inset(-2px -2px -2px 0);
+            transition-delay: 1s;
+        }
+
+        /* small screens have no nav links: the menu is always there */
+        @media (max-width: 1200px) {
+            clip-path: inset(-2px -2px -2px 0);
+        }
+
+        /* desktop: the side menu takes over once the bar is gone, only the logo stays */
+        @media (min-width: 1200.02px) {
+            display: none;
+        }
+
+        .hamburger-menu-lines {
+            width: var(--dynamic-grid-size);
+            height: var(--dynamic-grid-size);
+            margin: var(--dynamic-grid-size);
+            position: relative;
+        }
+
+        .menu-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: black;
+            //transition: all 200ms ease-out;
+            animation: menu-lines-in 2s linear both;
+        }
+    }
+
+    .open {
+        .menu-line1 {
+            transform: translateY(calc(-0.5 * var(--dynamic-grid-size)));
+        }
+
+        .menu-line3 {
+            transform: translateY(calc(0.5 * var(--dynamic-grid-size)));
+        }
+    }
+
+    .close {
+        .menu-line1 {
+            transform: rotate(45deg) translateY(0);
+        }
+
+        .menu-line2 {
+            opacity: 0;
+        }
+
+        .menu-line3 {
+            transform: rotate(-45deg) translateY(0);
+        }
+    }
+
+    .side-nav {
+        position: absolute;
+        top: calc(4 * var(--dynamic-grid-size));
+        width: calc(6 * var(--dynamic-grid-size));
+        height: calc(12 * var(--dynamic-grid-size));
+        // six equal rows that fit inside the 2px frame
+        display: grid;
+        grid-template-rows: repeat(6, 1fr);
+        background-color: #fff;
+        color: black;
+        outline: var(--frame);
+        outline-offset: -1px;
+        border: 0;
+        transform: scale(0);
+        opacity: 0;
+
+        p {
+            display: flex;
+            align-items: center;
+            justify-content: end;
+            margin: 0;
+            padding-right: var(--dynamic-grid-size);
+            cursor: pointer;
+            font-family: var(--font-title);
+            font-size: var(--size-side-nav);
+            user-select: none;
+
+            &:hover {
+                background-color: black;
+                color: #fff;
+            }
+        }
+    }
+}
+
+
+
+/* desktop: no menu button, so no menu from it either */
+@media (min-width: 1200.02px) {
+    header .side-nav {
+        display: none;
+    }
+}
+
+@keyframes logo-collapse {
+    from {
+        -webkit-mask-position: 0% 0;
+        mask-position: 0% 0;
+    }
+
+    to {
+        -webkit-mask-position: 100% 0;
+        mask-position: 100% 0;
+    }
+}
+
+@keyframes logo-open {
+    from {
+        -webkit-mask-position: 100% 0;
+        mask-position: 100% 0;
+    }
+
+    to {
+        -webkit-mask-position: 0% 0;
+        mask-position: 0% 0;
+    }
+}
+
+/* the phone menu's lines: there once the button has unfolded, faded in over 3 frames */
+@keyframes menu-lines-in {
+    0%, 85% { opacity: 0; animation-timing-function: steps(3, jump-start); }
+    97.5%, 100% { opacity: 1; }
+}
+
+/* the bars' frames (from the video): how far each has run out from the left, then off it */
+@keyframes header-wipe-a {
+    0%    { clip-path: inset(0 32% 0 0); }
+    12.5% { clip-path: inset(0 4% 0 0); }
+    25%, 37.5% { clip-path: inset(0); }
+    50%   { clip-path: inset(0 0 0 4%); }
+    62.5% { clip-path: inset(0 0 0 50%); }
+    75%   { clip-path: inset(0 0 0 93%); }
+    87.5%, 100% { clip-path: inset(0 0 0 100%); }
+}
+@keyframes header-wipe-b {
+    0%      { clip-path: inset(0 68% 0 0); }
+    9.09%   { clip-path: inset(0 22.4% 0 0); }
+    18.18%  { clip-path: inset(0 7.6% 0 0); }
+    27.27%  { clip-path: inset(0 1.7% 0 0); }
+    36.36%, 45.45% { clip-path: inset(0); }
+    54.55%  { clip-path: inset(0 0 0 3.8%); }
+    63.64%  { clip-path: inset(0 0 0 49%); }
+    72.73%  { clip-path: inset(0 0 0 90.9%); }
+    81.82%  { clip-path: inset(0 0 0 98.5%); }
+    90.91%, 100% { clip-path: inset(0 0 0 100%); }
+}
+
+
+/* ---------- phones (Emil 22 Oct): the logo and the menu 4 x 4 cells; the menu's three lines
+   turn into a clean X (the middle one goes), in 3 frames at 12 fps ---------- */
+@media (max-width: 575.98px) {
+    header {
+        /* the logo and the menu button two cells in, on the pages' left edge (Emil 22 Oct) */
+        left: calc(var(--margin) + 2 * var(--dynamic-grid-size));
+
+        .logo-img {
+            width: calc(4 * var(--dynamic-grid-size));
+            height: calc(4 * var(--dynamic-grid-size));
+            /* framed like the menu button beside it (Emil 22 Oct) */
+            outline: var(--frame);
+            outline-offset: -1px;
+
+            /* the strip is drawn for a 3-cell box: the same, a third bigger */
+            .logo-anim { transform: scale(calc(4 / 3)); transform-origin: 0 0; }
+        }
+
+        .hamburger-menu {
+            left: calc(4 * var(--dynamic-grid-size));
+            width: calc(4 * var(--dynamic-grid-size));
+            height: calc(4 * var(--dynamic-grid-size));
+
+            .hamburger-menu-lines {
+                width: calc(1.5 * var(--dynamic-grid-size));
+                height: calc(1.5 * var(--dynamic-grid-size));
+                margin: calc(1.25 * var(--dynamic-grid-size));
+            }
+
+            .menu-line {
+                margin-top: -1px;   /* its 2px centred on the middle */
+                animation: none;
+                /* the X at once, the page breaking up with it (Emil 22 Oct) */
+                transition: none;
+            }
+        }
+
+        .open {
+            .menu-line1 { transform: translateY(calc(-0.55 * var(--dynamic-grid-size))); }
+            .menu-line3 { transform: translateY(calc(0.55 * var(--dynamic-grid-size))); }
+        }
+
+        /* the X: its arms a little shorter than the three lines' square's diagonals (30 %
+           smaller than they were, Emil 22 Oct) */
+        .close {
+            .menu-line1 { transform: rotate(45deg) scaleX(.99); }
+            .menu-line2 { opacity: 0; }
+            .menu-line3 { transform: rotate(-45deg) scaleX(.99); }
+        }
+
+        /* the menu under the logo and the button, as wide as the two, its words bigger and
+           from the left; it grows down out of them like the colour card (header.ts phoneNav) */
+        .side-nav {
+            left: 0;
+            top: calc(4 * var(--dynamic-grid-size));
+            width: calc(8 * var(--dynamic-grid-size));
+            --nav-h: calc(var(--rows, 5) * 2 * var(--dynamic-grid-size));
+            height: var(--nav-h);
+            grid-template-rows: none;
+            grid-auto-rows: calc(2 * var(--dynamic-grid-size));
+            align-content: start;
+            overflow: hidden;
+            transform: none;
+            opacity: 1;
+            visibility: hidden;
+
+            p {
+                justify-content: flex-start;
+                padding: 0 var(--dynamic-grid-size);
+                font-size: var(--dynamic-grid-size);
+            }
+
+            &.ph-open { visibility: visible; animation: ph-nav-open .5s step-end both; }
+            &.ph-closing { visibility: visible; animation: ph-nav-close .25s step-end both; }
+        }
+    }
+}
+
+/* the phone menu growing down (the colour card's frames) and folding back up */
+@keyframes ph-nav-open {
+    0%     { height: calc(.05 * var(--nav-h)); }
+    16.67% { height: calc(.625 * var(--nav-h)); }
+    33.33% { height: calc(.869 * var(--nav-h)); }
+    50%    { height: calc(.962 * var(--nav-h)); }
+    66.67% { height: calc(.997 * var(--nav-h)); }
+    83.33%, 100% { height: var(--nav-h); }
+}
+@keyframes ph-nav-close {
+    0%     { height: calc(.869 * var(--nav-h)); }
+    33.33% { height: calc(.375 * var(--nav-h)); }
+    66.67%, 100% { height: 0; outline-color: transparent; }
+}

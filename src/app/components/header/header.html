@@ -1,0 +1,57 @@
+<header [class.intro]="introOn()">
+    <!-- the way in (header.ts): pink bars wiping over the name and the menu -->
+    <span class="wipe wipe-a" aria-hidden="true"></span>
+    <span class="wipe wipe-b" aria-hidden="true"></span>
+    <!-- the e's logo, top left, always (no name): the bar shrinks into its box on scroll -->
+    <div class="logo-img" [class.big]="compact()" (click)="goToSection('home')" role="link" aria-label="Emil Suliman">
+        <!-- the name on the open bar; as the bar shrinks it breaks up (in the accent colour)
+             into e's, which then grows into the logo box: 14 frames at 12 fps (CTA.mp4),
+             played back the other way when the bar opens again -->
+        <span class="logo-anim" [class.to-logo]="compact()" [class.to-name]="logoPlayed() && !compact()" [class.still]="logoStill()" aria-hidden="true">
+            <span class="layer ink"></span>
+            <span class="layer accent"></span>
+        </span>
+    </div>
+
+    <div class="line line1"></div>
+    <div class="line line2"></div>
+    <div class="line line3"></div>
+    <div class="line line4"></div>
+    <div class="line line5"></div>
+    <div class="line line6"></div>
+
+    <nav #nav>
+        <!-- the box behind the word under the mouse: whole grid cells, it travels like the side
+             menu's (header.ts) -->
+        <span #marker class="nav-marker" aria-hidden="true"></span>
+        <p (click)="goToSection('about')">{{'HEADER.ABOUT'|translate}}</p>
+        <p (click)="goToSection('timeline')">{{'HEADER.TIMELINE'|translate}}</p>
+        <p (click)="goToSection('cases')">{{'HEADER.CASES'|translate}}</p>
+        @if (showSolidarity) {
+            <p (click)="goToSection('solidarity')">{{'HEADER.SOLIDARITY'|translate}}</p>
+        }
+        <p (click)="goToSection('contact')">{{'HEADER.CONTACT'|translate}}</p>
+        <p class="lang-toggle" (click)="toggleLanguage()">{{!isEnglish?"EN/DE":"DE/EN"}}</p>
+    </nav>
+
+    <!-- small screens: unfolds from the logo's right edge once the bar has shrunk into the
+         logo box (desktop has the side menu instead: only the logo stays) -->
+    <div class="hamburger-menu" [ngClass]="{'close': showMenu,'open': !showMenu, 'shown': compact() }" (click)="toggleMenu()">
+        <div class="hamburger-menu-lines">
+            <span class="menu-line menu-line1" aria-hidden="true"></span>
+            <span class="menu-line menu-line2" aria-hidden="true"></span>
+            <span class="menu-line menu-line3" aria-hidden="true"></span>
+        </div>
+    </div>
+
+    <div class="side-nav" [style.--rows]="showSolidarity ? 6 : 5">
+        <p (click)="goToSection('about')">{{'SIDENAV.ABOUT'|translate}}</p>
+        <p (click)="goToSection('timeline')">{{'SIDENAV.TIMELINE'|translate}}</p>
+        <p (click)="goToSection('cases')">{{'SIDENAV.CASES'|translate}}</p>
+        @if (showSolidarity) {
+            <p (click)="goToSection('solidarity')">{{'SIDENAV.SOLIDARITY'|translate}}</p>
+        }
+        <p (click)="goToSection('contact')">{{'SIDENAV.CONTACT'|translate}}</p>
+        <p (click)="toggleLanguage()">{{!isEnglish?"EN/DE":"DE/EN"}}</p>
+    </div>
+</header>

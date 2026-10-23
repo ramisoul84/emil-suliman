@@ -1,0 +1,45 @@
+/* The pages outside the main one (imprint, privacy, 404): the site's grid paper, the head
+   (legal-head.ts) and the text in a framed white box under the title, a cell below it;
+   headings in LCD at a cell (like the About topic), text in League Spartan at a cell on
+   1.2-cell lines (like About's text). */
+@mixin legal-page {
+  :host { display: block; }
+  .legal {
+    --g: var(--dynamic-grid-size);
+    min-height: 100vh;
+    min-height: 100svh;
+    padding-bottom: calc(3 * var(--g));
+    background-color: #fff;
+    background-image:
+      linear-gradient(var(--grid-stroke-color) var(--grid-stroke-width), transparent var(--grid-stroke-width)),
+      linear-gradient(90deg, var(--grid-stroke-color) var(--grid-stroke-width), transparent var(--grid-stroke-width));
+    background-size: var(--g) var(--g);
+    color: #000;
+  }
+  .panel {
+    box-sizing: border-box;
+    width: min(calc(40 * var(--g)), calc(100% - 6 * var(--g)));
+    margin: var(--g) 0 0 calc(5 * var(--g));
+    padding: var(--g) calc(2 * var(--g)) calc(2 * var(--g));
+    background: #fff;
+    outline: var(--frame, 2px solid #000);
+    outline-offset: -1px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--g);
+    font-family: var(--font-main);
+    font-size: var(--g);
+    line-height: calc(1.2 * var(--g));
+  }
+  .lead { margin: 0; font-weight: 600; }
+  .block { display: flex; flex-direction: column; gap: calc(.2 * var(--g)); }
+  .block h2, .block-title {
+    margin: 0;
+    font: 400 var(--g) / calc(1.2 * var(--g)) var(--font-title);
+  }
+  .block p, .block-info { margin: 0; }
+  .block ul { margin: 0; padding-left: calc(1.2 * var(--g)); }
+  @media (max-width: 575.98px) {
+    .panel { width: calc(100% - 2 * var(--g)); margin-left: var(--g); padding: var(--g); }
+  }
+}

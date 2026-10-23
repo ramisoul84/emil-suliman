@@ -1,0 +1,177 @@
+<section id="about">
+  <div class="about-layout" [attr.data-active]="lit() ?? active()" [class.run]="lit() !== null">
+
+    <div class="title about-title">about me.</div>
+    <!-- between the title and the photo: the same moving bars as under the photo -->
+    <div class="m mr hbars top-bars" aria-hidden="true" style="--c:0;--r:2;--cs:16;--rs:1;--o:21;--p:22;--bar:12.5"></div>
+
+    <!-- phones (Emil's ttt.mp4, 22 Oct): the photo a little landscape; pressed, it fades back
+         and the intro is over it in black (again: the photo) -->
+    <button type="button" class="ph-photo" [class.open]="introOpen()" [attr.aria-pressed]="introOpen()"
+      (click)="introOpen.set(!introOpen())">
+      <img src="assets/images/emil-phone.webp" alt="Emil Suliman" width="1440" height="900" loading="lazy" decoding="async">
+      <span class="ph-intro">{{ 'ABOUT.INTRO' | translate }}</span>
+    </button>
+
+    <div class="photo">
+      <img src="assets/images/emil.webp" alt="Emil Suliman" width="640" height="640" loading="eager" decoding="async">
+      @if (canPlayReveal) {
+      <!-- pixel-to-photo reveal, once: when the photo first comes into view -->
+      <video #reveal class="reveal" muted playsinline preload="none" aria-hidden="true">
+        <source src="assets/videos/emil.webm" type="video/webm">
+      </video>
+      }
+    </div>
+
+    <div class="panel" data-snap>
+      <p class="intro">{{ 'ABOUT.INTRO' | translate }}</p>
+      <div class="switcher">
+        <!-- both arrows before the topic -->
+        <span class="arrows">
+          <button type="button" class="arrow prev" (click)="step(-1)" aria-label="previous topic"></button>
+          <button type="button" class="arrow next" (click)="step(1)" aria-label="next topic"></button>
+        </span>
+        <span class="topic swap" [class.out]="fading()" aria-live="polite">{{ topics[shown()].label | translate }}</span>
+      </div>
+      <div class="text swap" [class.out]="fading()" [innerHTML]="topics[shown()].text | translate | paragraphs"></div>
+    </div>
+
+    @if (phone) {
+    <!-- phones (Emil's sketches, 23 Oct): the four topics in frames of one size under the photo,
+         each its symbol, its name and a + (Emil's mockup); tapped, a frame opens over the others to its whole
+         text (they stay put underneath); tapped again, or anywhere else, it folds back -->
+    <div class="ph-topics" role="list" [class.has-open]="openTopic() !== null">
+      @for (t of topics; track t.key; let i = $index) {
+      <div class="ph-card" role="listitem">
+        <div class="ph-card-btn" role="button" tabindex="0" [style.--i]="i" [class.open]="openTopic() === i"
+          [class.closing]="closingTopic() === i" [attr.aria-expanded]="openTopic() === i"
+          [style.--open-top]="openTop()" [style.--open-rows]="openRows()" (click)="toggleTopic(i)"
+          (keydown.enter)="toggleTopic(i)" (keydown.space)="$event.preventDefault(); toggleTopic(i)">
+          <span class="ph-band" aria-hidden="true">
+            <span class="sprite {{ symbols[t.key].cls }}" [style.--cx]="symbols[t.key].card[0]" [style.--cy]="symbols[t.key].card[1]"
+              [style.--ch]="symbols[t.key].card[2]" [style.--ca]="symbols[t.key].w / symbols[t.key].h"><canvas aria-hidden="true"></canvas></span>
+          </span>
+          <span class="ph-name">{{ t.label | translate }}</span>
+          <span class="ph-sign" aria-hidden="true"></span>
+          <span class="ph-text">{{ t.text | translate }}</span>
+        </div>
+      </div>
+      }
+    </div>
+    }
+
+    <div class="scroller">
+      <div class="stage" role="group" aria-label="Word collage. Pick the tree, house, camera or duck to highlight a topic.">
+        <!-- tiles on grid cells. g-* = topics that tint the tile; tree/house/camera/duck are the buttons -->
+        <div class="t p-diag g-urban pick" role="button" tabindex="0" aria-label="urban development" [attr.aria-pressed]="active() === 'urban'" (click)="pick('urban')" (keydown.enter)="pick('urban')" (keydown.space)="$event.preventDefault(); pick('urban')" style="--c:21;--r:0;--cs:4;--rs:4;z-index:1"></div>
+        <div class="t p-diag g-urban" data-word="urban development" style="--c:25;--r:0;--cs:15;--rs:2;z-index:1"></div>
+        <div class="t p-diag g-urban" data-word="safety" style="--c:16;--r:2;--cs:5;--rs:2;z-index:1"></div>
+        <div class="t p-diag-h g-urban g-arch" data-word="sustainability" style="--c:31;--r:2;--cs:6;--rs:3;z-index:1"></div>
+        <div class="t p-diag-h g-urban g-arch" data-word="re/upcycling" style="--c:37;--r:2;--cs:5;--rs:1;z-index:1"></div>
+        <div class="t p-diag-h g-urban g-arch" data-word="materials" style="--c:42;--r:2;--cs:6;--rs:2;z-index:1"></div>
+        <div class="t p-diag-grid g-urban g-arch g-story" data-word="freedom" style="--c:25;--r:3;--cs:7;--rs:2;z-index:2"></div>
+        <div class="t p-diag g-urban" data-word="human / immigrant" style="--c:0;--r:3;--cs:16;--rs:2;z-index:1"></div>
+        <div class="t p-diag-h g-urban g-arch" data-word="well being" style="--c:39;--r:4;--cs:5;--rs:2;z-index:1"></div>
+        <div class="t p-hlines g-arch pick" role="button" tabindex="0" aria-label="architecture" [attr.aria-pressed]="active() === 'arch'" (click)="pick('arch')" (keydown.enter)="pick('arch')" (keydown.space)="$event.preventDefault(); pick('arch')" style="--c:44;--r:4;--cs:7;--rs:5;z-index:1"></div>
+        <div class="t p-diag g-urban" data-word="empowerment" style="--c:16;--r:4;--cs:9;--rs:2;z-index:1"></div>
+        <div class="t p-diag-grid g-urban g-arch g-story" data-word="authenticity" style="--c:35;--r:5;--cs:5;--rs:3;z-index:2"></div>
+        <div class="t p-vdiag g-urban g-story" data-word="knowledge" style="--c:6;--r:6;--cs:13;--rs:2;z-index:1"></div>
+        <div class="t p-diag-grid-dots g-urban g-arch g-story g-personal" data-word="social value" style="--c:28;--r:6;--cs:7;--rs:4;z-index:1"></div>
+        <div class="t p-diag-grid g-urban g-arch g-story" data-word="inclusivity" style="--c:19;--r:6;--cs:9;--rs:3;z-index:2"></div>
+        <div class="t p-diag-h g-urban g-arch" data-word="space" style="--c:41;--r:6;--cs:3;--rs:3;z-index:3"></div>
+        <div class="t p-diag g-urban" data-word="marginalized groups" style="--c:11;--r:8;--cs:9;--rs:2;z-index:1"></div>
+        <div class="t p-diag-h g-urban g-arch" data-word="architecture" style="--c:33;--r:8;--cs:10;--rs:3;z-index:2"></div>
+        <div class="t p-diag-grid g-urban g-arch g-story" data-word="solidarity" style="--c:23;--r:9;--cs:5;--rs:2;z-index:1"></div>
+        <div class="t p-colors g-arch g-personal" data-word="colors" style="--c:43;--r:9;--cs:6;--rs:2;z-index:1"></div>
+        <div class="t p-dotgrid g-arch g-story g-personal" data-word="experience design" style="--c:29;--r:10;--cs:6;--rs:2;z-index:3"></div>
+        <div class="t p-vlines g-story pick" role="button" tabindex="0" aria-label="storytelling" [attr.aria-pressed]="active() === 'story'" (click)="pick('story')" (keydown.enter)="pick('story')" (keydown.space)="$event.preventDefault(); pick('story')" style="--c:23;--r:11;--cs:5;--rs:5;z-index:1"></div>
+        <div class="t p-dotgrid g-arch g-story g-personal" data-word="media architecture" style="--c:35;--r:12;--cs:8;--rs:2;z-index:1"></div>
+        <div class="t p-dotgrid g-arch g-story g-personal" data-word="storytelling" style="--c:28;--r:12;--cs:7;--rs:2;z-index:1"></div>
+        <div class="t p-dotgrid g-arch g-story g-personal" data-word="light" style="--c:43;--r:12;--cs:5;--rs:3;z-index:1"></div>
+        <div class="t p-dotgrid g-story g-personal" data-word="film" style="--c:34;--r:14;--cs:3;--rs:3;z-index:1"></div>
+        <div class="t p-dotgrid g-story g-personal" data-word="animation" style="--c:28;--r:14;--cs:4;--rs:2;z-index:1"></div>
+        <div class="t p-dotgrid g-story g-personal" data-word="sound" style="--c:42;--r:14;--cs:3;--rs:3;z-index:2"></div>
+        <div class="t p-dots g-personal pick" role="button" tabindex="0" aria-label="experience design" [attr.aria-pressed]="active() === 'personal'" (click)="pick('personal')" (keydown.enter)="pick('personal')" (keydown.space)="$event.preventDefault(); pick('personal')" style="--c:37;--r:15;--cs:5;--rs:4;z-index:1"></div>
+        <div class="t p-dotgrid g-story g-personal" data-word="electronic music" style="--c:45;--r:15;--cs:6;--rs:2;z-index:1"></div>
+        <!-- see-through tiles -->
+        <div class="t clear" style="--c:0;--r:2;--cs:16;--rs:1"></div>
+        <div class="t clear ot or ob" style="--c:6;--r:5;--cs:10;--rs:1"></div>
+        <div class="t clear p-diag ot or ob ol g-urban" style="--c:25;--r:2;--cs:6;--rs:1"></div>
+        <div class="t clear p-diag-h ot or ob ol g-urban g-arch" style="--c:37;--r:3;--cs:5;--rs:1"></div>
+        <div class="t clear p-diag-h or ob ol g-urban" style="--c:37;--r:4;--cs:2;--rs:1"></div>
+        <div class="t clear p-diag-h ot or ob ol" style="--c:40;--r:6;--cs:1;--rs:2"></div>
+        <div class="t clear ot or ol" style="--c:20;--r:9;--cs:3;--rs:1"></div>
+        <div class="t clear p-vlines ot or ob ol" style="--c:28;--r:10;--cs:1;--rs:2"></div>
+        <div class="t clear p-dotgrid ot ob ol g-personal" style="--c:43;--r:11;--cs:5;--rs:1"></div>
+        <div class="t clear ot or ol" style="--c:32;--r:14;--cs:2;--rs:2"></div>
+        <div class="t clear p-dotgrid ot or ob ol g-personal" style="--c:37;--r:14;--cs:5;--rs:1"></div>
+        <!-- spinning icons -->
+        <div class="sprite s-tree" style="--fx:21.037;--fy:0.373;--fw:3.878;--fh:3.595"><canvas aria-hidden="true"></canvas></div>
+        <div class="sprite s-house" style="--fx:45.023;--fy:4.101;--fw:5.684;--fh:4.394"><canvas aria-hidden="true"></canvas></div>
+        <div class="sprite s-cam" style="--fx:23.534;--fy:12.117;--fw:3.745;--fh:2.876"><canvas aria-hidden="true"></canvas></div>
+        <div class="sprite s-duck" style="--fx:37.108;--fy:15.766;--fw:4.542;--fh:3.116"><canvas aria-hidden="true"></canvas></div>
+        <!-- moving motifs -->
+        <div class="m mr stripes g-urban g-arch g-story" style="--c:25;--r:5;--cs:10;--rs:1;--o:7"></div>
+        <div class="m mr stripes rev g-arch" style="--c:35;--r:11;--cs:8;--rs:1;--o:3"></div>
+        <div class="m mr stripes clear rev" style="--c:43;--r:11;--cs:5;--rs:1;--o:11"></div>
+        <div class="m mr stripes clear" style="--c:32;--r:14;--cs:2;--rs:1;--o:8"></div>
+        <div class="m mr stripes clear" style="--c:37;--r:14;--cs:5;--rs:1;--o:11"></div>
+        <div class="m mx dots x" style="--c:32;--cs:5;--fy:4.168;--fh:0.32;--o:4.35"></div>
+        <div class="m mx dots x rev" style="--c:32;--cs:5;--fy:4.594;--fh:0.32;--o:14.35"></div>
+        <div class="m mx dots x" style="--c:37;--cs:2;--fy:4.168;--fh:0.32;--o:18.35"></div>
+        <div class="m mx dots x rev" style="--c:37;--cs:2;--fy:4.594;--fh:0.32;--o:6.35"></div>
+        <div class="m mx dots x rev" style="--c:20;--cs:3;--fy:9.161;--fh:0.32;--o:6.35"></div>
+        <div class="m mx dots x" style="--c:20;--cs:3;--fy:9.614;--fh:0.32;--o:16.35"></div>
+        <div class="m mx dots x" style="--c:37;--cs:5;--fy:15.366;--fh:0.32;--o:4.35"></div>
+        <div class="m mx dots x" style="--c:32;--cs:2;--fy:15.366;--fh:0.32;--o:14.35"></div>
+        <div class="m my dots y" style="--r:4;--rs:5;--fx:44.12;--fw:0.319;--o:13.5"></div>
+        <div class="m my dots y rev" style="--r:4;--rs:5;--fx:44.625;--fw:0.319;--o:10.35"></div>
+        <div class="m mr lattice" style="--c:25;--r:2;--cs:6;--rs:1;--ox:19.6;--oy:29"></div>
+        <div class="m mr hbars" style="--c:0;--r:2;--cs:16;--rs:1;--o:21;--p:22;--bar:12.5"></div>
+        <div class="m mr hbars" style="--c:37;--r:3;--cs:5;--rs:1;--o:5;--p:23;--bar:13"></div>
+        <div class="m mr hbars" style="--c:40;--r:6;--cs:1;--rs:2;--o:2;--p:22;--bar:12"></div>
+        <div class="m mr sbars-l" style="--c:41;--r:9;--cs:2;--rs:2;--o:14"></div>
+        <div class="m mr sbars-r" style="--c:28;--r:10;--cs:1;--rs:2;--o:6"></div>
+        <div class="m mr vboots" style="--c:6;--r:5;--cs:10;--rs:1;--o:14"></div>
+        <!-- pulses (2 x 2 cells) + blink (1 cell) -->
+        <svg class="pulse" style="--c:33;--r:6" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><rect x="50" y="50" width="0" height="0" stroke-width="0"><animate attributeName="x" values="50.0;43.0;39.5;27.3;13.8;7.55;3.4;2.5;0.0;0.0" keyTimes="0;.0833;.167;.25;.333;.417;.5;.583;.62;1" dur="1s" repeatCount="indefinite" /><animate attributeName="y" values="50.0;43.0;39.5;27.3;13.8;7.55;3.4;2.5;0.0;0.0" keyTimes="0;.0833;.167;.25;.333;.417;.5;.583;.62;1" dur="1s" repeatCount="indefinite" /><animate attributeName="width" values="0;14;21;45.4;72.4;84.9;93.2;95;100;100" keyTimes="0;.0833;.167;.25;.333;.417;.5;.583;.62;1" dur="1s" repeatCount="indefinite" /><animate attributeName="height" values="0;14;21;45.4;72.4;84.9;93.2;95;100;100" keyTimes="0;.0833;.167;.25;.333;.417;.5;.583;.62;1" dur="1s" repeatCount="indefinite" /><animate attributeName="stroke-width" values="0;14;21;22.6;22.6;15.1;6.8;5;0;0" keyTimes="0;.0833;.167;.25;.333;.417;.5;.583;.62;1" dur="1s" repeatCount="indefinite" /></rect></svg>
+        <svg class="pulse" style="--c:35;--r:12" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><rect x="50" y="50" width="0" height="0" stroke-width="0"><animate attributeName="x" values="50.0;43.0;39.5;27.3;13.8;7.55;3.4;2.5;0.0;0.0" keyTimes="0;.0833;.167;.25;.333;.417;.5;.583;.62;1" dur="1s" repeatCount="indefinite" /><animate attributeName="y" values="50.0;43.0;39.5;27.3;13.8;7.55;3.4;2.5;0.0;0.0" keyTimes="0;.0833;.167;.25;.333;.417;.5;.583;.62;1" dur="1s" repeatCount="indefinite" /><animate attributeName="width" values="0;14;21;45.4;72.4;84.9;93.2;95;100;100" keyTimes="0;.0833;.167;.25;.333;.417;.5;.583;.62;1" dur="1s" repeatCount="indefinite" /><animate attributeName="height" values="0;14;21;45.4;72.4;84.9;93.2;95;100;100" keyTimes="0;.0833;.167;.25;.333;.417;.5;.583;.62;1" dur="1s" repeatCount="indefinite" /><animate attributeName="stroke-width" values="0;14;21;22.6;22.6;15.1;6.8;5;0;0" keyTimes="0;.0833;.167;.25;.333;.417;.5;.583;.62;1" dur="1s" repeatCount="indefinite" /></rect></svg>
+        <div class="blink" style="--c:20;--r:3"></div>
+        <!-- words -->
+        <svg class="labels" viewBox="0 109 1920 713.45" preserveAspectRatio="none" aria-hidden="true">
+          <text x="107.2" y="269.3" font-size="48.0">human / immigrant</text>
+          <text x="635.9" y="233.8" font-size="34.0">safety</text>
+          <text x="678.6" y="303.4" font-size="32.0">empowerment</text>
+          <text x="1075.6" y="158.4" font-size="37.0">urban development</text>
+          <text x="1011.4" y="270.4" font-size="35.0">freedom</text>
+          <text x="1223.4" y="236.4" font-size="26.5">sustainability</text>
+          <text x="1426.0" y="211.0" font-size="23.5">re/upcycling</text>
+          <text x="1620.8" y="235.2" font-size="39.5">materials</text>
+          <text x="1524.5" y="306.2" font-size="26.5">well being</text>
+          <text x="1339.4" y="363.4" font-size="26.5">authenticity</text>
+          <text x="1563.7" y="399.4" font-size="31.0">space</text>
+          <text x="384.7" y="381.5" font-size="38.5">knowledge</text>
+          <text x="801.8" y="405.1" font-size="42.0">inclusivity</text>
+          <text x="1091.0" y="400.2" font-size="44.0">social</text>
+          <text x="1090.5" y="444.2" font-size="44.0">value</text>
+          <text x="1279.3" y="463.2" font-size="48.5">architecture</text>
+          <text x="493.2" y="440.4" font-size="29.5">marginalized</text>
+          <text x="494.3" y="469.5" font-size="29.0">groups</text>
+          <text x="908.3" y="489.7" font-size="26.0">solidarity</text>
+          <text x="1670.9" y="499.2" font-size="47.0">colors</text>
+          <text x="1143.5" y="515.6" font-size="26.5">experience</text>
+          <text x="1143.4" y="542.2" font-size="26.5">design</text>
+          <text x="1104.4" y="606.0" font-size="36.0">storytelling</text>
+          <text x="1434.8" y="593.4" font-size="26.5">media</text>
+          <text x="1434.6" y="618.4" font-size="26.5">architecture</text>
+          <text x="1675.3" y="610.7" font-size="45.5">light</text>
+          <text x="1078.3" y="678.4" font-size="26.0">animation</text>
+          <text x="1312.7" y="701.1" font-size="33.0">film</text>
+          <text x="1598.9" y="701.4" font-size="31.0">sound</text>
+          <text x="1712.9" y="718.5" font-size="28.5">electronic music</text>
+        </svg>
+      </div>
+    </div>
+
+  </div>
+</section>

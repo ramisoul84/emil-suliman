@@ -1,0 +1,816 @@
+@use "../../_styles/motion" as *;
+
+/* The cases page: a title and the category tabs on the logo's row, then one large frame
+   showing a case at a time, laid out exactly like a slide of the pitch deck. Everything sits on the grid;
+   on desktop the right-hand band (where the side menu floats) is left free. */
+:host {
+  --g: var(--dynamic-grid-size, 21px);
+  --tab: color-mix(in srgb, var(--color1) 35%, var(--color2));
+  --ink: #22293c;
+  --side: 3;              /* free cells on the right of the content (small screens) */
+  display: block;
+}
+
+#cases {
+  position: relative;
+  padding: 0;
+  /* ten cells free under the previous / next box (it hangs three rows under the frame) */
+  margin: 0 1px calc(13 * var(--g) + var(--snap, 0px)) 0;
+}
+
+/* ---------- title + tabs ---------- */
+.cases-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--g);
+  padding: var(--g) 0 var(--g) var(--g);
+}
+.cases-title {
+  margin: 0;
+  flex: none;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--g);
+}
+.tab {
+  height: calc(2 * var(--g));
+  padding: 0 calc(.5 * var(--g));
+  border: 0;
+  background: var(--tab);
+  color: #fff;
+  font-family: var(--font-title);
+  font-size: var(--size-main-nav, .8rem);
+  line-height: calc(2 * var(--g));
+  cursor: pointer;
+  white-space: nowrap;
+  /* the same green shadow as the other buttons, sliding out at 12 fps */
+  box-shadow: 0 0 0 var(--color2);
+  transition: box-shadow .25s #{fps12(.25s, linear)}, background-color .25s #{fps12(.25s, linear)}, color .25s #{fps12(.25s, linear)};
+}
+.tab:hover, .tab:focus-visible { box-shadow: var(--shadow); }
+/* the filter button, at the right end of the title box: a sliders icon (three lines, a knob on each) */
+.cases-title { position: relative; }
+.filter-btn {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: calc(2 * var(--g));
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  display: grid;
+  place-items: center;
+  color: #000;
+  cursor: pointer;
+}
+.filter-btn svg {
+  width: calc(.95 * var(--g));
+  height: calc(.85 * var(--g));
+  fill: #fff;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  overflow: visible;
+}
+.filter-btn:hover, .filter-btn:focus-visible { color: var(--color3); outline: none; }
+.filter-btn:not(.on) svg { stroke: var(--color3); }
+/* hidden filters: gone in 12 fps steps */
+.tabs { transition: opacity .25s steps(3, end), visibility 0s linear .25s; }
+.tabs.closed { opacity: 0; visibility: hidden; pointer-events: none; }
+.tabs:not(.closed) { transition: opacity .25s steps(3, end), visibility 0s; }
+.tab { text-align: center; }
+.tab-label { display: inline-block; white-space: nowrap; }
+.tab.off {
+  background: #fff;
+  color: var(--tab);
+  outline: 2px solid var(--tab);
+  outline-offset: -1px;
+}
+
+/* ---------- the frame ---------- */
+/* a line all round (Emil 22 Oct: the sides too), on the grid lines like the other frames */
+.stage {
+  position: relative;
+  background: #fff;
+}
+.stage::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: 3;
+  border: var(--frame, 2px solid #000);
+  pointer-events: none;
+}
+
+.case {
+  position: relative;
+  /* a new case comes in over 3 frames, from a third on the first (no empty frame between
+     two cases) */
+  animation: case-in .25s step-end both;
+}
+@keyframes case-in {
+  0% { opacity: .35; }
+  33.3% { opacity: .7; }
+  66.6%, 100% { opacity: 1; }
+}
+
+/* ---------- the slide: the deck's 1920 × 1080 slide, scaled ----------
+   The video is the deck's slide; the text sits on it where the deck has it, at the deck's
+   sizes: title 55 px, text 26 px (slide px, --u = one), all in black; in the site's League
+   Spartan (--font-deck). */
+.slide {
+  position: relative;
+  --u: calc(100cqw / 1920);
+  color: #000;
+  font-family: var(--font-deck);
+}
+.screen {
+  position: relative;
+}
+.video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  object-fit: cover;
+  background: #fff;
+  /* the deck's own progress line (rows 1068–1080 of 1080) is cropped off */
+  clip-path: inset(0 0 1.12% 0);
+}
+/* a film (not the deck's slide): nothing cropped off its bottom */
+.film .video { clip-path: none; }
+/* a mark after the year / place line (the project's logo), its bottom on that line's, as tall
+   as the title and the line together */
+.c-meta { position: relative; }
+.c-logo {
+  position: absolute;
+  left: calc(100% + 1.2em);
+  bottom: -.1em;
+  height: 3.2em;
+  width: auto;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+/* drawings and animations on the slide: desktop only */
+.piece { display: none; }
+
+/* a still (a render instead of the deck's video): small screens, the picture over the text */
+.still-img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  object-fit: cover;
+}
+.wash { display: none; }
+
+/* the time line (video-bar.ts). At rest a black line as thick as the frame's line under it,
+   where the deck had its progress line; hovered, it opens smoothly into a bar a cell tall
+   along the bottom of the frame (and closes back into the line): grey, filled in the tabs'
+   colour up to where the video is, a black line at the mouse, and at the play head a label
+   saying what a press there does ("press to stop" / "press to play"). */
+.scrub {
+  --open: .3s cubic-bezier(.2, .8, .2, 1);   /* fast, then slowing down */
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--g);
+  z-index: 2;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+}
+/* the grey track, growing out of the line */
+.scrub::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(4 * var(--u));
+  height: 2px;
+  background: transparent;
+  pointer-events: none;
+  transition: bottom var(--open), height var(--open), background-color var(--open);
+}
+.scrub.open::before { bottom: 0; height: 100%; background-color: #cfd1cf; }
+.scrub-fill {
+  position: absolute;
+  left: 0;
+  bottom: calc(4 * var(--u));              /* where the deck's line was (rows 1071–1076) */
+  width: 0;
+  height: 2px;                             /* the frame's line: 2 px */
+  background: #000;
+  pointer-events: none;
+  transition: bottom var(--open), height var(--open), background-color var(--open);
+}
+.scrub.open .scrub-fill { bottom: 0; height: 100%; background-color: var(--tab); }
+.scrub-cursor { display: none; }
+.scrub.open .scrub-cursor {
+  display: block;
+  position: absolute;
+  left: -1px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #000;
+  pointer-events: none;
+}
+.scrub.open.near .scrub-cursor,
+.scrub.dragging .scrub-cursor { display: none; }
+.scrub-toggle {
+  position: absolute;
+  left: 0;
+  top: 1px;
+  bottom: 1px;
+  padding: 0 calc(.5 * var(--g));
+  border: 0;
+  outline: var(--frame, 2px solid #000);
+  outline-offset: -1px;
+  background: #fff;
+  color: #000;
+  font-family: var(--font-title);
+  font-size: calc(.7 * var(--g));
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s ease-out;
+}
+.scrub.open .scrub-toggle { opacity: 1; transition-delay: .12s; }
+.scrub.open.near .scrub-toggle { background: #000; color: #fff; }
+.c-title {
+  margin: 0;
+  font-family: var(--font-deck);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -.04em;
+  color: #000;
+}
+.c-meta {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: -.02em;
+  white-space: pre;
+}
+/* the | between year and place: a 2 × 28 line, 37 px either side (as in the deck) */
+.c-divider {
+  flex: none;
+  width: max(1px, calc(2 * var(--u)));
+  height: calc(28 * var(--u));
+  margin: 0 calc(37 * var(--u));
+  background: currentColor;
+}
+.c-body {
+  overflow: hidden;
+  font-weight: 300;
+  line-height: 1.2;
+}
+.c-role { margin: 0 0 1.2em; }
+.c-role b, .c-project b { font-weight: 700; }
+/* role, then the project's office under it, then the text (Emil 23 Oct) */
+.c-role.then-project { margin-bottom: 0; }
+.c-project { margin: 0 0 1.2em; }
+.c-desc { margin: 0; white-space: pre-line; }
+/* a text too long for its place fades out at the bottom */
+.c-body.clip {
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 3em), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 3em), transparent);
+}
+
+/* small screens: the video full width, the text under it */
+.c-title, .c-meta, .c-body { padding: 0 var(--g); }
+.c-title { padding-top: var(--g); font-size: 26px; margin-bottom: 6px; }
+.c-meta { font-size: 14px; margin-bottom: var(--g); }
+.c-meta .c-divider { width: 1px; height: 14px; margin: 0 8px 0 6px; }
+.c-body { font-size: 15px; padding-bottom: calc(2 * var(--g)); }
+
+.empty {
+  display: grid;
+  place-items: center;
+  min-height: calc(10 * var(--g));
+  margin: 0;
+  font-family: var(--font-title);
+  color: #000;
+}
+
+/* previous / next, under the frame */
+/* previous / project n/m / next: a framed box a cell under the frame, LCD letters */
+.case-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: calc(2 * var(--g));
+  margin-top: var(--g);
+  padding: 0 var(--g);
+  outline: var(--frame, 2px solid #000);
+  outline-offset: -1px;
+  background: #fff;
+  font-family: var(--font-title);
+  font-size: calc(.7 * var(--g));
+  color: #000;
+  user-select: none;
+}
+.nav-step {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(.4 * var(--g));
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+.nav-step:hover, .nav-step:focus-visible { color: var(--tab); outline: none; }
+/* a film's buttons: watch it on YouTube, and its sound (the case-nav's frame and letters) */
+.yt-link, .sound-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(2 * var(--g));
+  margin-top: var(--g);
+  margin-right: var(--g);
+  padding: 0 var(--g);
+  border: 0;
+  outline: var(--frame, 2px solid #000);
+  outline-offset: -1px;
+  background: #fff;
+  font-family: var(--font-title);
+  font-size: calc(.7 * var(--g));
+  color: #000;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: var(--shadow-0);
+  transition: var(--lift);
+}
+.yt-link:hover, .yt-link:focus-visible, .sound-btn:hover, .sound-btn:focus-visible { box-shadow: var(--shadow); outline-color: #000; }
+.sound-btn { width: calc(2 * var(--g)); padding: 0; }
+.sound-btn svg {
+  width: calc(.9 * var(--g));
+  height: calc(.9 * var(--g));
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+  overflow: visible;
+}
+.sound-btn .spk { fill: currentColor; }
+.sound-btn:not(.on) { color: #8a8a8a; }
+
+/* small filled triangles, pointing out */
+.nav-step .tri {
+  width: calc(.4 * var(--g));
+  height: calc(.5 * var(--g));
+  background: currentColor;
+}
+.nav-step.prev .tri { clip-path: polygon(100% 0, 100% 100%, 0 50%); }
+.nav-step.next .tri { clip-path: polygon(0 0, 100% 50%, 0 100%); }
+
+/* ---------- desktop: everything placed in cells, the slide as in the deck ---------- */
+@media (min-width: 1200px) {
+  :host { --side: 8; }
+  /* the page's width, for the slide's size (cqw) */
+  #cases { container-type: inline-size; }
+
+  /* the title beside the logo (like every page), the tabs after it */
+  .cases-head {
+    position: relative;
+    height: calc(4 * var(--g));
+    padding: 0;
+    display: block;
+  }
+  .cases-title {
+    position: absolute;
+    /* a cell after the logo (desktop has no menu button there), to the line the titles end
+       on (styles.scss: --title-end) */
+    left: calc(4 * var(--g));
+    top: var(--g);
+    width: calc((var(--title-end) - 4) * var(--g));
+  }
+  .tabs {
+    position: absolute;
+    left: calc((var(--title-end) + 1) * var(--g));
+    top: var(--g);
+    flex-wrap: nowrap;
+  }
+
+  /* the frame: as tall as the window allows, in whole cells (so its lines are on the grid;
+     a free row and the 2-row previous / next box under it), the 16:9 slide from its left edge. The
+     slide's own white margin on the right may run into the menu's band: what is on it (text,
+     video, drawings) stays clear of it */
+  .stage {
+    --slide-h: round(down, min(calc(100vh - 7 * var(--g)),
+                               calc((100cqw - (var(--side) - 2) * var(--g)) * 9 / 16)), var(--g));
+    height: var(--slide-h);
+  }
+  .case { position: absolute; inset: 0; }
+  .slide {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: var(--slide-h);
+    width: calc(var(--slide-h) * 16 / 9);
+    --u: calc(var(--slide-h) / 1080);
+  }
+  .screen { position: absolute; inset: 0; }
+  .video { height: 100%; }
+  /* the deck's slide video, where the deck has it (its pictures big, above previous / next;
+     Emil 21 Oct: not moved right). Its white is a touch grey, so its left edge fades in from
+     the page's white over the slide's empty margin (pictures start at slide px 100) and never
+     shows as a line */
+  .screen:not(.film) .video {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 calc(90 * var(--u)));
+    mask-image: linear-gradient(90deg, transparent, #000 calc(90 * var(--u)));
+  }
+  /* the time line runs the whole width of the frame, to the right end of the page */
+  .scrub { right: auto; width: 100cqw; }
+  /* a still: from its start (--still-left, slide px) to the right end of the page, as tall as
+     the frame, and washed out to white from the frame's top-left corner, where the text is:
+     white up to --wash-0 slide px along the angle, easing out (smoothstep) to the plain
+     picture by --wash-1 (cases-data.ts, measured off the mockups) */
+  .screen.still {
+    right: auto;
+    width: 100cqw;
+    overflow: hidden;
+    --img-left: calc(var(--still-left, 0) * var(--u));
+    --shift: 0px;
+    --w0: calc(var(--wash-0) * var(--u) + var(--shift));
+    --w1: calc(var(--wash-1) * var(--u) + var(--shift));
+  }
+  /* with its ratio known, a picture is at most as large as the frame is tall: on a wider frame
+     it moves right (against the frame's right end) and its wash moves with it */
+  .screen.still.fit {
+    --img-left: max(calc(var(--still-left, 0) * var(--u)), calc(100cqw - var(--slide-h) * var(--ratio)));
+    --shift: calc(var(--img-left) - var(--still-left, 0) * var(--u));
+  }
+  .still-img {
+    position: absolute;
+    top: 0;
+    left: var(--img-left);
+    width: calc(100% - var(--img-left));
+    max-width: none;              /* starting left of the frame, it is wider than it: to its end */
+    height: 100%;
+    aspect-ratio: auto;
+  }
+  .wash {
+    display: block;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(var(--wash-a),
+      #fff var(--w0),
+      rgb(255 255 255 / .844) calc(var(--w0) + .25 * (var(--w1) - var(--w0))),
+      rgb(255 255 255 / .5) calc(var(--w0) + .5 * (var(--w1) - var(--w0))),
+      rgb(255 255 255 / .156) calc(var(--w0) + .75 * (var(--w1) - var(--w0))),
+      rgb(255 255 255 / 0) var(--w1));
+  }
+  /* a film: as tall as the frame, against its right end (16:9), faded in from white from its
+     left edge across --fade-0 .. --fade-1 slide px (smoothstep) */
+  .screen.film {
+    right: auto;
+    width: 100cqw;
+    overflow: hidden;
+    --film-left: calc(100cqw - var(--slide-h) * 16 / 9);
+    --f0: calc(var(--film-left) + var(--fade-0) * var(--u));
+    --f1: calc(var(--film-left) + var(--fade-1) * var(--u));
+  }
+  .screen.film .video {
+    position: absolute;
+    top: 0;
+    /* moved right by --film-shift slide px (its right end cropped), the fade staying put */
+    right: calc(-1 * var(--film-shift, 0) * var(--u));
+    width: calc(var(--slide-h) * 16 / 9);
+    height: 100%;
+  }
+  .wash.film-fade {
+    background: linear-gradient(90deg,
+      #fff var(--f0),
+      rgb(255 255 255 / .844) calc(var(--f0) + .25 * (var(--f1) - var(--f0))),
+      rgb(255 255 255 / .5) calc(var(--f0) + .5 * (var(--f1) - var(--f0))),
+      rgb(255 255 255 / .156) calc(var(--f0) + .75 * (var(--f1) - var(--f0))),
+      rgb(255 255 255 / 0) var(--f1));
+  }
+  /* a film framed in its place on the slide (cases-data.ts: place), not the whole slide */
+  .screen.placed {
+    inset: auto;
+    left: calc(var(--px) * var(--u));
+    top: calc(var(--py) * var(--u));
+    width: calc(var(--pw) * var(--u));
+    height: calc(var(--ph) * var(--u));
+    outline: var(--frame, 2px solid #000);
+    outline-offset: -1px;
+    z-index: 1;
+  }
+  .screen.placed .video {
+    width: 100%;
+    height: 100%;
+    clip-path: none;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .screen.placed .scrub { width: 100%; }
+  /* drawings and animations, placed in slide px; white drops out (multiply) */
+  .piece {
+    display: block;
+    position: absolute;
+    z-index: 1;
+    left: calc(var(--x) * var(--u));
+    top: calc(var(--y) * var(--u));
+    width: calc(var(--w) * var(--u));
+    height: calc(var(--h) * var(--u));
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+  /* framed like every other frame (Emil 22 Oct: all the frames' lines alike) */
+  .piece.framed { outline: var(--frame, 2px solid #000); outline-offset: -1px; }
+
+  /* the whole picture, as tall as the frame, against its right end; its own extension fades
+     out to the left (cases-data.ts: whole) */
+  .still.whole .still-img { left: auto; right: 0; width: auto; max-width: none; }
+  /* a white box behind the text, fading out below it and to its right (box) */
+  .wash.box {
+    --x0: calc(var(--bx0) * var(--u));
+    --x1: calc(var(--bx1) * var(--u));
+    --y0: calc(var(--by0) * var(--u));
+    --y1: calc(var(--by1) * var(--u));
+    background: linear-gradient(to bottom,
+      #fff var(--y0),
+      rgb(255 255 255 / .844) calc(var(--y0) + .25 * (var(--y1) - var(--y0))),
+      rgb(255 255 255 / .5) calc(var(--y0) + .5 * (var(--y1) - var(--y0))),
+      rgb(255 255 255 / .156) calc(var(--y0) + .75 * (var(--y1) - var(--y0))),
+      rgb(255 255 255 / 0) var(--y1));
+    -webkit-mask-image: linear-gradient(to right,
+      #000 var(--x0),
+      rgb(0 0 0 / .844) calc(var(--x0) + .25 * (var(--x1) - var(--x0))),
+      rgb(0 0 0 / .5) calc(var(--x0) + .5 * (var(--x1) - var(--x0))),
+      rgb(0 0 0 / .156) calc(var(--x0) + .75 * (var(--x1) - var(--x0))),
+      rgb(0 0 0 / 0) var(--x1));
+    mask-image: linear-gradient(to right,
+      #000 var(--x0),
+      rgb(0 0 0 / .844) calc(var(--x0) + .25 * (var(--x1) - var(--x0))),
+      rgb(0 0 0 / .5) calc(var(--x0) + .5 * (var(--x1) - var(--x0))),
+      rgb(0 0 0 / .156) calc(var(--x0) + .75 * (var(--x1) - var(--x0))),
+      rgb(0 0 0 / 0) var(--x1));
+  }
+
+  .c-title, .c-meta, .c-body { position: absolute; padding: 0; z-index: 1; }
+  /* the text a little higher than the deck's (title 105, text 244), so it has room above the
+     pictures; it ends where they begin (--bottom, cases-data.ts textBottom) */
+  .c-title {
+    left: calc(100 * var(--u));
+    top: calc(64 * var(--u));
+    width: calc(1280 * var(--u));
+    font-size: calc(55 * var(--u));
+  }
+  .c-meta {
+    left: calc(100 * var(--u));
+    top: calc(131 * var(--u));
+    font-size: calc(.85 * var(--g));   /* type chart: .85 of a cell */
+  }
+  .c-logo { left: calc(100% + 80 * var(--u)); bottom: calc(-8 * var(--u)); height: calc(94 * var(--u)); }
+  .c-meta .c-divider {
+    width: max(1px, calc(2 * var(--u)));
+    height: 1.08em;
+    margin: 0 calc(37 * var(--u));
+  }
+  .c-body {
+    left: calc(100 * var(--u));
+    top: calc(196 * var(--u));
+    width: calc(var(--w, 902) * var(--u));
+    max-height: calc((var(--bottom, 1004) - 196) * var(--u));
+    /* type chart: .85 of a cell; on short windows (a small frame for the width) it follows the
+       frame instead, so the text keeps its place above the pictures (not under 14 px) */
+    font-size: max(14px, min(calc(.85 * var(--g)), calc(30 * var(--u))));
+  }
+  /* under the frame, a free row between, as wide as the deck's left column: lined up with the
+     picture above it (slide px 100 to 922, the text's left edge to the picture's right) */
+  .case-nav {
+    position: absolute;
+    left: calc(100 * var(--slide-h) / 1080);
+    top: calc(100% + var(--g));
+    width: calc(822 * var(--slide-h) / 1080);
+    margin: 0;
+  }
+  /* the film's buttons on the row of previous / next: the sound under DE in the corner, the
+     YouTube one ending under EN (side-menu.ts: EN / DE start 2 cells past the text column) */
+  .yt-link, .sound-btn {
+    position: absolute;
+    top: calc(100% + var(--g));
+    margin: 0;
+  }
+  .yt-link {
+    right: calc((var(--page-side) - 4) * var(--g));
+    width: calc(12 * var(--g));
+    padding: 0;
+  }
+  .sound-btn { right: calc((var(--page-side) - 7) * var(--g)); }
+  .empty { position: absolute; inset: 0; min-height: 0; }
+}
+
+/* 1200-1599 px: the row of categories after the longer title only fits with the words a
+   touch smaller (each still a cell free on both sides) */
+@media (min-width: 1200px) and (max-width: 1599.98px) { .tab { font-size: calc(.9 * var(--g)); } }
+@media (min-width: 1600px) { :host { --side: 13; } }
+@media (min-width: 2200px) { :host { --side: 18; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .case { animation: none; }
+  .tab { transition: none; }
+}
+
+/* ================================================================
+   Phones (Emil's sketch, 22 Oct): "cases" in a box beside the logo and the menu; the case's
+   title between two arrows, its text, and its pictures in a square frame with arrows of its
+   own. The section is 25 cells wide here, like the others.
+   ================================================================ */
+@media (max-width: 575.98px) {
+  /* each page its own screen here (phone-pager.service): no free cells under it */
+  #cases { margin: 0 calc(2 * var(--g) + 1px) var(--snap, 0px) calc(2 * var(--g)); }
+  /* the title as about's (Emil's mockup): a cell down, three tall, a cell after the menu */
+  .cases-head { padding: var(--g) 0 0 calc(9 * var(--g)); }
+  .cases-title {
+    width: calc(16 * var(--g)) !important;
+    height: calc(3 * var(--g));
+    font-size: calc(1.6 * var(--g));
+  }
+  .filter-btn, .tabs { display: none; }
+  /* Emil's mockup (23 Oct): the case in one frame, a cell under the title, down to two rows
+     above the window's end (the count under it); everything in it in cells from its top */
+  .stage.ph {
+    position: relative;
+    background: none;
+    margin-top: var(--g);
+    height: calc(var(--ph-floor, 100svh) - 7 * var(--g));
+  }
+  .stage.ph::after { display: none; }
+  .stage.ph .case {
+    position: absolute;
+    inset: 0;
+    outline: var(--frame, 2px solid #000);
+    outline-offset: -1px;
+    background: #fff;
+  }
+  /* the name between the arrows (the arrows as they were), three rows from a cell down */
+  .ph-title {
+    position: absolute;
+    left: var(--g);
+    right: var(--g);
+    top: calc(.6 * var(--g));
+    height: calc(3 * var(--g));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: calc(.5 * var(--g));
+  }
+  /* one line, smaller when long (cases.ts fitPhoneText) */
+  .ph-name {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    text-align: center;
+    font-family: var(--font-deck);
+    font-weight: 400;
+    font-size: calc(1.8 * var(--g));
+    line-height: calc(1.45 * var(--g));
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  /* year and place, role (each one line, cut), and the text, as big as about's frames' (cut to
+     whole lines above the square: cases.ts fitText) */
+  .ph-text {
+    position: absolute;
+    left: var(--g);
+    right: var(--g);
+    top: calc(3.8 * var(--g));
+    bottom: calc(24.6 * var(--g));
+    overflow: hidden;
+    font-family: var(--font-deck);
+    color: #000;
+  }
+  .ph-text p { margin: 0; }
+  /* year and place, role, project: as big as the text (Emil 23 Oct); year and place on one
+     line, the role and project on as many as they need, never cut */
+  .ph-meta, .c-role, .c-project {
+    font-family: var(--font-main);
+    font-size: calc(1.15 * var(--g));
+    line-height: calc(1.6 * var(--g));
+  }
+  .ph-meta { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  /* (Emil 23 Oct) the name to the year as far as the year to the role; role and project
+     together; the text further below */
+  .ph-meta + .c-role { margin-top: calc(.75 * var(--g)) !important; }
+  .ph-meta { color: #000; }
+  .c-desc {
+    margin-top: calc(1.1 * var(--g));
+    font-family: var(--font-main);
+    font-size: calc(1.15 * var(--g));
+    line-height: calc(1.6 * var(--g));
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--lines, 6);
+    overflow: hidden;
+  }
+  .c-desc ::ng-deep p { margin: 0; display: inline; }
+  /* the square: 23 cells, a cell in from the frame's sides and bottom, always there; no line
+     round it (Emil 23 Oct), the pictures in it */
+  .ph-frame {
+    position: absolute;
+    left: var(--g);
+    bottom: var(--g);
+    width: calc(23 * var(--g));
+    height: calc(23 * var(--g));
+    background: #fff;
+    overflow: hidden;
+  }
+  .ph-frame video, .ph-frame img {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: contain;
+    background: #fff;
+  }
+  /* a wide picture fills the square and pans slowly from its left edge to its right and back
+     (Emil 23 Oct): as tall as the square, slid on the compositor */
+  .ph-frame img.pan {
+    inset: 0 auto 0 0;
+    width: calc(23 * var(--ar, 1) * var(--g));
+    height: 100%;
+    object-fit: cover;
+    animation: ph-pan 14s cubic-bezier(.45, 0, .55, 1) infinite alternate;
+    will-change: transform;
+  }
+  @media (prefers-reduced-motion: reduce) { .ph-frame img.pan { animation: none; } }
+  .ph-frame .ph-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+  }
+  .ph-frame .ph-arrow.prev { left: calc(.5 * var(--g)); }
+  .ph-frame .ph-arrow.next { right: calc(.5 * var(--g)); }
+  /* youtube and sound: in the square's bottom corners */
+  .ph-buttons {
+    position: absolute;
+    left: calc(.5 * var(--g));
+    right: calc(.5 * var(--g));
+    bottom: calc(.5 * var(--g));
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .ph-buttons > * { pointer-events: auto; margin: 0; }
+  /* which case of how many: under the frame, its left edge */
+  .ph-count {
+    position: absolute;
+    left: 0;
+    top: calc(100% + .5 * var(--g));
+    margin: 0;
+    font-family: var(--font-title);
+    font-size: var(--g);
+    line-height: var(--g);
+  }
+}
+/* the arrows: the desktop's (about's) grey triangles, in a box that takes the tap */
+.ph-arrow {
+  position: relative;
+  flex: none;
+  width: calc(1.6 * var(--g));
+  height: calc(1.6 * var(--g));
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.ph-arrow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #808080;
+  transition: background-color .15s;
+}
+.ph-arrow::after { content: ""; position: absolute; inset: calc(-.4 * var(--g)); }
+.ph-arrow.prev::before { clip-path: polygon(80% 10%, 80% 90%, 20% 50%); }
+.ph-arrow.next::before { clip-path: polygon(20% 10%, 20% 90%, 80% 50%); }
+.ph-arrow:hover::before, .ph-arrow:active::before { background: #000; }
+.ph-arrow:focus-visible { outline: 2px solid var(--color3); outline-offset: 2px; }
+
+@keyframes ph-pan {
+  from { transform: none; }
+  to { transform: translateX(calc((1 - var(--ar, 1)) * 23 * var(--g))); }
+}

@@ -1,0 +1,28 @@
+<footer [ngClass]="{'blur':isBlur}">
+     <!-- the whale: click it for the whale game -->
+     <div class="whale-container" #whaleBox role="button" tabindex="0" [attr.aria-label]="hint()"
+          [class.playing]="gameOpen()"
+          (click)="openGame()" (keydown.enter)="openGame()" (keydown.space)="$event.preventDefault(); openGame()">
+          <!-- the animated whale (60 kB WebP): fetched once the page has settled, so it is simply
+               there when the contact page comes -->
+          @defer (on idle) {
+          <img src="assets/images/whale.webp" alt="whale" class="whale" width="1000" height="640" decoding="async">
+          } @placeholder {
+          <div class="whale" style="aspect-ratio: 1000 / 640"></div>
+          }
+          <div class="whale-hint">{{ hint() }}</div>
+     </div>
+     <div class="footer-btns">
+          <p class="btn" role="link" tabindex="0" (click)="goToPage('imprint')" (keydown.enter)="goToPage('imprint')">{{ de() ? 'impressum' : 'imprint' }}</p>
+          <p class="btn" role="link" tabindex="0" (click)="goToPage('privacy')" (keydown.enter)="goToPage('privacy')">{{ de() ? 'datenschutz' : 'privacy policy' }}</p>
+     </div>
+     <div class="copy">
+          &copy; 2026 emilsuliman.com | {{ de() ? 'Alle Rechte vorbehalten.' : 'All rights reserved.' }}
+     </div>
+</footer>
+@if (gameOpen()) {
+     <!-- the game's code loads only when it is opened -->
+     @defer (on immediate) {
+     <app-whale-game [whaleRect]="whaleRect" (closed)="closeGame()" />
+     }
+}

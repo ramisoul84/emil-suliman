@@ -1,0 +1,35 @@
+<section id="home">
+    <!-- Loading state -->
+    <div class="loading" [class.hidden]="!loading">
+        <div class="loading-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+        </div>
+    </div>
+
+    <!-- Home content -->
+    <div [ngClass]="{'blur': isBlur, 'loading-hidden': loading}" 
+         [attr.aria-hidden]="isBlur" 
+         class="home">
+        <!-- the way in (home.ts, intro.service.ts): a pink bar over each line of the name, which
+             is there once its bar has passed; then the blob fades in, and the controls a second
+             later -->
+        <div class="text-container">
+            <div #textElement class="text-stack" [style.--ln0]="lineShown(0)" [style.--ln1]="lineShown(1)"
+                [style.--ln2]="lineShown(2)">
+                <div class="current-text" [innerHTML]="currentText"></div>
+                <!-- the same text in white, cut to the cells where the blob is pink -->
+                <div #lightText class="current-text light" aria-hidden="true" [innerHTML]="currentText"
+                    [style.opacity]="blobOpacity()"></div>
+                @for (w of nameWipes(); track $index) {
+                <span class="name-wipe" aria-hidden="true" [style.left.px]="w.left" [style.top.px]="w.top"
+                    [style.width.px]="w.width" [style.height.px]="w.height" [style.clip-path]="w.clip"></span>
+                }
+            </div>
+        </div>
+        <div class="canvas" [style.opacity]="blobOpacity()">
+            <app-blob />
+        </div>
+        <div class="control" [style.opacity]="uiOpacity()" [class.waiting]="uiOpacity() < 1">
+            <app--control />
+        </div>
+    </div>
+</section>

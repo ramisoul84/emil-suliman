@@ -1,0 +1,532 @@
+/* League Spartan (variable, OFL) — self-hosted: no render-blocking request to Google,
+   and no visitor IP sent to Google Fonts (a GDPR issue for German sites). */
+@font-face {
+  font-family: "League Spartan";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("assets/fonts/league-spartan/league-spartan-latin-wght-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+@font-face {
+  font-family: "League Spartan";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("assets/fonts/league-spartan/league-spartan-latin-ext-wght-normal.woff2") format("woff2");
+  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "lcd_solidregular";
+  src: url("assets/fonts/lcdsolid/lcdsolid-vpzb-webfont.woff2") format("woff2"),
+    url("assets/fonts/lcdsolid/lcdsolid-vpzb-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  /* the LCD text waits for its font (3 s at most) instead of showing another one first and
+     jumping when it arrives */
+  font-display: block;
+}
+
+;
+
+:root {
+  /* colors #0a1225; #0a1225;*/
+  --color-bg-top: white;
+  --color-bg-bottom: white;
+
+  /* the site's three colours; the blob's colour pickers change them for the whole site
+     (ThemeService sets them on <html>) — everything coloured derives from these */
+  --color1: #226b22;
+  --color2: #acc424;
+  --color3: #ff00fc;
+
+  --color-header-left: var(--color1);
+  --color-header-right: var(--color2);
+  --gradient-title: linear-gradient(135deg, var(--color-header-left), var(--color-header-right));
+
+  /* grid */
+  --grid-stroke-color: rgba(196, 202, 196, 0.6);
+  --grid-stroke-width: 1px;
+  --margin: 0;
+
+  /* fonts */
+  --font-main: "League Spartan", sans-serif;
+  /* two fonts on the site: LCD for titles, menus and buttons, League Spartan for everything else
+     (the cases' texts too) */
+  --font-deck: "League Spartan", sans-serif;
+  --font-title: "lcd_solidregular", sans-serif;
+
+  --size-main-nav: 1rem;   /* side menu, cases tabs: a cell, like the titles (rem = a cell) */
+  --size-side-nav: 0.7rem;
+  --size-name: 1.4rem;
+  --size-title: 1rem;
+  --size-text: 1.2rem;
+
+  --frame: 2px solid #000;
+  --shadow: calc(0.3 * var(--dynamic-grid-size)) calc(0.3 * var(--dynamic-grid-size)) 1px var(--color2);
+  /* the site's one highlight (like the landing page's reset button): the green shadow slides
+     out in 3 frames at 12 fps on hover, and back. Rest: box-shadow: var(--shadow-0); hover:
+     var(--shadow); with transition: var(--lift). */
+  --shadow-0: 0 0 0 var(--color2);
+  --lift: box-shadow .25s linear(0 0%, .333 .1%, .333 33.333%, .667 33.333%, .667 66.667%, 1 66.667%, 1 100%);
+}
+/* phones: the shadow half a cell deep (Emil 22 Oct) */
+@media (max-width: 575.98px) {
+  :root { --shadow: calc(0.5 * var(--dynamic-grid-size)) calc(0.5 * var(--dynamic-grid-size)) 1px var(--color2); }
+}
+
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* form fields and plain buttons take the browser's fonts (Arial, monospace) unless told: League
+   Spartan, the site's text font; components that use LCD set it themselves */
+input, textarea, select, button { font-family: var(--font-main); }
+
+html {
+  scroll-behavior: smooth;
+
+  font-size: var(--dynamic-grid-size);
+  overflow-x: hidden;
+}
+
+/* the page grid runs on past the page column to the window's edges: when the column is
+   narrower than the window (short or very wide windows, grid.service.ts) the design stays in
+   the middle and the same lines, in step with the column's, fill the sides. Only once a page
+   with a grid is there, so it fades in together with the column's own (main.scss) */
+html:has(.main, .legal) {
+  background-color: var(--color-bg-top);
+  background-image:
+    linear-gradient(var(--side-grid) var(--grid-stroke-width), transparent var(--grid-stroke-width)),
+    linear-gradient(90deg, var(--side-grid) var(--grid-stroke-width), transparent var(--grid-stroke-width));
+  background-size: var(--dynamic-grid-size) var(--dynamic-grid-size);
+  background-position: var(--margin) 0;
+  animation: side-grid-in .25s steps(3, end) both;
+}
+@keyframes side-grid-in {
+  from { --side-grid: rgba(196, 202, 196, 0); }
+  to { --side-grid: rgba(196, 202, 196, .6); }
+}
+
+body {
+  margin: 0 var(--margin-right, var(--margin)) 0 var(--margin);
+  background: linear-gradient(to bottom, var(--color-bg-top), var(--color-bg-bottom));
+  font-family: var(--font-main);
+  color: black;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  font-display: swap;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+
+}
+
+section {
+  scroll-margin-top: calc(4 * var(--dynamic-grid-size));
+  /* main is (columns x grid) + 1px wide so the last grid line shows: the extra 1px on the
+     right keeps every section a whole number of cells wide. --snap (set by the main page)
+     tops each section up to whole cells so the next one starts on a grid line. Ten cells
+     free between one section and the next. */
+  margin: 0 calc(var(--dynamic-grid-size) + 1px) calc(10 * var(--dynamic-grid-size) + var(--snap, 0px)) var(--dynamic-grid-size);
+
+  .title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(25 * var(--dynamic-grid-size));
+    height: calc(2 * var(--dynamic-grid-size));
+    margin-bottom: var(--dynamic-grid-size);
+    //background: var(--gradient-title);
+    font-family: var(--font-title);
+    font-size: var(--size-title);
+    user-select: none;
+    background-color: #fff;
+    /* frames are drawn centred on the grid lines (1px each side), so a box of n cells
+       has its lines exactly on the grid and neighbouring frames merge into one line */
+    outline: var(--frame);
+    outline-offset: -1px;
+  }
+}
+
+/* ---- pages (main page only) ----
+   Landing, about, timeline, cases, solidarity and contact + whale are each a page of their
+   own: a stop puts the page's title on the logo's row (desktop) and the next page starts
+   below the bottom of the window. On a mouse / trackpad the glide between pages is done in
+   page-scroll.service.ts; on touch screens (and with "reduce motion") the browser snaps. */
+app-main {
+  /* where a page rests: its title beside the logo, or just under it below 1200 px */
+  #home,
+  #about,
+  #cases {
+    scroll-margin-top: 0;
+  }
+
+  #timeline,
+  #solidarity,
+  .last-page {
+    scroll-margin-top: var(--dynamic-grid-size);
+  }
+
+  /* page height = the window, minus where it rests and the gap to the next page */
+  #about { min-height: calc(100vh - 6 * var(--dynamic-grid-size)); }
+  #cases { min-height: calc(100vh - 4 * var(--dynamic-grid-size)); }
+  #solidarity { min-height: calc(100vh - 7 * var(--dynamic-grid-size)); }
+
+  /* contact + whale: one window, the footer at the bottom */
+  .last-page {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - var(--dynamic-grid-size));
+  }
+
+  .last-page > app-footer {
+    display: block;
+    margin-top: auto;
+  }
+}
+
+/* below 1200 px the section titles start at the left edge, under the fixed logo: rest 4 cells lower */
+@media (max-width: 1199.98px) {
+  app-main {
+    #about,
+    #cases {
+      scroll-margin-top: calc(3 * var(--dynamic-grid-size));
+    }
+
+    #timeline,
+    #solidarity,
+    .last-page {
+      scroll-margin-top: calc(4 * var(--dynamic-grid-size));
+    }
+
+    #about { min-height: calc(100vh - 9 * var(--dynamic-grid-size)); }
+    #cases { min-height: calc(100vh - 7 * var(--dynamic-grid-size)); }
+    #solidarity { min-height: calc(100vh - 10 * var(--dynamic-grid-size)); }
+    .last-page { min-height: calc(100vh - 4 * var(--dynamic-grid-size)); }
+  }
+}
+
+/* phones (Emil's sketches, 22 Oct): about and cases rest at the very top, their frame and
+   title beside the logo and the menu */
+@media (max-width: 575.98px) {
+  app-main {
+    #about,
+    #cases,
+    #timeline,
+    .last-page {
+      scroll-margin-top: 0;
+    }
+
+  }
+
+  /* the pages two cells in from each side of the 29 columns (Emil 22 Oct); the landing is
+     the whole width and keeps its controls two cells in itself (home.scss) */
+  app-main section:not(#home) {
+    margin-left: calc(2 * var(--dynamic-grid-size));
+    margin-right: calc(2 * var(--dynamic-grid-size) + 1px);
+  }
+
+  /* one page at a time (Emil's ttt.mp4, 22 Oct): the page never scrolls by itself; each page
+     is at least a window tall in whole cells (--ph-h, phone-pager.service) and the curtain
+     takes the visitor from one to the next */
+  html:has(app-main) { overscroll-behavior: none; overflow-x: clip; }
+  /* no zooming on phones (Emil 23 Oct): no pinch, no double-tap (main.ts does the iPhone's) */
+  html { touch-action: pan-x pan-y; }
+  app-main {
+    app-home,
+    app-about,
+    app-timeline,
+    app-cases,
+    .last-page {
+      display: flow-root;
+      min-height: var(--ph-h, 100svh);
+    }
+    /* no ten free cells under a page here: each page is its own screen (its --snap stays,
+       keeping a longer page a whole number of cells) */
+    #home, #about, #timeline, #cases { margin-bottom: var(--snap, 0px); }
+    /* the last: just the window, its footer at the bottom on the window's last whole row */
+    .last-page { display: flex; min-height: var(--ph-vh, 100svh); padding-bottom: var(--ph-rest, 0px); }
+    /* the footer fills what the form leaves, the whale in its middle (footer.scss) */
+    .last-page > app-footer { display: flex; flex-direction: column; flex: 1 1 auto; margin-top: 0; }
+  }
+}
+
+/* phones: the curtain between the pages (phone-pager.service): the way in's panel in the third
+   colour with the page's title in white, in the middle of the screen */
+.page-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  --g: var(--dynamic-grid-size);
+}
+.page-curtain[hidden] { display: none; }
+.page-curtain .pc-text span { height: calc(3 * var(--g)); }
+.page-curtain .pc-panel {
+  position: absolute;
+  inset: 0;
+  background: var(--color3);
+  clip-path: inset(0 0 100% 0);
+}
+.page-curtain .pc-text {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  margin: calc(-1.5 * var(--g)) 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #fff;
+  font-family: var(--font-title);
+  font-size: calc(2 * var(--g));
+  line-height: calc(3 * var(--g));
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* touch screens and "reduce motion": the browser snaps to the pages; not phones: there the
+   page scrolls freely, smoothly, without stops (Emil 22 Oct: the timeline) */
+@media (pointer: coarse) and (min-width: 576px), (prefers-reduced-motion: reduce) and (min-width: 576px) {
+  html:has(app-main) {
+    scroll-snap-type: y mandatory;
+  }
+
+  app-main {
+    #home,
+    #about,
+    #timeline,
+    #cases,
+    #solidarity {
+      scroll-snap-align: start;
+    }
+
+    .last-page {
+      scroll-snap-align: end;
+    }
+  }
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  /* ADD: Prevent layout shifts */
+  // aspect-ratio: attr(width) / attr(height);
+}
+
+
+.no-scroll {
+  overflow: hidden !important;
+  height: 100vh;
+  position: fixed;
+  width: 100%;
+}
+
+
+.blur {
+  /*
+  filter:
+    url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg"><filter id="pixelate"><feFlood x="0" y="0" height="2" width="2"/><feComposite width="12" height="12"/><feTile result="a"/><feComposite in="SourceGraphic" in2="a" operator="in"/><feMorphology operator="dilate" radius="4"/></filter></svg>#pixelate') blur(2px) contrast(1);
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+  -ms-interpolation-mode: nearest-neighbor;
+  user-select: none;
+  pointer-events: none;
+  opacity: 0.5;
+  transform: translateZ(0);
+  */
+  /* the menu is open: the page breaks up into grid-cell blocks (main.ts) and rests */
+  user-select: none;
+  pointer-events: none;
+}
+
+
+
+
+::-webkit-scrollbar {
+  width: 20px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(to bottom, var(--color-bg-top), var(--color-bg-bottom));
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-header-right);
+  background-clip: padding-box;
+  border: 3px solid transparent;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-header-left);
+  background-clip: padding-box;
+  cursor: pointer;
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--color-bg-top);
+}
+
+
+@supports (-ms-overflow-style: none) {
+  * {
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* ADD: Respect user motion preferences 
+  html {
+    scroll-behavior: auto;
+  }
+  
+  .blur {
+    transition: none !important;
+  }
+    */
+}
+
+/* ADD: Print styles for better printing 
+@media print {
+  .blur {
+    filter: none !important;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}
+  */
+
+@media (min-width:576px) {
+  section {
+
+    .title {
+      width: calc(12 * var(--dynamic-grid-size));
+    }
+  }
+
+}
+
+@media (min-width:1200px) {
+  :root {
+    --size-text: 1rem;
+    /* the page's side margin in cells (8 / 13 / 18), and the line the titles end on: the
+       right edge of the about column (photo and title), 16 cells after it. Pages other than
+       "about me" start a cell after the logo (column 4) and end their title on that line. */
+    --page-side: 8;
+    --title-end: calc(var(--page-side) + 16);
+  }
+
+  section {
+    .title {
+      width: calc(11 * var(--dynamic-grid-size));
+    }
+
+    margin: 0 calc(8 * var(--dynamic-grid-size) + 1px) calc(10 * var(--dynamic-grid-size) + var(--snap, 0px)) calc(8 * var(--dynamic-grid-size));
+  }
+}
+
+@media (min-width:1600px) {
+  :root { --page-side: 13; }
+
+  section {
+    margin: 0 calc(13 * var(--dynamic-grid-size) + 1px) calc(10 * var(--dynamic-grid-size) + var(--snap, 0px)) calc(13 * var(--dynamic-grid-size));
+  }
+}
+
+@media (min-width:2200px) {
+  :root { --page-side: 18; }
+
+  section {
+    margin: 0 calc(18 * var(--dynamic-grid-size) + 1px) calc(10 * var(--dynamic-grid-size) + var(--snap, 0px)) calc(18 * var(--dynamic-grid-size));
+  }
+}
+
+/* solidarity and contact: from a cell after the logo (column 4), their titles to the line */
+@media (min-width:1200px) {
+  section#solidarity,
+  section#contact {
+    margin-left: calc(4 * var(--dynamic-grid-size));
+  }
+
+  section#solidarity > .title {
+    width: calc((var(--title-end) - 4) * var(--dynamic-grid-size));
+  }
+}
+
+/* the header bar's colours: where they meet, gliding (header.scss) */
+/* the page grid's lines: they fade in at the very start (main.scss) */
+@property --grid-stroke-color { syntax: "<color>"; inherits: true; initial-value: rgba(196, 202, 196, .6); }
+/* the same lines beyond the page column, on the page's own background (html, above): not
+   inherited, so fading them in restyles nothing else */
+@property --side-grid { syntax: "<color>"; inherits: false; initial-value: rgba(196, 202, 196, .6); }
+/* the landing's slider line: its colour and thickness animate (control.scss) */
+@property --track { syntax: "<color>"; inherits: false; initial-value: #000; }
+@property --track-w { syntax: "<length>"; inherits: false; initial-value: 2px; }
+@property --hmid {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 50%;
+}
+
+/* the timeline map's zoom, a number that can glide (timeline.scss: in Germany it comes closer).
+   Not inherited: only the map's frame, its svg and its top group take it (explicitly), so a
+   zoom restyles three elements a frame, not the whole map */
+@property --map-zoom {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 2;
+}
+
+/* a page out of the window rests (main.ts): its loops hold still where they are and go on
+   from there when it comes back, so only the page in view costs frames */
+section.resting *,
+section.resting *::before,
+section.resting *::after {
+  animation-play-state: paused !important;
+}
+
+/* the menu's pixel effect (main.ts holdStill): while the page is broken up it holds still and
+   nothing in it is drawn on a layer of its own (an iPhone leaves such layers out of the
+   filter, and anything moving under it makes it work every frame) */
+/* iPhones: the page soft under its own grid while the menu is open (main.ts softPixels) */
+.main.soft-cells { filter: blur(calc(.45 * var(--dynamic-grid-size))) saturate(1.15); }
+.grid-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 998;           /* under the header and its menu */
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(196, 202, 196, .9) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(196, 202, 196, .9) 1px, transparent 1px);
+}
+.main.pixelating {
+  transform: none !important;
+  will-change: auto !important;
+}
+.main.pixelating *,
+.main.pixelating *::before,
+.main.pixelating *::after {
+  animation-play-state: paused !important;
+  will-change: auto !important;
+  backface-visibility: visible !important;
+}
+.main.pixelating .text-stack,
+.main.pixelating .map > svg { transform: none !important; }
+.main.pixelating .m::before { animation-name: none !important; }

@@ -1,0 +1,41 @@
+<!-- phones open with a curtain in the third colour: it comes down over the name, then
+     drops away down the screen and leaves the page (main.ts; Emil's Comp 13, 12 fps) -->
+@if (curtain()) {
+<div class="curtain" [class.play]="curtainPlay()" aria-hidden="true">
+    <div class="curtain-panel" (animationend)="curtainDone()">
+        <p class="curtain-text"><span>EMIL SULIMAN</span><span>ARCHITECT - DESIGNER</span><span>BERLIN, GERMANY</span></p>
+    </div>
+</div>
+}
+<app-header />
+<!-- the site menu, always on the right (desktop) -->
+<app-side-menu />
+<!-- the menu's pixel effect (main.ts): the page as blocks, sampled from a soft copy of itself
+     so each block is about the average of what it covers -->
+<svg class="fx-defs" aria-hidden="true" width="0" height="0" focusable="false">
+    <filter id="menu-pixels" filterUnits="userSpaceOnUse" primitiveUnits="userSpaceOnUse"
+        color-interpolation-filters="sRGB" x="0" y="0" width="100" height="100">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="soft" />
+        <feFlood x="10" y="10" width="1" height="1" flood-color="#000" />
+        <feComposite width="21" height="21" />
+        <feTile result="samples" />
+        <feComposite in="soft" in2="samples" operator="in" />
+        <feMorphology operator="dilate" radius="10" />
+    </filter>
+</svg>
+<div class="main" #main>
+    <app-grid-fx />
+    <app-home />
+    <app-about />
+    <app-timeline />
+    <app-cases />
+    <!-- solidarity: off for now, back with SHOW_SOLIDARITY (_config/sections.ts) -->
+    @if (showSolidarity) {
+    <app-solidarity />
+    }
+    <!-- the last page: contact and the whale on one screen -->
+    <div class="last-page">
+        <app-contact />
+        <app-footer />
+    </div>
+</div>
