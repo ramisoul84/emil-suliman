@@ -69,7 +69,8 @@ interface Era {
   cards: CardData[];
 }
 
-const ERAS: Era[] = [
+// exported for the Telegram bot's content (emil-server/scripts/bot-content.mjs)
+export const ERAS: Era[] = [
   {
     place: 'syria', country: t('SYRIA', 'SYRIEN'), from: 1989, cardsFrom: 2008, cards: [
       { bar: 9, kind: 'edu', logo: 'tishreen',
@@ -78,7 +79,8 @@ const ERAS: Era[] = [
         more: t('Five years of architecture at Tishreen University in Latakia, 2008 to 2013. My graduation project was a science centre: research, learning and public exhibitions under one roof.',
                 'Fünf Jahre Architekturstudium an der Tishreen-Universität in Latakia, 2008 bis 2013. Mein Abschlussprojekt war ein Wissenschaftszentrum: Forschung, Lehre und öffentliche Ausstellungen unter einem Dach.') },
       { bar: 0, kind: 'work', logo: 'tarek-jeffe',
-        title: t('Architect assistant-3D artist', 'Architekturassistent-3D-Artist'),
+        // "3D artist" / "3D-Artist" kept on one row (Emil 23 Oct): \u00a0, and \u2060 after a hyphen
+        title: t('Architect assistant-3D\u00a0artist', 'Architekturassistent-3D-\u2060Artist'),
         sub: t('Tarek Jeffe arch-practice (2008-2013)', 'Architekturbüro Tarek Jeffe (2008-2013)'),
         more: t('I started here as a freelancer, then the office took me on. I designed many apartments and interiors and worked on buildings and competitions, all alongside my studies, so I saw the practical side of architecture early on.',
                 'Ich habe hier als Freelancer angefangen, dann hat mich das Büro angestellt. Ich habe viele Wohnungen und Innenräume gestaltet und an Gebäuden und Wettbewerben gearbeitet, alles neben dem Studium. So habe ich die Praxis früh kennengelernt.') },
@@ -120,12 +122,13 @@ const ERAS: Era[] = [
   {
     place: 'ludwigshafen', country: t('GERMANY', 'DEUTSCHLAND'), city: t('LUDWIGSHAFEN AM RHEIN'), from: 2016.5, cards: [
       { bar: 13, kind: 'other', logo: 'kreativlabor42',
-        title: t('Architectural intern', 'Architekturpraktikant'),
+        // a long word breaks only as "Architektur-" / "praktikant" (\u00ad, Emil 23 Oct)
+        title: t('Architectural intern', 'Architektur\u00adpraktikant'),
         sub: t('kreativLABOR42 (2016)'),
         more: t('My first contact with the German market: six months alongside architects in Ludwigshafen, learning how projects are planned and built here. It’s where I found my way in Germany.',
                 'Mein erster Kontakt mit dem deutschen Markt: sechs Monate an der Seite von Architekten in Ludwigshafen, um zu lernen, wie hier geplant und gebaut wird. Hier habe ich meinen Weg in Deutschland gefunden.') },
       { bar: 2, kind: 'work', logo: 'northwind',
-        title: t('Mo. graphics designer-3D artist', 'Motion-Designer-3D-Artist'),
+        title: t('Mo. graphics designer-3D\u00a0artist', 'Motion-Designer-3D-\u2060Artist'),
         sub: t('Northwind Visuals (2016-2018)'),
         more: t('My first full-time job in Germany, which I got through my 3D and motion graphics skills. At a film studio, alongside filmmakers, I made motion graphics and illustrations, bringing geometry, order and proportion from architecture into the work.',
                 'Mein erster Vollzeitjob in Deutschland, den ich durch meine 3D- und Motion-Graphics-Kenntnisse bekam. In einem Filmstudio habe ich mit Filmemachern Motion Graphics und Illustrationen gemacht und Geometrie, Ordnung und Proportion aus der Architektur eingebracht.') },
@@ -164,14 +167,11 @@ const ERAS: Era[] = [
                 'Drei Jahre bei Leonard Design Architects an Handels- und Mischnutzungsprojekten: Einkaufszentren, Ladenflächen, ein Flughafen, Studentenwohnheime und Wohnungsbau, vom Wettbewerb bis zur Ausführung. Vor allem für den britischen Markt, dazu internationale und deutsche Projekte und ein Innenraum, den ich hier in Berlin realisiert habe.') },
       { bar: 8, kind: 'work', logo: 'resvr',
         title: t('Designer - co founder', 'Designer - Mitgründer'),
-        sub: t('ResVR (2023 - )'),
-        desc: t('I co-founded ResVR, a digital-twin visualisation company in Canada. I led its design and brand: the UI, the videos and materials, and the 3D homes buyers walk through, with an architect’s eye.',
-                'Ich habe ResVR mitgegründet, ein Unternehmen für Visualisierung mit digitalen Zwillingen in Kanada. Ich habe Design und Marke verantwortet: die UI, Videos und Materialien und die 3D-Häuser, durch die Käufer gehen, mit dem Blick des Architekten.') },
+        // just the title and the time (Emil 23 Oct: no explanation)
+        sub: t('ResVR (2023 - )') },
       { bar: 6, kind: 'work', logo: 'es',
         title: t('Freelancer', 'Freiberuflich'),
-        sub: t('Architect - designer (2025 - )', 'Architekt - Designer (2025 - )'),
-        desc: t('Freelance architect and designer specializing in visualization, UI, motion graphics. I create human-centered work that bridges space and digital.',
-                'Freier Architekt und Designer mit Fokus auf Visualisierung, UI und Motion Graphics. Ich gestalte menschenzentrierte Arbeiten zwischen Raum und Digitalem.') },
+        sub: t('Architect - designer (2025 - )', 'Architekt - Designer (2025 - )') },
     ],
   },
 ];

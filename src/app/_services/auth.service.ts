@@ -1,113 +1,71 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { Inject, Injectable, PLATFORM_ID } from "@angular/core";
-import { BehaviorSubject, catchError, map, Observable, tap, throwError, } from "rxjs";
-import { isPlatformBrowser } from "@angular/common";
+import { Injectable, inject, signal } from "@angular/core";
+import { Observable, catchError, tap, throwError } from "rxjs";
 import { environment } from "../../environments/environment";
+
+interface LoginResponse {
+    token: string;
+    /** Seconds until the token expires. */
+    expiresIn: number;
+}
+
+const TOKEN_KEY = 'access_token';
+const EXPIRES_KEY = 'access_token_expires';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
-    private apiUrl = environment.apiUrl;
-    private readonly tokenKey = 'access_token';
-    private isBrowser: boolean;
+    private readonly http = inject(HttpClient);
+    private readonly apiUrl = environment.apiUrl;
 
-    private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
-    public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+    /** Signed in with a token that hasn't expired. */
+    readonly isAuthenticated = signal(this.getToken() !== null);
 
-    constructor(
-        private http: HttpClient,
-        @Inject(PLATFORM_ID) private platformId: Object
-    ) {
-        this.isBrowser = isPlatformBrowser(this.platformId);
-    }
-
-    login(email: string, password: string): Observable<{ token: string }> {
-        return this.http.post<{ token: string }>(
-            `${this.apiUrl}/auth/login`,
-            { email, password }
-        ).pipe(
-            tap(response => {
-                if (response.token) {
-                    this.setToken(response.token);
-                    this.isAuthenticatedSubject.next(true);
-                }
+    login(username: string, password: string): Observable<LoginResponse> {
+        return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, { username, password }).pipe(
+            tap(({ token, expiresIn }) => {
+                write(TOKEN_KEY, token);
+                write(EXPIRES_KEY, String(Date.now() + expiresIn * 1000));
+                this.isAuthenticated.set(true);
             }),
-            catchError(this.handleError)
+            catchError((error: HttpErrorResponse) => throwError(() => ({
+                status: error.status,
+                message: loginError(error),
+            }))),
         );
     }
 
     logout(): void {
-        this.removeToken();
-        this.isAuthenticatedSubject.next(false);
+        remove(TOKEN_KEY);
+        remove(EXPIRES_KEY);
+        this.isAuthenticated.set(false);
     }
 
-    private setToken(token: string): void {
-        if (this.isBrowser) {
-            localStorage.setItem(this.tokenKey, token);
-        }
+    getToken(): string | null {
+        const token = read(TOKEN_KEY);
+        const expires = Number(read(EXPIRES_KEY) ?? 0);
+        if (!token || (expires && Date.now() >= expires)) return null;
+        return token;
     }
+}
 
-    private removeToken(): void {
-        if (this.isBrowser) {
-            localStorage.removeItem(this.tokenKey);
-        }
+function loginError(error: HttpErrorResponse): string {
+    switch (error.status) {
+        case 0: return 'Cannot reach the server.';
+        case 401: return 'Wrong username or password.';
+        case 429: return 'Too many attempts — wait a minute.';
+        default: return error.error?.error?.message ?? `Login failed (${error.status}).`;
     }
+}
 
-    private hasToken(): boolean {
-        if (this.isBrowser) {
-            return !!localStorage.getItem(this.tokenKey);
-        }
-        return false;
-    }
-
-    private getToken(): string | null {
-        if (this.isBrowser) {
-            return localStorage.getItem(this.tokenKey);
-        }
-        return null;
-    }
-
-    isAuthenticated(): Observable<boolean> {
-        return this.isAuthenticated$.pipe(
-            map(isAuth => isAuth)
-        );
-    }
-
-    isAuthenticatedSync(): boolean {
-        return this.hasToken();
-    }
-
-    private handleError(error: HttpErrorResponse) {
-        let errorMessage = 'An error occurred';
-
-        if (error.error instanceof ErrorEvent) {
-            errorMessage = error.error.message;
-        } else {
-            // Server-side error
-            switch (error.status) {
-                case 401:
-                    errorMessage = 'Invalid email or password';
-                    break;
-                case 403:
-                    errorMessage = 'Access denied';
-                    break;
-                case 404:
-                    errorMessage = 'Resource not found';
-                    break;
-                case 500:
-                    errorMessage = 'Server error. Please try again later.';
-                    break;
-                default:
-                    errorMessage = error.error?.message || `Error: ${error.status}`;
-            }
-        }
-
-        console.error('API Error:', error);
-        return throwError(() => ({
-            status: error.status,
-            message: errorMessage,
-            error: error.error
-        }));
-    }
+// Storage can throw (private mode, blocked site data): then the admin just signs in again.
+function read(key: string): string | null {
+    try { return localStorage.getItem(key); } catch { return null; }
+}
+function write(key: string, value: string): void {
+    try { localStorage.setItem(key, value); } catch { /* not persisted */ }
+}
+function remove(key: string): void {
+    try { localStorage.removeItem(key); } catch { /* nothing to remove */ }
 }

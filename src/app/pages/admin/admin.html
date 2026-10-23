@@ -1,189 +1,73 @@
-<div class="admin-container">
-    @if (!authService.isAuthenticatedSync()) {
-    <div class="login-wrapper">
-        <div class="login-card">
-            <h2>Admin Login</h2>
-            <p class="subtitle">Enter your credentials to access the dashboard</p>
+<div class="admin">
+    @if (!auth.isAuthenticated()) {
+    <main class="login">
+        <form class="login-card" [formGroup]="loginForm" (ngSubmit)="login()">
+            <h1>admin</h1>
+            <p class="sub">Emil Suliman — visitors &amp; messages</p>
 
-            <form [formGroup]="loginForm" class="login-form" (ngSubmit)="onSubmit()">
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input id="email" formControlName="email" type="email" placeholder="admin@example.com"
-                        autocomplete="email" [class.error]="email?.invalid && email?.touched">
-                    @if (email?.invalid && email?.touched) {
-                    <div class="field-error">
-                        @if (email?.errors?.['required']) {
-                        <span>Email is required</span>
-                        }
-                        @if (email?.errors?.['email']) {
-                        <span>Please enter a valid email</span>
-                        }
-                    </div>
-                    }
-                </div>
+            <label for="username">Username</label>
+            <input id="username" formControlName="username" autocomplete="username" autocapitalize="none" spellcheck="false">
 
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input id="password" formControlName="password" type="password" placeholder="••••••••"
-                        autocomplete="current-password" [class.error]="password?.invalid && password?.touched">
-                    @if (password?.invalid && password?.touched) {
-                    <div class="field-error">
-                        @if (password?.errors?.['required']) {
-                        <span>Password is required</span>
-                        }
-                        @if (password?.errors?.['minlength']) {
-                        <span>Password must be at least 8 characters</span>
-                        }
-                    </div>
-                    }
-                </div>
-                @if (errMsg) {
-                <div class="alert alert-error">
-                    {{ errMsg }}
-                </div>
-                }
+            <label for="password">Password</label>
+            <input id="password" type="password" formControlName="password" autocomplete="current-password">
 
-                <button type="submit" class="btn-login" [disabled]="loginForm.invalid || loading">
-                    @if (loading) {
-                    <span class="spinner"></span>
-                    <span>LOGGING IN...</span>
-                    } @else {
-                    <span>LOGIN</span>
-                    }
-                </button>
-            </form>
+            @if (loginError()) {
+            <p class="login-error" role="alert">{{ loginError() }}</p>
+            }
+
+            <button type="submit" class="btn primary" [disabled]="loginForm.invalid || loggingIn()">
+                {{ loggingIn() ? 'Signing in…' : 'Sign in' }}
+            </button>
+        </form>
+    </main>
+    } @else {
+    <header class="top">
+        <div class="brand">
+            <span class="title">emil suliman</span>
+            <span class="live" [class.on]="(live()?.visitors ?? 0) > 0" [title]="'Active in the last ' + (live()?.window_seconds ?? 45) + ' seconds'">
+                <span class="live-dot" aria-hidden="true"></span>
+                {{ live()?.visitors ?? 0 }} on the site now
+            </span>
         </div>
+        <div class="top-actions">
+            <label class="check" title="Your own visits from this browser are not counted">
+                <input type="checkbox" [checked]="optedOut()" (change)="toggleOptOut()">
+                Don't count this browser
+            </label>
+            <button type="button" class="btn small" (click)="logout()">Sign out</button>
+        </div>
+    </header>
+
+    <nav class="tabs" aria-label="Admin sections">
+        @for (t of tabs; track t) {
+        <button type="button" class="tab" [class.on]="tab() === t" [attr.aria-current]="tab() === t ? 'page' : null" (click)="openTab(t)">
+            {{ t }}
+            @if (t === 'messages' && unread() > 0) {<span class="badge" [attr.aria-label]="unread() + ' unread'">{{ unread() }}</span>}
+        </button>
+        }
+    </nav>
+
+    @if (showRange()) {
+    <div class="range" role="group" aria-label="Date range">
+        <div class="seg">
+            @for (p of presets; track p.id) {
+            <button type="button" [class.on]="data.preset() === p.id" (click)="data.setPreset(p.id)">{{ p.label }}</button>
+            }
+        </div>
+        <span class="custom">
+            <input #from type="date" [value]="data.range().from" [max]="data.range().to" aria-label="From" (change)="setCustom(from.value, to.value)">
+            –
+            <input #to type="date" [value]="data.range().to" [min]="data.range().from" aria-label="To" (change)="setCustom(from.value, to.value)">
+        </span>
     </div>
     }
 
-    <!-- Admin Dashboard - shown when authenticated -->
-    @else {
-    <div class="dashboard">
-        <!-- Header with logout -->
-        <header class="dashboard-header">
-            <h1>Admin Dashboard</h1>
-            <button class="btn-logout" (click)="logout()">
-                <span>🚪</span> Logout
-            </button>
-        </header>
-
-        <!-- Loading State -->
-        @if (isLoadingData) {
-        <div class="loading-state">
-            <div class="spinner-large"></div>
-            <p>Loading dashboard data...</p>
-        </div>
+    <main class="content">
+        @switch (tab()) {
+        @case ('overview') { <app-admin-overview /> }
+        @case ('sessions') { <app-admin-sessions /> }
+        @case ('messages') { <app-admin-messages (unreadChange)="unread.set($event)" /> }
         }
-
-        <!-- Stats Cards -->
-        @if (visitStats) {
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon">✉️</div>
-                <div class="stat-content">
-                    <div class="stat-value">{{ totalMessages || 0 }}</div>
-                    <div class="stat-label">Total Message</div>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon">👁️</div>
-                <div class="stat-content">
-                    <div class="stat-value">{{ visitStats.total_visits || 0 }}</div>
-                    <div class="stat-label">Total Visits</div>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon">🆕</div>
-                <div class="stat-content">
-                    <div class="stat-value">{{ visitStats.unique_users || 0 }}</div>
-                    <div class="stat-label">Unique Visitors</div>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon">⏱️</div>
-                <div class="stat-content">
-                    <div class="stat-value">{{ visitStats.avg_duration || 0 | number:'1.0-0'}}s</div>
-                    <div class="stat-label">Avg. Duration</div>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon">⏱️</div>
-                <div class="stat-content">
-                    <div class="stat-value">{{ visitStats.avg_active_duration || 0 | number:'1.0-0'}}s</div>
-                    <div class="stat-label">Avg. Active Duration</div>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon">🖱️</div>
-                <div class="stat-content">
-                    <div class="stat-value">{{ visitStats.avg_actions || 0 | number:'1.0-0'}}</div>
-                    <div class="stat-label">Avg. Actions</div>
-                </div>
-            </div>
-        </div>
-        }
-
-        <!-- Recent Visits Table -->
-        @if (visits) {
-        <div class="recent-visits">
-            <h2>Recent Visits</h2>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Time</th>
-                            <th>IP</th>
-                            <th>Location</th>
-                            <th>Duration</th>
-                            <th>Device</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (visit of visits; track visit.id) {
-                        <tr>
-                            <td>{{ visit.start_time| date:'short' }}</td>
-                            <td><code>{{ visit.ip }}</code></td>
-                            <td>
-                                <span class="flag">{{ getFlagEmoji(visit.country) }}</span>
-                                {{ visit.city }}, {{ visit.country }}
-                            </td>
-                            <td>{{ visit.active_duration | number:'1.0-0' }}s</td>
-                            <td>{{ visit.os}}</td>
-                            <td class="page-url">{{ visit.actions_count }}</td>
-                        </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        }
-
-        <!-- Messages Section -->
-        @if (messages) {
-        <div class="messages-section">
-            <h2>Messages</h2>
-            <div class="messages-list">
-                @for (message of messages; track message.id) {
-                <div class="message-card">
-                    <div class="message-header">
-                        <span class="message-sender">{{ message.name }}</span>
-                        <span class="message-email">{{ message.email }}</span>
-                        <span class="message-time">{{ message.time| date:'short' }}</span>
-                    </div>
-                    <div class="message-body">
-                        {{ message.text }}
-                    </div>
-                </div>
-                }
-            </div>
-        </div>
-        }
-    </div>
+    </main>
     }
 </div>

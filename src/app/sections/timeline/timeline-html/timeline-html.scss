@@ -76,8 +76,17 @@ $gone: .3s cubic-bezier(.4, 0, .6, 1);
   height: var(--g);
   line-height: var(--g);
   font-family: var(--font-title);
-  font-size: calc(.9 * var(--g));
+  /* bigger than they were (.9), the size of the story's hint beside them, and the LCD
+     letters a little thicker (Emil 23 Oct) */
+  font-size: calc(1.1 * var(--g));
+  -webkit-text-stroke: .02em currentColor;
   white-space: nowrap;
+}
+/* the first year (the birth): above its square on the axis, written whole (Emil 23 Oct) */
+.year.first {
+  left: calc(var(--R) + 22 * var(--g));
+  top: calc((var(--y) - 1.6) * var(--g));
+  transform: translateX(-50%);
 }
 
 /* ---------- connectors ---------- */
@@ -167,15 +176,16 @@ $gone: .3s cubic-bezier(.4, 0, .6, 1);
   --box-w: calc(var(--R) + 9 * var(--g));
   width: var(--box-w);
   height: 100%;
-  padding: 0 calc(.5 * var(--g));
+  /* two title rows and the office line fit the card's four cells, even on a phone */
+  padding: calc(.25 * var(--g)) calc(.5 * var(--g));
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: calc(.32 * var(--g));
+  gap: calc(.12 * var(--g));
   font-family: var(--font-main);
   overflow: hidden;
 }
-.box p { margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: calc(var(--box-w) - var(--g)); flex: none; }
+.box p { margin: 0; width: calc(var(--box-w) - var(--g)); flex: none; }
 
 /* the logo drops into its cell from a third of a cell above, easing out over 4 frames, at
    two-thirds strength on the first (reference video); the box then grows out of it.
@@ -195,18 +205,48 @@ $gone: .3s cubic-bezier(.4, 0, .6, 1);
 }
 .card .box { width: 0; visibility: hidden; transition: width .2083s #{fps12(.2083s, in)}, visibility 0s .2083s; }
 .card.on .box { width: var(--box-w); visibility: visible; transition: width .4167s #{fps12(.4167s)} .0833s, visibility 0s .0833s; }
+/* Emil's reference (23 Oct): the title bold capitals, one or two rows, always whole (fitCards
+   brings a longer one down); under it the office and the years, smaller, in a softer ink */
 .c-title {
-  font-size: max(calc(.9 * var(--g)), 15px);
-  line-height: 1.15;
-  font-weight: 600;
-  letter-spacing: .07em;
+  font-size: max(calc(.9 * var(--g)), 13px);
+  line-height: 1.08;
+  font-weight: 700;
+  letter-spacing: .03em;
   text-transform: uppercase;
+  /* words break only where they may (spaces, hyphens, soft hyphens in the data), never one
+     letter onto a row of its own: a word too long for the row brings the title down (fitCards) */
+  hyphens: manual;
 }
+/* the office and the years: on hover they roll to the right, evenly, a copy coming in from
+   the left behind them (fitCards: --roll-gap, --roll, --roll-t) */
 .c-sub {
-  font-size: max(calc(.85 * var(--g)), 13px);
-  line-height: 1.25;
-  letter-spacing: .05em;
+  font-size: max(calc(.72 * var(--g)), 11px);
+  /* 10% heavier than the text's 400 (Emil 23 Oct; League Spartan is a variable font) */
+  font-weight: 450;
+  line-height: 1.3;
+  letter-spacing: .02em;
+  white-space: nowrap;
+  overflow: hidden;
+  opacity: .78;
 }
+.c-track { display: inline-flex; gap: var(--roll-gap, 2em); }
+/* the copy only shows while rolling (at rest it would sit in the box after a short line) */
+.c-copy { visibility: hidden; }
+@media (hover: hover) {
+  .card:hover .c-track { animation: tl-roll var(--roll-t, 4s) linear infinite; }
+  .card:hover .c-copy { visibility: visible; }
+}
+/* touch screens have no hover: a tapped card rolls instead */
+@media (hover: none) {
+  .card.sel .c-track { animation: tl-roll var(--roll-t, 4s) linear infinite; }
+  .card.sel .c-copy { visibility: visible; }
+}
+/* from the copy where the line was to the line where it was: seamless, to the right */
+@keyframes tl-roll {
+  from { transform: translateX(calc(-1 * var(--roll, 0px))); }
+  to { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) { .card .c-track { animation: none !important; } }
 
 .edu .box { background: var(--grey-box); }
 .work .box {
@@ -219,28 +259,15 @@ $gone: .3s cubic-bezier(.4, 0, .6, 1);
 
 /* big cards: a picture rather than a logo, and title + role + short text */
 .big .logo { object-fit: cover; padding: 0; }
-.big .box {
-  justify-content: flex-start;
-  padding-top: calc(.35 * var(--g));
-  gap: 0;
-}
-.big .box p { width: calc(var(--box-w) - var(--g)); }
-.big .c-title { font-size: max(calc(.9 * var(--g)), 15px); line-height: 1.15; }
-.big .c-sub {
-  font-size: max(calc(.8 * var(--g)), 11px);
-  line-height: 1.4;
-  text-transform: uppercase;
-}
+.big .box { justify-content: flex-start; }
+.big .c-sub { text-transform: uppercase; }
+/* the short text under the role: what fits shows, the rest rolls up on hover (the whole text
+   also opens with the card) */
 .big .c-desc {
   margin-top: calc(.15 * var(--g));
-  font-size: max(calc(.8 * var(--g)), 12.5px);
+  font-size: max(calc(.72 * var(--g)), 11px);
   line-height: 1.3;
-  letter-spacing: .04em;
-  white-space: normal;
-  /* at .8 of a cell one line fits under the title and role; the whole text opens with the card */
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
+  letter-spacing: .02em;
 }
 
 /* ---------- selecting a card: its time span and place ---------- */
@@ -453,9 +480,10 @@ $gone: .3s cubic-bezier(.4, 0, .6, 1);
   .box { --box-w: calc(var(--R) + 10 * var(--g)); }
   .year {
     left: calc(var(--R) + 22.2 * var(--g));
-    font-size: calc(.72 * var(--g));
+    font-size: calc(.9 * var(--g));   /* the phones' small LCD size (control, footer) */
     letter-spacing: -.02em;
   }
+  .year.first { left: calc(var(--R) + 22 * var(--g)); }
 }
 
 /* wider screens (Emil 22 Oct): every frame's line alike (2px), only the axis and the lines

@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://ramisuliman.ru/api/emil',
-  //apiUrl: 'http://localhost:8080/api/v1',
+  // emil-server on the VPS, behind nginx: ramisuliman.com/emil-api/ → 127.0.0.1:8001/api/v1/
+  apiUrl: 'https://ramisuliman.com/emil-api',
 };

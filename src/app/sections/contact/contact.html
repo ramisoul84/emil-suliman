@@ -4,7 +4,7 @@
         <p class="text">{{msg}}</p>
     </div>
     }
-    <div class="title contact-title" [ngClass]="{'blur':isBlur}">contact.</div>
+    <div class="title contact-title" [ngClass]="{'blur':isBlur}">contact</div>
     <form [formGroup]="contactForm" [ngClass]="{'blur':isBlur}" novalidate>
         <div class="input-group">
             <label for="name">Name</label>
@@ -15,6 +15,8 @@
             <input type="email" id="email" placeholder="" required formControlName="email" autocomplete="on">
         </div>
         <textarea placeholder="" id="text" required formControlName="text"></textarea>
+        <!-- honeypot: invisible to people, bots fill it in and their message is dropped -->
+        <input class="hp" type="text" formControlName="website" tabindex="-1" autocomplete="off" aria-hidden="true">
         <button class="submit" [class.loading]="isSubmitting" (click)="submitForm()" [disabled]="contactForm.invalid">
             <span *ngIf="!isSubmitting">{{ de() ? 'Senden' : 'Send' }}</span>
             <span *ngIf="isSubmitting">{{ de() ? 'Wird gesendet…' : 'Sending…' }}</span>

@@ -1,0 +1,90 @@
+// Shared by the admin pages: cards, headings, buttons, states.
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+  gap: 1.25rem;
+}
+
+.card {
+  min-width: 0;
+  padding: 1.1rem 1.25rem 1.25rem;
+  background: var(--a-surface);
+  border: var(--a-frame);
+
+  &.wide { grid-column: 1 / -1; }
+}
+
+.card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1rem;
+
+  h2 { margin: 0; }
+}
+
+h2 {
+  font-family: var(--font-title);
+  font-size: 1rem;
+  font-weight: normal;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+}
+
+.sub { margin: 0.2rem 0 0; color: var(--a-ink-3); font-size: 0.82rem; }
+
+.seg {
+  display: inline-flex;
+  border: var(--a-frame);
+
+  button {
+    padding: 0.3rem 0.7rem;
+    border: 0;
+    border-left: 2px solid var(--a-ink);
+    background: var(--a-surface);
+    color: var(--a-ink);
+    font: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+
+    &:first-child { border-left: 0; }
+    &.on { background: var(--a-ink); color: var(--a-surface); }
+    &:focus-visible { outline: 2px solid var(--a-accent); outline-offset: 2px; }
+  }
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.9rem;
+  border: var(--a-frame);
+  background: var(--a-surface);
+  color: var(--a-ink);
+  font: inherit;
+  font-size: 0.9rem;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 0 0 var(--a-accent-2);
+  transition: box-shadow 0.15s;
+
+  &:hover:not(:disabled) { box-shadow: 0.25rem 0.25rem 0 var(--a-accent-2); }
+  &:disabled { opacity: 0.45; cursor: default; }
+  &.danger { border-color: var(--a-bad-text); color: var(--a-bad-text); }
+  &.small { padding: 0.25rem 0.6rem; font-size: 0.82rem; }
+}
+
+.state {
+  padding: 2rem 1rem;
+  color: var(--a-ink-2);
+  text-align: center;
+
+  &.error { color: var(--a-bad-text); }
+}
+
+.muted { color: var(--a-ink-3); }
+
+.loading-dim { opacity: 0.55; transition: opacity 0.2s; }

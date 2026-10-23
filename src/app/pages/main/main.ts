@@ -79,6 +79,27 @@ export class Main implements OnInit, AfterViewInit, OnDestroy {
     text.style.transform = 'none';
   }
 
+  /** analytics: a section counts as seen once it reaches the middle of the screen (once per
+      visit of the page; works for sections taller than the screen too) — the admin panel's
+      funnel is built from these */
+  private trackSections(): void {
+    if (typeof IntersectionObserver === 'undefined') return;
+    const seen = new Set<string>();
+    this.sectionObserver = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        const id = entry.target.id;
+        if (!entry.isIntersecting || !id || seen.has(id)) continue;
+        seen.add(id);
+        this.analyticsService.trackSectionView({ section: id, page: '/' });
+      }
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    // sections that render later (@defer) are picked up on the next pass
+    const observe = () => this.host.nativeElement.querySelectorAll<HTMLElement>('section[id]')
+      .forEach(el => this.sectionObserver?.observe(el));
+    observe();
+    setTimeout(observe, 2000);
+  }
+
   curtainDone(): void {
     this.curtain.set(false);
   }
@@ -87,6 +108,7 @@ export class Main implements OnInit, AfterViewInit, OnDestroy {
   private blurSub?: Subscription;
 
   private resizeObserver?: ResizeObserver;
+  private sectionObserver?: IntersectionObserver;
   private mutationObserver?: MutationObserver;
   private restObserver?: IntersectionObserver;
   private snapFrame = 0;
@@ -102,7 +124,6 @@ export class Main implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.startCurtain();
-    this.analyticsService.trackVisit();
   }
 
   ngAfterViewInit(): void {
@@ -112,6 +133,7 @@ export class Main implements OnInit, AfterViewInit, OnDestroy {
     this.blurSub = this.blurService.blurState$.subscribe(open =>
       this.ngZone.runOutsideAngular(() => this.pixelate(open)));
     this.ngZone.runOutsideAngular(() => this.restOffscreen());
+    this.ngZone.runOutsideAngular(() => this.trackSections());
     // phones: one page at a time, the curtain between them (phone-pager.service); not while
     // the menu is open
     let menuOpen = false;
@@ -138,6 +160,7 @@ export class Main implements OnInit, AfterViewInit, OnDestroy {
     this.resizeObserver?.disconnect();
     this.mutationObserver?.disconnect();
     this.restObserver?.disconnect();
+    this.sectionObserver?.disconnect();
     this.menuSub?.unsubscribe();
     this.phonePager.detach();
     cancelAnimationFrame(this.snapFrame);

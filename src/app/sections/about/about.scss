@@ -119,6 +119,10 @@
 .s-house { --img: url("../../../assets/images/collage/house.webp"); }
 .s-cam { --img: url("../../../assets/images/collage/cam.webp"); }
 .s-duck { --img: url("../../../assets/images/collage/duck.webp"); }
+/* phones' topic frames: the symbols without the collage's lines and dots (recolor.ts PHONE_SPRITES) */
+.ph-band .s-house { --img: url("../../../assets/images/collage/house-clean.webp"); }
+.ph-band .s-cam { --img: url("../../../assets/images/collage/cam-clean.webp"); }
+.ph-band .s-duck { --img: url("../../../assets/images/collage/duck-clean.webp"); }
 
 /* ---------- moving motifs (sizes in --u = one px of the original 1920 canvas) ----------
    Each box shows its pattern on a layer one repeat bigger than the box on the side the

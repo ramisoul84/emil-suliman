@@ -23,9 +23,18 @@ export const COLLAGE_SPRITES: [string, string][] = [
   ['s-duck', 'assets/images/collage/duck.webp'],
 ];
 
+/** the phones' topic frames: the same sheets with the collage's patterns (lines, dots) taken
+    off the symbols (Emil 23 Oct); the tree has none */
+export const PHONE_SPRITES: Record<string, string> = {
+  's-house': 'assets/images/collage/house-clean.webp',
+  's-cam': 'assets/images/collage/cam-clean.webp',
+  's-duck': 'assets/images/collage/duck-clean.webp',
+};
+
 /** get the collage pictures ready for re-colouring (decoded once, in the background) */
 export function warmCollage(): void {
   COLLAGE_SPRITES.forEach(([, url]) => RecolorSource.load(url));
+  Object.values(PHONE_SPRITES).forEach(url => RecolorSource.load(url));
 }
 
 export function hexToRgb(hex: string): RGB {

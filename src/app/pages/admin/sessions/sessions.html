@@ -1,0 +1,119 @@
+<div class="head">
+    <p class="sub">{{ total() | number }} session{{ total() === 1 ? '' : 's' }} · {{ data.range().from }} – {{ data.range().to }}</p>
+    <label class="check">
+        <input type="checkbox" [checked]="convertedOnly()" (change)="convertedOnly.set($any($event.target).checked)" />
+        Only sessions that got in touch
+    </label>
+</div>
+
+@if (error()) {
+<p class="state error" role="alert">{{ error() }}</p>
+}
+
+<section class="card" [class.loading-dim]="loading()" [attr.aria-busy]="loading()">
+    <div class="table-wrap">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Started</th>
+                    <th scope="col">Visitor</th>
+                    <th scope="col">Source</th>
+                    <th scope="col">Device</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">Read</th>
+                    <th scope="col">Got in touch</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (s of sessions(); track s.session_id) {
+                <tr class="row" tabindex="0" (click)="open(s)" (keydown.enter)="open(s)"
+                    [class.selected]="selected()?.session?.session_id === s.session_id">
+                    <td class="nowrap c-start">{{ s.started_at | date: 'd MMM, HH:mm' }}</td>
+                    <td class="nowrap c-who">
+                        <span aria-hidden="true">{{ flag(s.country) }}</span>
+                        {{ place(s.country, s.city) }}
+                        @if (s.is_returning) {<span class="pill">returning</span>}
+                    </td>
+                    <td class="c-src">
+                        {{ s.source }}
+                        @if (s.utm_campaign) {<span class="muted"> · {{ s.utm_campaign }}</span>}
+                    </td>
+                    <td class="nowrap muted c-dev">{{ s.device }} · {{ s.browser ?? '—' }}</td>
+                    <td class="nowrap c-time">{{ duration(s.engaged_seconds) }}</td>
+                    <td class="c-read">
+                        <span class="meter" [title]="'Scrolled ' + s.max_scroll + '%'">
+                            <span class="meter-fill" [style.width.%]="s.max_scroll"></span>
+                        </span>
+                    </td>
+                    <td class="nowrap c-conv">
+                        @for (c of s.conversions; track c) {
+                        <span class="pill conv">✓ {{ conversionLabels[c] ?? c }}</span>
+                        } @empty {
+                        <span class="muted">—</span>
+                        }
+                    </td>
+                </tr>
+                } @empty {
+                <tr>
+                    <td colspan="7" class="muted empty">
+                        {{ loading() ? 'Loading…' : convertedOnly() ? 'Nobody got in touch in this range.' : 'No sessions in this range.' }}
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (pageCount() > 1) {
+    <nav class="pager" aria-label="Pagination">
+        <button type="button" class="btn small" [disabled]="page() === 0" (click)="page.set(page() - 1)">← prev</button>
+        <span class="muted">page {{ page() + 1 }} / {{ pageCount() }}</span>
+        <button type="button" class="btn small" [disabled]="page() + 1 >= pageCount()" (click)="page.set(page() + 1)">next →</button>
+    </nav>
+    }
+</section>
+
+@if (selected(); as detail) {
+<div class="backdrop" (click)="closeDetail()"></div>
+<aside class="drawer" role="dialog" aria-modal="true" aria-label="Session detail">
+    <header class="drawer-head">
+        <div>
+            <h2><span aria-hidden="true">{{ flag(detail.session.country) }}</span> {{ place(detail.session.country, detail.session.city) }}</h2>
+            <p class="sub">{{ detail.session.started_at | date: 'EEE d MMM y · HH:mm:ss' }}</p>
+        </div>
+        <button type="button" class="btn small" (click)="closeDetail()" aria-label="Close">✕</button>
+    </header>
+
+    <dl class="facts">
+        <div><dt>Source</dt><dd>{{ detail.session.source }}</dd></div>
+        <div><dt>Referrer</dt><dd class="break">{{ detail.session.referrer ?? 'direct' }}</dd></div>
+        @if (detail.session.utm_campaign) {
+        <div><dt>Campaign</dt><dd>{{ detail.session.utm_campaign }}</dd></div>
+        }
+        <div><dt>Device</dt><dd>{{ detail.session.device }} · {{ detail.session.os ?? '—' }} · {{ detail.session.browser ?? '—' }}</dd></div>
+        <div><dt>Language</dt><dd>site {{ detail.session.site_language ?? '—' }} · browser {{ detail.session.browser_language ?? '—' }}</dd></div>
+        <div><dt>Time</dt><dd>{{ duration(detail.session.duration_seconds) }} on site · {{ duration(detail.session.engaged_seconds) }} looking</dd></div>
+        <div><dt>Sections</dt><dd>{{ sectionPath(detail.session.sections) }}</dd></div>
+        <div><dt>Visitor</dt><dd class="muted break">{{ detail.session.visitor_id }}{{ detail.session.is_returning ? ' (returning)' : '' }}</dd></div>
+    </dl>
+
+    <h2 class="tl-title">timeline</h2>
+    @if (detailLoading()) {
+    <p class="muted">Loading events…</p>
+    } @else {
+    <ol class="timeline">
+        @for (item of timeline(); track $index) {
+        <li [class]="'tl-' + item.kind">
+            <time>{{ item.at | date: 'HH:mm:ss' }}</time>
+            <span>
+                {{ item.text }}
+                @if (item.detail) {<span class="muted"> · {{ item.detail }}</span>}
+            </span>
+        </li>
+        } @empty {
+        <li class="muted">No events recorded.</li>
+        }
+    </ol>
+    }
+</aside>
+}

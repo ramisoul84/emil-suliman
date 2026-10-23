@@ -5,6 +5,7 @@ import { GridService } from '../../_services/grid.service';
 import { BlurService } from '../../_services/blur.service';
 import { Subject, takeUntil } from 'rxjs';
 import { AnalyticsService } from '../../_services/analytics.service';
+import { AnalyticsEvent, ContactChannel } from '../../_services/analytics-events';
 import { MessageService } from '../../_services/message.service';
 import { LanguageService } from '../../_services/language.service';
 
@@ -38,7 +39,9 @@ export class Contact implements OnInit, OnDestroy {
     this.contactForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
-      text: ['', [Validators.required, Validators.minLength(6)]]
+      text: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(5000)]],
+      // honeypot: hidden from people (contact.html), filled in by spam bots
+      website: [''],
     });
 
     this.blurService.blurState$.pipe(
@@ -53,8 +56,8 @@ export class Contact implements OnInit, OnDestroy {
     }));
   }
 
-  onLinkClick(link: string, platform: string): void {
-    this.analyticsService.trackAction(platform)
+  onLinkClick(link: string, channel: ContactChannel): void {
+    this.analyticsService.track(AnalyticsEvent.ContactClick, { channel, source: 'contact' });
     const newWindow = window.open(link, '_blank', 'noopener,noreferrer');
 
     // Security measure to prevent tabnabbing
@@ -83,16 +86,17 @@ export class Contact implements OnInit, OnDestroy {
   }
 
   submitForm(): void {
-    this.analyticsService.trackAction('form')
     if (this.isSubmitting || this.contactForm.invalid) {
       return;
     }
 
     this.isSubmitting = true;
 
-    this.messageSercvice.sendMessage(this.contactForm.value)
+    const { website, ...message } = this.contactForm.value;
+    this.messageSercvice.sendMessage(message, website)
       .subscribe({
         next: () => {
+          this.analyticsService.track(AnalyticsEvent.MessageSent, { lang: this.lang.currentLang() });
           this.isSubmitting = false;
           this.msg = this.de() ? "✅ Danke! Deine Nachricht ist angekommen." : "✅ Thank you! Your message has been sent successfully.";
           this.contactForm.reset();

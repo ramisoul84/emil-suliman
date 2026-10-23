@@ -30,12 +30,13 @@ export class TimelineHtml {
     recolorImage(TimelineHtml.ES_LOGO, palette).then(u => { if (this.theme.palette() === palette) this.esLogo.set(u); });
   });
 
-  /** card titles are .9 of a cell; the few too long for their box come down just enough to
-      fit (on every size of window, in both languages) */
-  private readonly fitOnLang = effect(() => { this.lang.currentLang(); requestAnimationFrame(() => this.fitTitles()); });
+  /** the cards (Emil's reference, 23 Oct): the title on top, one or two rows, always whole
+      (one too long even for two comes down just enough); under it the office and the years,
+      rolling to the right on hover (fitCards) */
+  private readonly fitOnLang = effect(() => { this.lang.currentLang(); requestAnimationFrame(() => this.fitCards()); });
   private readonly fitOnResize = (() => {
     if (typeof ResizeObserver === 'undefined') return;
-    const fit = () => this.fitTitles();
+    const fit = () => this.fitCards();
     const ro = new ResizeObserver(fit);
     ro.observe(this.host.nativeElement);
     // measured again once the card font has arrived (its letters are wider than the fallback's)
@@ -43,16 +44,26 @@ export class TimelineHtml {
     document.fonts?.addEventListener?.('loadingdone', fit);
     inject(DestroyRef).onDestroy(() => { ro.disconnect(); document.fonts?.removeEventListener?.('loadingdone', fit); });
   })();
-  private fitTitles(): void {
-    const titles = (this.host.nativeElement as HTMLElement).querySelectorAll<HTMLElement>('.card .c-title');
-    titles.forEach(p => p.style.removeProperty('font-size'));
-    const range = document.createRange();
-    titles.forEach(p => {
-      range.selectNodeContents(p);
-      const room = p.clientWidth, need = range.getBoundingClientRect().width;
-      if (!room || need <= room) return;
-      const fs = parseFloat(getComputedStyle(p).fontSize);
-      p.style.fontSize = `${Math.floor(fs * room / need * 10) / 10 - .1}px`;
+  private fitCards(): void {
+    const host = this.host.nativeElement as HTMLElement;
+    host.querySelectorAll<HTMLElement>('.card .c-title').forEach(p => {
+      p.style.removeProperty('font-size');
+      // fits: at most two rows, and no word wider than its row
+      const fits = () => p.scrollHeight <= 2 * parseFloat(getComputedStyle(p).lineHeight) + 1 && p.scrollWidth <= p.clientWidth;
+      for (let fs = parseFloat(getComputedStyle(p).fontSize); !fits() && fs > 10; fs -= .5) p.style.fontSize = `${fs - .5}px`;
+    });
+    // the office and the years roll to the right on hover (Emil 23 Oct), at an even speed: the
+    // line goes out on the right while its copy comes in from the left, one line apart, so a
+    // line that fits leaves the box whole before it comes back
+    const g = parseFloat(getComputedStyle(host).getPropertyValue('--g')) || 21;
+    host.querySelectorAll<HTMLElement>('.card .c-sub').forEach(sub => {
+      const line = sub.querySelector<HTMLElement>('.c-track > span');
+      if (!line) return;
+      const w = line.getBoundingClientRect().width, room = sub.clientWidth;
+      const gap = Math.max(2 * g, room - w + g);
+      sub.style.setProperty('--roll-gap', `${gap.toFixed(1)}px`);
+      sub.style.setProperty('--roll', `${(w + gap).toFixed(1)}px`);
+      sub.style.setProperty('--roll-t', `${((w + gap) / 45).toFixed(2)}s`);
     });
   }
 
@@ -74,7 +85,7 @@ export class TimelineHtml {
   /** place → its order in the story (for fading the places already told) */
   readonly placeIndex = Object.fromEntries(PLACES.map((p, i) => [p, i])) as Record<string, number>;
   /** phones: the years' last two figures ('89, '13...: Emil 22 Oct) */
-  readonly years = YEARS.map(y => ({ ...y, label: this.phone ? y.label.slice(2) : y.label }));
+  readonly years = YEARS.map((y, i) => ({ ...y, first: i === 0, label: this.phone && i > 0 ? y.label.slice(2) : y.label }));
   readonly axis = AXIS;
   readonly graduation = GRADUATION;
   /**

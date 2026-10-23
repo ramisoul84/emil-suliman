@@ -296,7 +296,7 @@
                 text-transform: uppercase;
                 /* every tutorial in this type and size (the landing's, about's): Emil 22 Oct,
                    a fifth smaller than it was */
-                font-size: calc(1.12 * var(--dynamic-grid-size));
+                font-size: calc(1.1 * var(--dynamic-grid-size));
                 line-height: var(--dynamic-grid-size);
 
                 span {
@@ -397,7 +397,9 @@
             background: #fff;
             color: #000;
             font-family: var(--font-title);
-            font-size: calc(.9 * var(--dynamic-grid-size));
+            /* the words bigger, as "press to customize" on the first page, the button as it
+               was (Emil 23 Oct) */
+            font-size: calc(1.1 * var(--dynamic-grid-size));
             cursor: pointer;
             box-shadow: var(--shadow-0);
             transition: var(--lift);
@@ -433,7 +435,7 @@
                 flex-direction: column;
                 gap: var(--dynamic-grid-size);
                 text-transform: uppercase;
-                font-size: calc(1.12 * var(--dynamic-grid-size));
+                font-size: calc(1.1 * var(--dynamic-grid-size));
                 line-height: var(--dynamic-grid-size);
 
                 span {

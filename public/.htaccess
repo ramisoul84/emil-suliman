@@ -1,0 +1,46 @@
+# emilsuliman.com on Namecheap (Apache / LiteSpeed): the Angular build in public_html.
+
+# https only, and one host name (www), like the canonical link in index.html
+RewriteEngine On
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} ^emilsuliman\.com$ [NC]
+RewriteRule ^ https://www.emilsuliman.com%{REQUEST_URI} [L,R=301]
+
+# the app's own routes (/imprint, /privacy, /admin …) are all index.html
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  # index.html changes with every deploy and names the new files: always ask again
+  <Files "index.html">
+    Header set Cache-Control "no-cache"
+  </Files>
+  # build files carry a hash in their name: they never change
+  <FilesMatch "^(main|polyfills|styles|chunk)-[A-Z0-9]+\.(js|css)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
+
+# pictures, videos, fonts and data keep their names: a day, so new ones show up by tomorrow
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/webp "access plus 1 day"
+  ExpiresByType image/png "access plus 1 day"
+  ExpiresByType image/jpeg "access plus 1 day"
+  ExpiresByType image/gif "access plus 1 day"
+  ExpiresByType video/mp4 "access plus 1 day"
+  ExpiresByType video/webm "access plus 1 day"
+  ExpiresByType font/woff2 "access plus 1 month"
+  ExpiresByType application/json "access plus 1 day"
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain application/javascript application/json image/svg+xml
+</IfModule>
+
+AddType image/webp .webp
+AddType video/webm .webm
+AddType font/woff2 .woff2

@@ -45,9 +45,12 @@
         @for (s of sliders; track s.key) {
         <label class="range-group" [class]="s.key" [class.held]="held() === s.key">
             @if (s.key === 'intensity') {
-            <!-- phones (Emil 23 Oct): reset, left of the "i": the blob and its colours as they came -->
+            <!-- phones (Emil 23 Oct): reset, left of the "i": the blob and its colours as they came;
+                 a refresh sign, the side menu's -->
             <button type="button" class="reset-all" (click)="resetAll()"
-                [attr.aria-label]="lang.currentLang() === 'de' ? 'alles zurücksetzen' : 'reset everything'">reset</button>
+                [attr.aria-label]="lang.currentLang() === 'de' ? 'alles zurücksetzen' : 'reset everything'">
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13.2 9.4A5.4 5.4 0 1 1 11.6 4.2" /><path d="M12.2 1.4v3.4H8.8" /></svg>
+            </button>
             <!-- "i": what the controls do (the tutorial, control.ts), and its words beside it -->
             <button type="button" class="info" (click)="info()"
                 [attr.aria-label]="lang.currentLang() === 'de' ? 'Was die Regler tun' : 'what the controls do'">i</button>

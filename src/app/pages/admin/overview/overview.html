@@ -1,0 +1,185 @@
+@if (error()) {
+<p class="state error" role="alert">{{ error() }}</p>
+}
+
+@if (overview(); as ov) {
+<div class="overview" [class.loading-dim]="loading()">
+    <section class="kpis" aria-label="Key numbers">
+        <app-kpi-tile label="Visitors" [kpi]="ov.kpis.visitors" />
+        <app-kpi-tile label="Pageviews" [kpi]="ov.kpis.pageviews" />
+        <app-kpi-tile label="Avg. time on site" [kpi]="ov.kpis.avg_engaged_seconds" format="duration" />
+        <app-kpi-tile label="Bounce rate" [kpi]="ov.kpis.bounce_rate" format="percent" [invert]="true" />
+        <app-kpi-tile label="Messages" [kpi]="ov.kpis.messages" [highlight]="ov.kpis.messages.current > 0" />
+        <app-kpi-tile label="Contact clicks" [kpi]="ov.kpis.contact_clicks" />
+        <app-kpi-tile label="Conversion" [kpi]="ov.kpis.conversion_rate" format="percent" />
+        <app-kpi-tile label="Returning" [kpi]="ov.kpis.returning_rate" format="percent" />
+    </section>
+
+    <div class="cards">
+        <section class="card wide">
+            <div class="card-head">
+                <div>
+                    <h2>{{ trendNames[metric()] }} per day</h2>
+                    <p class="sub">{{ ov.range.from }} – {{ ov.range.to }}</p>
+                </div>
+                <div class="seg" role="group" aria-label="Metric">
+                    @for (m of metrics; track m) {
+                    <button type="button" [class.on]="metric() === m" [attr.aria-pressed]="metric() === m" (click)="metric.set(m)">{{ m }}</button>
+                    }
+                </div>
+            </div>
+            <app-trend-chart [points]="trend()" [name]="trendNames[metric()]" />
+        </section>
+
+        <section class="card">
+            <div class="card-head"><h2>where they come from</h2></div>
+            <app-bar-list [rows]="sources()" label="Traffic sources" />
+        </section>
+
+        <section class="card">
+            <div class="card-head"><h2>countries</h2></div>
+            <app-bar-list [rows]="countries()" label="Visitors by country" />
+        </section>
+
+        <section class="card">
+            <div class="card-head">
+                <div>
+                    <h2>how far they scroll</h2>
+                    <p class="sub">Share of sessions that reached each section</p>
+                </div>
+            </div>
+            @if (funnel().length) {
+            <ol class="funnel">
+                @for (step of funnel(); track step.label) {
+                <li>
+                    <span class="f-label">{{ step.label }}</span>
+                    <span class="f-track" aria-hidden="true"><span class="f-fill" [style.width.%]="step.share * 100"></span></span>
+                    <span class="f-value">{{ step.share * 100 | number: '1.0-0' }}% <span class="muted">· {{ step.sessions }}</span></span>
+                </li>
+                }
+            </ol>
+            }
+        </section>
+
+        <section class="card">
+            <div class="card-head">
+                <div>
+                    <h2>contact clicks</h2>
+                    <p class="sub">Which channel visitors opened</p>
+                </div>
+            </div>
+            <app-bar-list [rows]="channels()" label="Contact clicks by channel" />
+        </section>
+
+        <section class="card">
+            <div class="card-head">
+                <h2>devices</h2>
+                <div class="seg" role="group" aria-label="Breakdown">
+                    <button type="button" [class.on]="techTab() === 'devices'" (click)="techTab.set('devices')">type</button>
+                    <button type="button" [class.on]="techTab() === 'browsers'" (click)="techTab.set('browsers')">browser</button>
+                    <button type="button" [class.on]="techTab() === 'os'" (click)="techTab.set('os')">system</button>
+                </div>
+            </div>
+            <app-bar-list [rows]="tech()" label="Sessions by device" />
+        </section>
+
+        <section class="card">
+            <div class="card-head">
+                <div>
+                    <h2>what they play with</h2>
+                    <p class="sub">Slider, projects, blob, whale game…</p>
+                </div>
+            </div>
+            <app-bar-list [rows]="interactions()" label="Interactions" [showShare]="false" />
+        </section>
+
+        <section class="card">
+            <div class="card-head"><h2>site language</h2></div>
+            <app-bar-list [rows]="languages()" label="Sessions by site language" />
+        </section>
+
+        <section class="card">
+            <div class="card-head"><h2>pages</h2></div>
+            <app-bar-list [rows]="topPages()" label="Top pages" [showShare]="false" />
+        </section>
+
+        <section class="card">
+            <div class="card-head">
+                <div>
+                    <h2>scroll depth</h2>
+                    <p class="sub">Sessions reaching each point of a page</p>
+                </div>
+            </div>
+            <ol class="funnel">
+                @for (s of scroll(); track s.label) {
+                <li>
+                    <span class="f-label">{{ s.label }}</span>
+                    <span class="f-track" aria-hidden="true"><span class="f-fill" [style.width.%]="s.share * 100"></span></span>
+                    <span class="f-value">{{ s.share * 100 | number: '1.0-0' }}% <span class="muted">· {{ s.value }}</span></span>
+                </li>
+                }
+            </ol>
+        </section>
+
+        <section class="card wide">
+            <div class="card-head">
+                <div>
+                    <h2>when they visit</h2>
+                    <p class="sub">Sessions by weekday and hour</p>
+                </div>
+            </div>
+            <app-heatmap [cells]="ov.heatmap" />
+        </section>
+
+        @if (ov.campaigns.length) {
+        <section class="card">
+            <div class="card-head"><h2>campaigns</h2></div>
+            <table class="table">
+                <thead><tr><th>Campaign</th><th>Source</th><th class="num">Visitors</th><th class="num">Conv.</th></tr></thead>
+                <tbody>
+                    @for (c of ov.campaigns; track c.campaign + c.source) {
+                    <tr><td>{{ c.campaign }}</td><td>{{ c.source ?? '—' }}</td><td class="num">{{ c.visitors }}</td><td class="num">{{ c.conversions }}</td></tr>
+                    }
+                </tbody>
+            </table>
+        </section>
+        }
+
+        <section class="card">
+            <div class="card-head">
+                <div>
+                    <h2>speed</h2>
+                    <p class="sub">75th percentile of {{ vitalsSamples() }} visit{{ vitalsSamples() === 1 ? '' : 's' }}</p>
+                </div>
+            </div>
+            @if (vitals().length) {
+            <ul class="vitals">
+                @for (v of vitals(); track v.key) {
+                <li [title]="v.hint">
+                    <span class="v-label">{{ v.label }}</span>
+                    <span class="v-value">{{ v.shown }}</span>
+                    <span class="v-rating" [class]="'v-rating ' + v.rating">
+                        @switch (v.rating) {
+                        @case ('good') {● good}
+                        @case ('ok') {▲ needs work}
+                        @case ('poor') {■ poor}
+                        }
+                    </span>
+                </li>
+                }
+            </ul>
+            } @else {
+            <p class="muted">No measurements in this range yet.</p>
+            }
+        </section>
+    </div>
+
+    <div class="export">
+        <button type="button" class="btn" (click)="exportCsv()" [disabled]="exporting()">
+            {{ exporting() ? 'Exporting…' : '⬇ Download raw events (CSV)' }}
+        </button>
+    </div>
+</div>
+} @else if (loading()) {
+<p class="state">Loading…</p>
+}

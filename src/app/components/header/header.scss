@@ -389,16 +389,18 @@ header {
             .menu-line3 { transform: rotate(-45deg) scaleX(.99); }
         }
 
-        /* the menu under the logo and the button, as wide as the two, its words bigger and
-           from the left; it grows down out of them like the colour card (header.ts phoneNav) */
+        /* the menu a cell under the logo and the button, as wide as the two, its words bigger
+           and from the left; it grows down like the colour card (header.ts phoneNav). Each
+           word three cells tall, so the words are further apart and the black of the one
+           pressed is bigger (Emil 23 Oct; they were two) */
         .side-nav {
             left: 0;
-            top: calc(4 * var(--dynamic-grid-size));
+            top: calc(5 * var(--dynamic-grid-size));
             width: calc(8 * var(--dynamic-grid-size));
-            --nav-h: calc(var(--rows, 5) * 2 * var(--dynamic-grid-size));
+            --nav-h: calc(var(--rows, 5) * 3 * var(--dynamic-grid-size));
             height: var(--nav-h);
             grid-template-rows: none;
-            grid-auto-rows: calc(2 * var(--dynamic-grid-size));
+            grid-auto-rows: calc(3 * var(--dynamic-grid-size));
             align-content: start;
             overflow: hidden;
             transform: none;
@@ -409,6 +411,8 @@ header {
                 justify-content: flex-start;
                 padding: 0 var(--dynamic-grid-size);
                 font-size: var(--dynamic-grid-size);
+                /* the LCD letters 15% thicker (Emil 23 Oct; its strokes are about .13 em) */
+                -webkit-text-stroke: .02em currentColor;
             }
 
             &.ph-open { visibility: visible; animation: ph-nav-open .5s step-end both; }

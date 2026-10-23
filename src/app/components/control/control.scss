@@ -795,7 +795,7 @@
     .control-wrapper .control .range-group.held .range-label { visibility: visible; }
     /* the buttons' words a little bigger */
     .control-wrapper .control .control-btn,
-    .control-wrapper .control .randomize-color { font-size: calc(.85 * var(--dynamic-grid-size)); }
+    .control-wrapper .control .randomize-color { font-size: calc(.9 * var(--dynamic-grid-size)); }   /* the small LCD size, as the footer's buttons and the years */
     /* the tutorial's black lift as deep as the phones' shadow (half a cell at its deepest) */
     .control-wrapper .control { --tlift-k: 1.52; }
     .control-wrapper .control .info,
@@ -803,12 +803,14 @@
     .control-wrapper .control .reset-all {
         bottom: calc(100% + 4 * var(--dynamic-grid-size));
     }
-    /* reset on the left, the "i" a cell after it, its words a cell after that (Emil 23 Oct) */
+    /* reset on the left, a square like the "i" with the refresh sign in it (Emil 23 Oct), the
+       "i" a cell after it, its words a cell after that */
     .control-wrapper .control .reset-all {
-        display: block;
+        display: grid;
+        place-items: center;
         position: absolute;
         left: 0;
-        width: calc(5 * var(--dynamic-grid-size));
+        width: calc(2 * var(--dynamic-grid-size));
         height: calc(2 * var(--dynamic-grid-size));
         padding: 0;
         border: 0;
@@ -816,18 +818,23 @@
         outline-offset: -1px;
         background: #fff;
         color: #000;
-        font-family: var(--font-title);
-        font-size: calc(.85 * var(--dynamic-grid-size));
-        line-height: calc(2 * var(--dynamic-grid-size));
-        text-align: center;
         cursor: pointer;
         @include lift;
+
+        svg {
+            width: calc(1.25 * var(--dynamic-grid-size));
+            height: calc(1.25 * var(--dynamic-grid-size));
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.6;
+            stroke-linecap: square;
+        }
     }
-    .control-wrapper .control .info { left: calc(6 * var(--dynamic-grid-size)); }
-    /* its words from 9 cells, on two lines when they are long (the colours' were cut off) */
+    .control-wrapper .control .info { left: calc(3 * var(--dynamic-grid-size)); }
+    /* its words from 6 cells, on two lines when they are long (the colours' were cut off) */
     .control-wrapper .control .hint {
-        left: calc(9 * var(--dynamic-grid-size));
-        width: calc(17 * var(--dynamic-grid-size));
+        left: calc(6 * var(--dynamic-grid-size));
+        width: calc(20 * var(--dynamic-grid-size));
         white-space: normal;
         font-size: calc(1.2 * var(--dynamic-grid-size));
         line-height: var(--dynamic-grid-size);

@@ -1,0 +1,76 @@
+@use '../ui/admin-page';
+
+:host { display: block; }
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+
+  .sub { margin: 0; }
+}
+
+.inbox {
+  display: grid;
+  grid-template-columns: minmax(16rem, 2fr) 3fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.list { padding: 0; }
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  width: 100%;
+  padding: 0.85rem 1.1rem;
+  border: 0;
+  border-bottom: 1px solid var(--a-grid);
+  background: none;
+  color: var(--a-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover { background: var(--a-tint); }
+  &.active { background: var(--a-tint); box-shadow: inset 4px 0 0 var(--a-ink); }
+  &:focus-visible { outline: 2px solid var(--a-ink); outline-offset: -2px; }
+  &.unread .name { font-weight: 700; }
+}
+
+.item-top { display: flex; justify-content: space-between; gap: 0.75rem; }
+.name { display: inline-flex; align-items: center; gap: 0.4rem; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--a-accent); }
+time { flex: none; color: var(--a-ink-3); font-size: 0.82rem; }
+.preview { color: var(--a-ink-2); font-size: 0.88rem; line-height: 1.35; }
+
+.pager { display: flex; align-items: center; justify-content: center; gap: 1rem; padding: 0.9rem; }
+
+.reader { position: sticky; top: 1rem; }
+.placeholder { padding: 3rem 1rem; text-align: center; }
+.back { display: none; margin-bottom: 1rem; }
+
+.reader-head { padding-bottom: 1rem; border-bottom: 1px solid var(--a-grid); }
+.from { margin: 0 0 0.3rem; font-family: var(--font-main); font-size: 1.5rem; font-weight: 700; text-transform: none; letter-spacing: 0; }
+.email { color: var(--a-ink); font-size: 1rem; }
+.meta { margin: 0.5rem 0 0; color: var(--a-ink-2); font-size: 0.88rem; }
+
+.text { margin: 1.25rem 0; font-size: 1.05rem; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; }
+.btn.primary { background: var(--a-ink); color: var(--a-surface); }
+.confirm { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
+.device { margin: 1.25rem 0 0; font-size: 0.8rem; }
+
+/* phones and narrow windows: one column, the open message replaces the list */
+@media (max-width: 52rem) {
+  .inbox { grid-template-columns: 1fr; }
+  .inbox.has-open .list { display: none; }
+  .placeholder { display: none; }
+  .reader { position: static; }
+  .back { display: inline-flex; }
+}

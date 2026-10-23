@@ -58,8 +58,9 @@
                 <!-- a new element for each picture: its pan starts from its left edge -->
                 @for (m of (shownMedia(c) ? [shownMedia(c)!] : []); track m.src) {
                 @if (m.video) {
+                <!-- flipped to, a film plays at once (the first is started by cases.ts) -->
                 <video appFadeIn [class.video]="m.main" [class.piece]="!m.main" [src]="m.src" muted loop playsinline [muted]="true"
-                    [attr.poster]="m.poster ?? null" [attr.aria-label]="tx(c.title)"></video>
+                    [autoplay]="!m.main" [attr.poster]="m.poster ?? null" [attr.aria-label]="tx(c.title)"></video>
                 } @else {
                 <img appFadeIn [src]="m.src" [alt]="tx(c.title)" decoding="async" [class.pan]="!!m.pan" [style.--ar]="m.pan ?? null">
                 }

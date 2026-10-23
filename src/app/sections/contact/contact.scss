@@ -224,3 +224,12 @@
         font-size: calc(1.6 * var(--dynamic-grid-size));
     }
 }
+
+/* the honeypot field: out of sight and out of the tab order, still in the form for bots */
+.hp {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}

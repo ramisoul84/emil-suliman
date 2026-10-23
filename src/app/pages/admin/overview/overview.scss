@@ -1,0 +1,65 @@
+@use '../ui/admin-page';
+
+:host { display: block; }
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 60rem) {
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.funnel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: grid;
+    grid-template-columns: 6rem 1fr auto;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.92rem;
+  }
+}
+
+.f-track { height: 10px; background: var(--a-grid); border-radius: 0 4px 4px 0; overflow: hidden; }
+.f-fill { display: block; height: 100%; min-width: 2px; background: var(--a-viz); border-radius: 0 4px 4px 0; transition: width 0.4s ease; }
+.f-value { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+
+  th { color: var(--a-ink-2); font-weight: 500; text-align: left; border-bottom: 2px solid var(--a-ink); padding: 0.3rem 0.4rem; }
+  td { border-bottom: 1px solid var(--a-grid); padding: 0.4rem; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+}
+
+.vitals {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li { display: flex; flex-direction: column; gap: 0.15rem; }
+}
+
+.v-label { color: var(--a-ink-2); font-size: 0.8rem; letter-spacing: 0.05em; }
+.v-value { font-size: 1.3rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.v-rating { font-size: 0.8rem; }
+.v-rating.good { color: var(--a-good-text); }
+.v-rating.ok { color: var(--a-warn-text); }
+.v-rating.poor { color: var(--a-bad-text); }
+
+.export { margin-top: 1.5rem; display: flex; justify-content: flex-end; }

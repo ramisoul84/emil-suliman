@@ -5,7 +5,7 @@
 
     @for (y of years; track y.label) {
     <div class="tick" aria-hidden="true" [style.--y]="y.y" [attr.data-at]="y.y" data-time></div>
-    <div class="year" aria-hidden="true" [class.in]="inSpan(y.y)" [style.--y]="y.y" [attr.data-at]="y.y" data-time>{{ y.label }}</div>
+    <div class="year" aria-hidden="true" [class.first]="y.first" [class.in]="inSpan(y.y)" [style.--y]="y.y" [attr.data-at]="y.y" data-time>{{ y.label }}</div>
     }
     <div class="icon birth" aria-hidden="true" [style.--y]="years[0].y" [attr.data-at]="years[0].y" data-time></div>
 
@@ -33,9 +33,11 @@
         (click)="toggle($index)" (pointerleave)="leave($index, $event)" (pointerenter)="enter($index)"
         (keydown.enter)="toggle($index)" (keydown.space)="$event.preventDefault(); toggle($index)">
         <img appFadeIn class="logo" [class.fill]="c.logo === 'es' || c.logo === 'resvr'" [src]="c.logo === 'es' ? esLogo() : 'assets/images/timeline/' + c.logo + '.webp'" alt="" loading="lazy" decoding="async">
+        <!-- Emil's reference (23 Oct): the title on top, still; under it the office and the
+             years, rolling to the right on hover (a second copy comes in behind it: fitCards) -->
         <div class="box">
             <p class="c-title">{{ tx(c.title) }}</p>
-            <p class="c-sub">{{ tx(c.sub) }}</p>
+            <p class="c-sub"><span class="c-track"><span>{{ tx(c.sub) }}</span><span class="c-copy" aria-hidden="true">{{ tx(c.sub) }}</span></span></p>
             @if (c.desc) {
             <p class="c-desc">{{ tx(c.desc) }}</p>
             }

@@ -1,54 +1,45 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { Inject, Injectable, PLATFORM_ID } from "@angular/core";
-import { Message, MessageList, MessageRequest } from "../_models/message";
+import { Injectable, inject } from "@angular/core";
 import { Observable } from "rxjs";
-import { isPlatformBrowser } from "@angular/common";
+import { Message, MessageList, MessageRequest } from "../_models/message";
 import { environment } from "../../environments/environment";
+import { AnalyticsService } from "./analytics.service";
 
 @Injectable({
     providedIn: 'root'
 })
 export class MessageService {
-    private apiUrl = environment.apiUrl;
-    private isBrowser: boolean;
+    private readonly http = inject(HttpClient);
+    private readonly analytics = inject(AnalyticsService);
+    private readonly apiUrl = environment.apiUrl;
 
-    constructor(
-        private http: HttpClient,
-        @Inject(PLATFORM_ID) private platformId: Object
-    ) {
-        this.isBrowser = isPlatformBrowser(this.platformId);
+    /** The contact form. `website` is the honeypot: people leave it empty, bots don't. */
+    sendMessage(message: MessageRequest, website = ''): Observable<void> {
+        return this.http.post<void>(`${this.apiUrl}/messages`, {
+            ...message,
+            ...this.analytics.ids,
+            site_language: this.analytics.siteLang,
+            website,
+        });
     }
 
-    sendMessage(message: MessageRequest): Observable<void> {
-        message.user_id = this.getUserId()!
-        return this.http.post<void>(`${this.apiUrl}/message/save`, message)
+    // --- Admin inbox ---
+
+    getList(limit = 20, offset = 0, unreadOnly = false): Observable<MessageList> {
+        let params = new HttpParams().set('limit', limit).set('offset', offset);
+        if (unreadOnly) params = params.set('unread', 'true');
+        return this.http.get<MessageList>(`${this.apiUrl}/admin/messages`, { params });
     }
 
-    markMessageAsRead(id: string): Observable<void> {
-        return this.http.put<void>(`${this.apiUrl}/message/${id}`, {})
+    getMessage(id: number): Observable<Message> {
+        return this.http.get<Message>(`${this.apiUrl}/admin/messages/${id}`);
     }
 
-    getMessage(id: string): Observable<Message> {
-        return this.http.get<Message>(`${this.apiUrl}/message/${id}`)
+    setUnread(id: number, unread: boolean): Observable<void> {
+        return this.http.patch<void>(`${this.apiUrl}/admin/messages/${id}`, { unread });
     }
 
-    getList(limit: number = 10, offset: number = 0): Observable<MessageList> {
-        const params = new HttpParams()
-            .set('limit', limit.toString())
-            .set('offset', offset.toString());
-        return this.http.get<MessageList>(`${this.apiUrl}/message`, { params })
+    deleteMessage(id: number): Observable<void> {
+        return this.http.delete<void>(`${this.apiUrl}/admin/messages/${id}`);
     }
-
-    deleteMessage(id: string): Observable<void> {
-        return this.http.delete<void>(`${this.apiUrl}/message/${id}`)
-    }
-
-
-    private getUserId(): string | null {
-        if (this.isBrowser) {
-            return localStorage.getItem("user_id");
-        }
-        return null;
-    }
-
 }

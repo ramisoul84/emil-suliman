@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, Pipe, Pi
 import { TranslateModule } from '@ngx-translate/core';
 import { AnalyticsService } from '../../_services/analytics.service';
 import { Palette, ThemeService } from '../../_services/theme.service';
-import { COLLAGE_SPRITES as SPRITES, RecolorSource, warmCollage } from '../../_services/recolor';
+import { COLLAGE_SPRITES as SPRITES, PHONE_SPRITES, RecolorSource, warmCollage } from '../../_services/recolor';
 import { isPhone } from '../../_config/phone';
 
 
@@ -59,7 +59,8 @@ export class About implements AfterViewInit, OnDestroy {
   readonly symbols: Record<Topic['key'], { cls: string; w: number; h: number; k: number; b: number; dx?: number;
     /** phones, in its frame (Emil's mockup, 23 Oct): the picture's left, top and height, cells */
     card: [number, number, number] }> = {
-    arch: { cls: 's-house', w: 5.684, h: 4.394, k: 1.47, b: .54, card: [1.23, .92, 4.31] },
+    // the house 10% bigger in its frame, around the same middle (Emil 23 Oct; it was 4.31 tall)
+    arch: { cls: 's-house', w: 5.684, h: 4.394, k: 1.47, b: .54, card: [.95, .70, 4.74] },
     // the duck and the camera a cell further right (Emil 22 Oct)
     personal: { cls: 's-duck', w: 4.542, h: 3.116, k: 1.886, b: .64, dx: 1, card: [.19, .32, 4.96] },
     story: { cls: 's-cam', w: 3.745, h: 2.876, k: 1.682, b: .49, dx: 1, card: [1.36, 1.28, 3.81] },
@@ -224,7 +225,9 @@ export class About implements AfterViewInit, OnDestroy {
         const canvas = el.querySelector('canvas');
         if (!canvas) return;
         if (plain) { el.classList.remove('recolored'); return; }
-        RecolorSource.load(url).then(src => {
+        // phones' frames: the pictures without the collage's lines and dots over them
+        const sheet = el.closest('.ph-band') ? PHONE_SPRITES[cls] ?? url : url;
+        RecolorSource.load(sheet).then(src => {
           if (!src || this.theme.palette() !== palette) return;   // changed again meanwhile
           src.draw(canvas, palette);
           el.classList.add('recolored');

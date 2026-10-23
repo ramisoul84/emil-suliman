@@ -261,12 +261,15 @@
   white-space: pre;
 }
 /* the | between year and place: a 2 × 28 line, 37 px either side (as in the deck) */
+/* the line between the year and the place: a border, which the browser draws on whole
+   pixels, so it is the same 2px in every project (a box of fractional width came out 1 or 2px
+   depending on where it fell; Emil 23 Oct) */
 .c-divider {
   flex: none;
-  width: max(1px, calc(2 * var(--u)));
+  width: 0;
   height: calc(28 * var(--u));
   margin: 0 calc(37 * var(--u));
-  background: currentColor;
+  border-left: 2px solid currentColor;
 }
 .c-body {
   overflow: hidden;
@@ -289,7 +292,7 @@
 .c-title, .c-meta, .c-body { padding: 0 var(--g); }
 .c-title { padding-top: var(--g); font-size: 26px; margin-bottom: 6px; }
 .c-meta { font-size: 14px; margin-bottom: var(--g); }
-.c-meta .c-divider { width: 1px; height: 14px; margin: 0 8px 0 6px; }
+.c-meta .c-divider { height: 14px; margin: 0 8px 0 6px; }
 .c-body { font-size: 15px; padding-bottom: calc(2 * var(--g)); }
 
 .empty {
@@ -580,7 +583,6 @@
   }
   .c-logo { left: calc(100% + 80 * var(--u)); bottom: calc(-8 * var(--u)); height: calc(94 * var(--u)); }
   .c-meta .c-divider {
-    width: max(1px, calc(2 * var(--u)));
     height: 1.08em;
     margin: 0 calc(37 * var(--u));
   }
@@ -750,7 +752,8 @@
     width: calc(23 * var(--ar, 1) * var(--g));
     height: 100%;
     object-fit: cover;
-    animation: ph-pan 14s cubic-bezier(.45, 0, .55, 1) infinite alternate;
+    /* an even speed all the way, no easing in or out (Emil 23 Oct) */
+    animation: ph-pan 14s linear infinite alternate;
     will-change: transform;
   }
   @media (prefers-reduced-motion: reduce) { .ph-frame img.pan { animation: none; } }

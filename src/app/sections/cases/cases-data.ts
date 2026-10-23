@@ -111,6 +111,10 @@ const V = 'assets/projects/cases/';
 const R = 'assets/projects/resvr/';
 const B = 'assets/projects/bmw/';
 const L = 'assets/projects/inner-loop/';
+const W = 'assets/projects/wolkenreich/';
+const H = 'assets/projects/bw-haus/';
+const U = 'assets/projects/usq/';
+const A = 'assets/projects/artcom/';
 
 export const ALL_CASES: CaseItem[] = [
   // ---- with the deck's slide as a video, in the deck's order ----
@@ -167,6 +171,14 @@ export const ALL_CASES: CaseItem[] = [
     text: t('An interactive ceiling of 85 paper umbrellas for Experimenta Heilbronn. Sensors track visitors, and it moves with them. A tablet plays choreographies or games.',
             'Eine interaktive Decke aus 85 Papierschirmen für die Experimenta Heilbronn. Sie bewegt sich mit den Besuchern. Ein Tablet spielt Choreografien oder Spiele.'),
     tags: ['experience'],
+    // phones (Emil 23 Oct, folder 3): the ceiling moving, an umbrella, the mounting sketch,
+    // then the plan of the visitors' activity
+    phoneMedia: [
+      { src: W + 'wr-film.mp4', video: true, poster: W + 'wr-film-poster.webp' },
+      { src: W + 'wr-umbrella.webp', pan: 1196 / 1039 },
+      { src: W + 'wr-sketch.webp' },
+      { src: W + 'wr-plan.mp4', video: true, poster: W + 'wr-plan-poster.webp' },
+    ],
     video: V + 'wolkenreich.mp4', textWidth: 860, textBottom: 528,
   },
   {
@@ -178,6 +190,13 @@ export const ALL_CASES: CaseItem[] = [
     text: t('Our competition entry for Baden-Württemberg\'s pavilion at EXPO 2020 Dubai. Timber honeycomb walls carry the roof, plants and exhibits. It won third place.',
             'Unser Wettbewerbsbeitrag für den Pavillon Baden-Württembergs auf der EXPO 2020 Dubai. Holzwaben tragen Dach, Pflanzen und Exponate. Er wurde Dritter.'),
     tags: ['architecture', 'visualisation'],
+    // phones (Emil 23 Oct, folder 4): the pavilion, its parts, the honeycomb walls, the plans
+    phoneMedia: [
+      { src: H + 'bw-1.webp' },
+      { src: H + 'bw-2.webp' },
+      { src: H + 'bw-3.webp' },
+      { src: H + 'bw-4.webp' },
+    ],
     video: V + 'bw-haus.mp4', textWidth: 860, textBottom: 522,
   },
   {
@@ -189,6 +208,12 @@ export const ALL_CASES: CaseItem[] = [
     text: t('Hamburg\'s first glass roof over a main street. A fine steel grid shell grows from cup-shaped columns. Its panels were optimized in Grasshopper.',
             'Hamburgs erstes Glasdach über einer Hauptstraße. Eine Stahlgitterschale wächst aus kelchförmigen Stützen. Die Paneele sind parametrisch optimiert.'),
     tags: ['architecture', 'visualisation'],
+    // phones (Emil 23 Oct, folder 5): the two street views, then the plan
+    phoneMedia: [
+      { src: U + 'usq-1.webp', pan: 1024 / 576 },
+      { src: U + 'usq-2.webp', pan: 1024 / 576 },
+      { src: U + 'usq-plan.mp4', video: true, poster: U + 'usq-plan-poster.webp' },
+    ],
     video: V + 'usq.mp4', textWidth: 900, textBottom: 528,
     youtube: 'https://www.youtube.com/watch?v=4xI0fWoaHu8',
   },
@@ -200,6 +225,16 @@ export const ALL_CASES: CaseItem[] = [
     text: t('ART+COM\'s new three-floor campus at Oranienplatz, for around 150 people. Concrete, wood and glass, zoned by furniture rather than walls. The long desks turn into seating steps, making the office an event space in minutes.',
             'Der neue Campus von ART+COM am Oranienplatz, auf drei Etagen für rund 150 Menschen. Beton, Holz und Glas, gegliedert durch Möbel. Die Tische werden zu Sitzstufen, das Büro zum Veranstaltungsraum.'),
     tags: ['architecture', 'visualisation'],
+    // phones (Emil 23 Oct, folder 6): the floors' renders in his order, then the plan
+    phoneMedia: [
+      { src: A + 'ac-1-1.webp', pan: 1536 / 864 },
+      { src: A + 'ac-1-2.webp', pan: 1536 / 864 },
+      { src: A + 'ac-2-1.webp', pan: 1536 / 864 },
+      { src: A + 'ac-2-2.webp', pan: 1536 / 864 },
+      { src: A + 'ac-2-3.webp', pan: 1536 / 864 },
+      { src: A + 'ac-3-1.webp', pan: 1536 / 864 },
+      { src: A + 'ac-plan.mp4', video: true, poster: A + 'ac-plan-poster.webp' },
+    ],
     video: V + 'artcom-office.mp4', textWidth: 800, textBottom: 526,
   },
   {
