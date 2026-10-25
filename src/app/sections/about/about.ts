@@ -1,9 +1,10 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, Pipe, PipeTransform, ViewChild, effect, signal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, NgZone, OnDestroy, Pipe, PipeTransform, ViewChild, effect, inject, signal } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AnalyticsService } from '../../_services/analytics.service';
 import { Palette, ThemeService } from '../../_services/theme.service';
 import { COLLAGE_SPRITES as SPRITES, PHONE_SPRITES, RecolorSource, warmCollage } from '../../_services/recolor';
 import { isDesktop, isPhone } from '../../_config/phone';
+import { Parallax } from './parallax';
 
 
 type Topic = { key: 'urban' | 'arch' | 'story' | 'personal'; label: string; text: string };
@@ -156,6 +157,44 @@ export class About implements AfterViewInit, OnDestroy {
 
   private observer?: IntersectionObserver;
 
+  /* ---- the photo in depth with the mouse (desktop, Emil 25 Oct: parallax.ts) ---- */
+  @ViewChild('depth') depthEl?: ElementRef<HTMLElement>;
+  private readonly zone = inject(NgZone);
+  private depth?: Parallax;
+  private depthObserver?: IntersectionObserver;
+  private depthLoaded?: Promise<void>;
+  /** the reveal has played (or there is none): the layers may show over it */
+  private revealDone = false;
+  private photoInView = false;
+  private setupDepth(): void {
+    const el = this.depthEl?.nativeElement;
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const mouse = window.matchMedia?.('(hover: hover) and (pointer: fine)').matches;
+    if (!el || this.phone || !isDesktop() || reduce || !mouse || !('IntersectionObserver' in window)) return;
+    this.depth = new Parallax(el);
+    this.revealDone = !this.reveal;
+    this.reveal?.nativeElement.addEventListener('ended', () => { this.revealDone = true; this.startDepth(); }, { once: true });
+    // the layers load when the photo comes into view (while the reveal plays over it); the
+    // effect runs only while it is in view
+    this.depthObserver = new IntersectionObserver(([e]) => {
+      this.photoInView = e.isIntersecting;
+      if (e.isIntersecting) this.loadDepth(el).then(() => this.startDepth());
+      else this.depth?.pause();
+    });
+    this.depthObserver.observe(el);
+  }
+  private loadDepth(el: HTMLElement): Promise<void> {
+    return this.depthLoaded ??= Promise.all([['.depth-back', 'emil-bg'], ['.depth-front', 'emil-fg']].map(([sel, name]) => {
+      const img = el.querySelector<HTMLImageElement>(sel)!;
+      img.src = `assets/images/parallax/${name}.webp`;
+      return img.decode().catch(() => { /* no layer: the photo underneath stays */ });
+    })).then(() => undefined);
+  }
+  private startDepth(): void {
+    // its pointer listener and frames outside Angular: they only restyle the two layers
+    if (this.revealDone && this.photoInView) this.zone.runOutsideAngular(() => this.depth?.start());
+  }
+
   /** while the page is in view the topics take turns: the next one every 4 s; one picked by
       hand (a symbol or the arrows) stays 8 s before they go on */
   private static readonly TURN_MS = 4000;
@@ -237,6 +276,7 @@ export class About implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    this.setupDepth();
     // phones: the topic frames fill the window under the photo
     if (this.phone) {
       this.sizeCards();
@@ -420,6 +460,8 @@ export class About implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.depthObserver?.disconnect();
+    this.depth?.destroy();
     clearTimeout(this.closeTimer);
     this.offCardResize?.();
     this.textWatch?.disconnect();

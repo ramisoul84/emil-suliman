@@ -299,6 +299,22 @@ section.resting .sprite canvas { animation-name: none; will-change: auto; }
   max-width: none;
   object-fit: cover;
 }
+/* the photo in depth (parallax.ts): the city behind, a margin bigger all round (48 of 640px),
+   and Emil cut out in front; shown over the reveal once it has played (.on) — together they
+   are the photo, so nothing jumps. Inside the frame, which stays on the grid. */
+.photo .depth { position: absolute; inset: 0; overflow: hidden; visibility: hidden; }
+.photo .depth.on { visibility: visible; }
+.photo .depth img { position: absolute; max-width: none; pointer-events: none; will-change: transform; }
+.photo .depth-back {
+  left: -7.5%; top: -7.5%; width: 115%; height: 115%;
+  transform: translate3d(var(--px-back-x, 0%), var(--px-back-y, 0%), 0);
+}
+.photo .depth-front {
+  /* the same margin as the city: his shirt carries on past the frame's edges */
+  left: -7.5%; top: -7.5%; width: 115%; height: 115%;
+  transform-origin: 50% 93.5%;   /* the frame's bottom edge (100 - 7.5 / 1.15 %) */
+  transform: translate3d(var(--px-front-x, 0%), 0, 0) scale(var(--px-zoom, 1));
+}
 
 .panel {
   outline: var(--frame, 2px solid #000);

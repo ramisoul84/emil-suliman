@@ -21,6 +21,12 @@
         <source src="assets/videos/emil.webm" type="video/webm">
       </video>
       }
+      <!-- the photo in depth with the mouse, over the reveal once it has played (parallax.ts):
+           the city behind, Emil in front -->
+      <div #depth class="depth" aria-hidden="true">
+        <img class="depth-back" alt="" decoding="async">
+        <img class="depth-front" alt="" decoding="async">
+      </div>
     </div>
 
     <div class="panel" data-snap>
