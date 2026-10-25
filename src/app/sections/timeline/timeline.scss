@@ -1,4 +1,5 @@
 @use "../../_styles/motion" as *;
+@use '../../_styles/breakpoints' as bp;
 
 #timeline {
     position: relative;
@@ -197,7 +198,7 @@
     }
 }
 
-@media (min-width:576px) {
+@media (min-width: bp.$desktop) {
     #timeline {
         margin-left: calc(6 * var(--dynamic-grid-size));
 
@@ -212,7 +213,7 @@
     }
 }
 
-@media (min-width:1200px) {
+@media (min-width: bp.$desktop) {
     #timeline {
         display: grid;
         /* the map from the left edge of the page (23 cells, odd: a true middle cell), then the
@@ -260,7 +261,9 @@
             position: relative;
             align-self: start;
             height: calc(100vh - 2 * var(--dynamic-grid-size));
-            overflow: hidden;
+            /* cut at the top and bottom only, where the story moves through; on the right the
+               years beside the axis may reach past it (they were cut: Emil 25 Oct) */
+            clip-path: inset(0 calc(-3 * var(--dynamic-grid-size)) 0 0);
         }
 
         /* on the empty page: "scroll down to see my story" between two double chevrons that
@@ -338,7 +341,7 @@
    like the desktop's (timeline.ts): the title beside the logo and the menu, the map under them,
    and under the map the window the story moves in. The window reaches into the page's right
    margin, where the years are */
-@media (max-width: 575.98px) {
+@media (max-width: bp.$phone-max) {
     #timeline {
         /* to the window's last whole row (the skip button ends on it) */
         height: var(--ph-floor, 100svh);
@@ -379,7 +382,8 @@
             position: relative;
             flex: 1 1 auto;
             min-height: 0;
-            overflow: hidden;
+            /* top and bottom only: the years' two figures sit in the page's margin on the right */
+            clip-path: inset(0 calc(-2 * var(--dynamic-grid-size)) 0 0);
             margin-right: calc(-1 * var(--dynamic-grid-size));
         }
 

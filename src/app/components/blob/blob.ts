@@ -55,14 +55,6 @@ export class Blob {
       the hero text turns white there (see home.ts) */
   onMask?: (mask: BlobMask) => void;
 
-  breakpoints = [
-    { minWidth: 2160, cells: 87 },
-    { minWidth: 1560, cells: 77 },
-    { minWidth: 1160, cells: 67 },
-    { minWidth: 536, cells: 37 },
-    { minWidth: 0, cells: 27 }
-  ];
-
   private offFrame?: () => void;
   private seen?: IntersectionObserver;
 
@@ -191,13 +183,10 @@ export class Blob {
     this.render();
   }
 
+  /** how many page cells fit across a width (the page's own cell size, grid.service.ts) */
   private getCellCountForWidth(width: number): number {
-    for (const bp of this.breakpoints) {
-      if (width >= bp.minWidth) {
-        return bp.cells;
-      }
-    }
-    return 27;
+    const g = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--dynamic-grid-size'));
+    return g ? Math.max(8, Math.round(width / g)) : 27;
   }
 
   private render(): void {

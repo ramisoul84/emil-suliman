@@ -1,3 +1,4 @@
+@use 'app/_styles/breakpoints' as bp;
 /* League Spartan (variable, OFL) — self-hosted: no render-blocking request to Google,
    and no visitor IP sent to Google Fonts (a GDPR issue for German sites). */
 @font-face {
@@ -73,7 +74,7 @@
   --lift: box-shadow .25s linear(0 0%, .333 .1%, .333 33.333%, .667 33.333%, .667 66.667%, 1 66.667%, 1 100%);
 }
 /* phones: the shadow half a cell deep (Emil 22 Oct) */
-@media (max-width: 575.98px) {
+@media (max-width: bp.$phone-max) {
   :root { --shadow: calc(0.5 * var(--dynamic-grid-size)) calc(0.5 * var(--dynamic-grid-size)) 1px var(--color2); }
 }
 
@@ -196,7 +197,7 @@ app-main {
 }
 
 /* below 1200 px the section titles start at the left edge, under the fixed logo: rest 4 cells lower */
-@media (max-width: 1199.98px) {
+@media (max-width: bp.$phone-max) {
   app-main {
     #about,
     #cases {
@@ -218,7 +219,7 @@ app-main {
 
 /* phones (Emil's sketches, 22 Oct): about and cases rest at the very top, their frame and
    title beside the logo and the menu */
-@media (max-width: 575.98px) {
+@media (max-width: bp.$phone-max) {
   app-main {
     #about,
     #cases,
@@ -296,7 +297,7 @@ app-main {
 
 /* touch screens and "reduce motion": the browser snaps to the pages; not phones: there the
    page scrolls freely, smoothly, without stops (Emil 22 Oct: the timeline) */
-@media (pointer: coarse) and (min-width: 576px), (prefers-reduced-motion: reduce) and (min-width: 576px) {
+@media (pointer: coarse) and (min-width: bp.$desktop), (prefers-reduced-motion: reduce) and (min-width: bp.$desktop) {
   html:has(app-main) {
     scroll-snap-type: y mandatory;
   }
@@ -413,7 +414,7 @@ video {
 }
   */
 
-@media (min-width:576px) {
+@media (min-width: bp.$desktop) {
   section {
 
     .title {
@@ -423,7 +424,7 @@ video {
 
 }
 
-@media (min-width:1200px) {
+@media (min-width: bp.$desktop) {
   :root {
     --size-text: 1rem;
     /* the page's side margin in cells (8 / 13 / 18), and the line the titles end on: the
@@ -450,16 +451,9 @@ video {
   }
 }
 
-@media (min-width:2200px) {
-  :root { --page-side: 18; }
-
-  section {
-    margin: 0 calc(18 * var(--dynamic-grid-size) + 1px) calc(10 * var(--dynamic-grid-size) + var(--snap, 0px)) calc(18 * var(--dynamic-grid-size));
-  }
-}
 
 /* solidarity and contact: from a cell after the logo (column 4), their titles to the line */
-@media (min-width:1200px) {
+@media (min-width: bp.$desktop) {
   section#solidarity,
   section#contact {
     margin-left: calc(4 * var(--dynamic-grid-size));

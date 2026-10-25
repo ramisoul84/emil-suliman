@@ -8,7 +8,7 @@ import { CASES, CASE_TAGS, CaseItem, CaseTag, Txt } from './cases-data';
 import { VideoBar } from './video-bar';
 import { FadeIn, preloadImages } from '../../_directives/fade-in.directive';
 import { BackdropService } from '../../_services/backdrop.service';
-import { isPhone } from '../../_config/phone';
+import { isDesktop, isPhone } from '../../_config/phone';
 
 /**
  * Cases: one case at a time, laid out exactly like a slide of the pitch deck — the deck's
@@ -279,7 +279,7 @@ export class Cases implements AfterViewInit, OnDestroy {
     });
     this.unregister = this.pageScroll.registerStory({
       el: section,
-      active: () => window.innerWidth >= 1200 && this.list().length > 1,
+      active: () => isDesktop() && this.list().length > 1,
       scroll: (px, fresh) => this.storyScroll(px, fresh),
       arrive: (dir, inMs) => this.zone.run(() => {
         // from above: the first case; from below: the last

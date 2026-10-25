@@ -1,3 +1,4 @@
+@use '../../_styles/breakpoints' as bp;
 #home {
     padding-top: calc(6 * var(--dynamic-grid-size));
     position: relative;
@@ -74,7 +75,7 @@
             width: 80%;
             /* phones: the whole column, so "ARCHITECT - DESIGNER" stays on one line (Emil's
                Comp 13: two-line texts, none broken) */
-            @media (max-width: 575.98px) { width: 100%; }
+            @media (max-width: bp.$phone-max) { width: 100%; }
             will-change: opacity;
             transform: translateZ(0);
             /* Force GPU acceleration */
@@ -129,7 +130,7 @@
 
         /* phones: a cell in from each side of the 29 columns, so the controls (25 cells, a
            cell in themselves) line up with the pages, two cells from the edges */
-        @media (max-width: 575.98px) {
+        @media (max-width: bp.$phone-max) {
             left: var(--dynamic-grid-size);
             width: calc(100% - 2 * var(--dynamic-grid-size));
         }
@@ -147,7 +148,7 @@
     pointer-events: none;
 }
 
-@media (min-width:1200px) {
+@media (min-width: bp.$desktop) {
     .control {
         right: calc(7 * var(--dynamic-grid-size));
     }
@@ -159,8 +160,3 @@
     }
 }
 
-@media (min-width:2200px) {
-    .control {
-        right: calc(18 * var(--dynamic-grid-size));
-    }
-}

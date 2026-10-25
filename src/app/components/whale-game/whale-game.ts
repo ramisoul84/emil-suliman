@@ -4,6 +4,7 @@ import {
 } from '@angular/core';
 import { LanguageService } from '../../_services/language.service';
 import { WHALE_FRAMES, WHALE_H, WHALE_W } from './whale-sprite';
+import { DESKTOP_MIN_WIDTH } from '../../_config/phone';
 
 /*
  * The whale game: the footer whale, on the page's grid, swims through the sea while krill and
@@ -478,7 +479,7 @@ export class WhaleGame implements OnInit, OnDestroy {
     // the texts line up with the page's: from the contact title to the menu's column
     const title = document.querySelector('#contact .contact-title')?.getBoundingClientRect();
     const L = title && title.width ? Math.round((title.left - this.x0) / g) : 1;
-    const R = main && vw >= 1200 ? Math.floor((main.right - this.x0) / g) - 2 : this.cols - 1;
+    const R = main && vw >= DESKTOP_MIN_WIDTH ? Math.floor((main.right - this.x0) / g) - 2 : this.cols - 1;
     this.L.set(Math.max(1, L));
     this.R.set(Math.max(this.L() + 20, R));
     // the sea: from under the contact links to the window's bottom (the floor's two rows);

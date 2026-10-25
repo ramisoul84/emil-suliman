@@ -12,7 +12,7 @@ import { SectionProgressService } from '../../_services/section-progress.service
 import { DEFAULT_PALETTE, ThemeService } from '../../_services/theme.service';
 import { recolorLottie } from '../../_services/recolor';
 import { DATA_VERSION } from '../../_config/data-version';
-import { isPhone } from '../../_config/phone';
+import { isDesktop, isPhone } from '../../_config/phone';
 import { PhonePagerService } from '../../_services/phone-pager.service';
 import { GERMANY_FROM, Mark, PLACE_NAMES, SYRIA_ID, cityMarkId, germanLeg, litCountries, routeState, withCityMarks } from './map-cities';
 
@@ -458,7 +458,7 @@ export class Timeline implements OnInit, AfterViewInit, OnDestroy {
   private desktop(): boolean {
     // phones never are: and asked every frame, the window's width made the browser lay the
     // page out again each time, after the panel had moved (the iPhone's lag, Emil 22 Oct)
-    return !this.phone && window.innerWidth >= 1200;
+    return !this.phone && isDesktop();
   }
 
   /** told place by place: the desktop with its page by page scrolling, and phones */
@@ -929,7 +929,7 @@ export class Timeline implements OnInit, AfterViewInit, OnDestroy {
 
   private calculateMapHeight(): void {
     // always an odd number of cells, so the pin has a true middle cell to sit in
-    if (window.innerWidth >= 1200) {
+    if (isDesktop()) {
       const cell = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--dynamic-grid-size')) || 21;
       let rows = Math.round(this.gridService.getMaxHeight(5) / cell);   // window minus title row, gap and a cell below
       if (rows % 2 === 0) rows -= 1;

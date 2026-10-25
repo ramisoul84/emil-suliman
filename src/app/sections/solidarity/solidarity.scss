@@ -1,3 +1,4 @@
+@use '../../_styles/breakpoints' as bp;
 /* Everything here is laid out in whole grid cells (g) so every edge lands on a grid line:
    text runs on a 1-cell (desktop) / 2-cell (mobile) baseline, logos are 4x4 cells,
    buttons 8x2 cells, and the donate columns are a fixed number of cells wide. */
@@ -56,7 +57,7 @@
     }
 }
 
-@media (min-width:576px) {
+@media (min-width: bp.$desktop) {
     .solidarity .solidarity-links {
         /* 16 + 1 + 16 = 33 cells: the full text width on tablets */
         grid-template-columns: repeat(2, calc(16 * var(--dynamic-grid-size)));
@@ -64,7 +65,7 @@
     }
 }
 
-@media (min-width:1200px) {
+@media (min-width: bp.$desktop) {
     /* the page down to the last row but one of the window (level with EN / DE in the
        corner): title, the box, a free row, then the black box filling the rest */
     #solidarity {

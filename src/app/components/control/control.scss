@@ -1,4 +1,5 @@
 @use "../../_styles/motion" as *;
+@use '../../_styles/breakpoints' as bp;
 
 /* The green shadow slides out at 12 frames a second (3 frames), and back on leave. Touch
    screens have no hover: a phone kept the last pressed button lifted (a tap leaves it
@@ -201,7 +202,7 @@
             .colors-title {
                 width: calc(4 * var(--dynamic-grid-size));
 
-                @media (max-width:576px) {
+                @media (max-width: bp.$phone-max) {
                     display: none;
                 }
             }
@@ -495,7 +496,7 @@
 }
 
 
-@media (min-width:576px) {
+@media (min-width: bp.$desktop) {
     .control-wrapper {
         .control {
             /* the capitals' tops 7.22 cells above the colour buttons */
@@ -571,7 +572,7 @@
     }
 }
 
-@media (min-width:1200px) {
+@media (min-width: bp.$desktop) {
     .control-wrapper {
         .control {
             .range-group {
@@ -714,27 +715,6 @@
     }
 }
 
-@media (min-width:2200px) {
-    .control-wrapper {
-        .control {
-            .reset-color {
-                left: calc(35 * var(--dynamic-grid-size));
-            }
-
-            .colors {
-                left: calc(41 * var(--dynamic-grid-size));
-            }
-
-            .randomize-color {
-                left: calc(51 * var(--dynamic-grid-size));
-                outline: var(--frame);
-                outline-offset: -1px;
-                border: 0;
-                width: calc(8 * var(--dynamic-grid-size));
-            }
-        }
-    }
-}
 
 @keyframes hatch-run { to { background-position: var(--hp) 0; } }
 /* out of the buttons upwards (its bottom stays), in 6 steps */
@@ -767,7 +747,7 @@
 
 /* phones: the sliders sit two by two (size, speed above intensity, wobble), so the "i" and its
    words go a free row above the first pair, not onto it */
-@media (max-width: 575.98px) {
+@media (max-width: bp.$phone-max) {
     /* "PRESS TO CUSTOMIZE" (Emil's ttt.mp4): the words a little smaller, the sign bigger */
     .control-wrapper .toggle-btn .uf-text {
         font-size: calc(1.1 * var(--dynamic-grid-size));

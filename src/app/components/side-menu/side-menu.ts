@@ -7,6 +7,7 @@ import { BackdropService } from '../../_services/backdrop.service';
 import { warmCollage } from '../../_services/recolor';
 import { SHOW_SOLIDARITY } from '../../_config/sections';
 import { ColorCard } from '../color-card/color-card';
+import { isDesktop } from '../../_config/phone';
 
 /** a rectangle in the menu, px: left, right, top, bottom */
 interface Box { x0: number; x1: number; y0: number; y1: number; }
@@ -85,7 +86,7 @@ interface Box { x0: number; x1: number; y0: number; y1: number; }
   `,
   styles: [`
     :host { display: none; }
-    @media (min-width: 1200px) { :host { display: block; } }
+    @media (min-width: 900px) { :host { display: block; } }   /* DESKTOP_MIN_WIDTH (_config/phone.ts) */
     .side-menu {
       --g: var(--dynamic-grid-size);
       position: fixed;
@@ -446,8 +447,8 @@ export class SideMenu implements AfterViewInit, OnDestroy {
   /** shown once "about me" fills half the window; the page you are on — while the page
       glides, the page it is going to, so the menu flips as the page does */
   private update(): void {
-    // below 1200 px the side menu isn't there (phones, tablets): nothing to follow
-    if (!window.matchMedia('(min-width: 1200px)').matches) {
+    // the phone layout has no side menu: nothing to follow
+    if (!isDesktop()) {
       if (this.timer) { clearInterval(this.timer); this.timer = 0; }
       return;
     }

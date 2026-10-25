@@ -1,4 +1,5 @@
 @use "../../_styles/motion" as *;
+@use '../../_styles/breakpoints' as bp;
 
 /* The cases page: a title and the category tabs on the logo's row, then one large frame
    showing a case at a time, laid out exactly like a slide of the pitch deck. Everything sits on the grid;
@@ -380,7 +381,7 @@
 .nav-step.next .tri { clip-path: polygon(0 0, 100% 50%, 0 100%); }
 
 /* ---------- desktop: everything placed in cells, the slide as in the deck ---------- */
-@media (min-width: 1200px) {
+@media (min-width: bp.$desktop) {
   :host { --side: 8; }
   /* the page's width, for the slide's size (cqw) */
   #cases { container-type: inline-size; }
@@ -622,9 +623,8 @@
 
 /* 1200-1599 px: the row of categories after the longer title only fits with the words a
    touch smaller (each still a cell free on both sides) */
-@media (min-width: 1200px) and (max-width: 1599.98px) { .tab { font-size: calc(.9 * var(--g)); } }
+@media (min-width: bp.$desktop) and (max-width: 1599.98px) { .tab { font-size: calc(.9 * var(--g)); } }
 @media (min-width: 1600px) { :host { --side: 13; } }
-@media (min-width: 2200px) { :host { --side: 18; } }
 
 @media (prefers-reduced-motion: reduce) {
   .case { animation: none; }
@@ -636,7 +636,7 @@
    title between two arrows, its text, and its pictures in a square frame with arrows of its
    own. The section is 25 cells wide here, like the others.
    ================================================================ */
-@media (max-width: 575.98px) {
+@media (max-width: bp.$phone-max) {
   /* each page its own screen here (phone-pager.service): no free cells under it */
   #cases { margin: 0 calc(2 * var(--g) + 1px) var(--snap, 0px) calc(2 * var(--g)); }
   /* the title as about's (Emil's mockup): a cell down, three tall, a cell after the menu */

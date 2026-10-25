@@ -1,3 +1,4 @@
+@use 'breakpoints' as bp;
 /* The pages outside the main one (imprint, privacy, 404): the site's grid paper, the head
    (legal-head.ts) and the text in a framed white box under the title, a cell below it;
    headings in LCD at a cell (like the About topic), text in League Spartan at a cell on
@@ -39,7 +40,7 @@
   }
   .block p, .block-info { margin: 0; }
   .block ul { margin: 0; padding-left: calc(1.2 * var(--g)); }
-  @media (max-width: 575.98px) {
+  @media (max-width: bp.$phone-max) {
     .panel { width: calc(100% - 2 * var(--g)); margin-left: var(--g); padding: var(--g); }
   }
 }

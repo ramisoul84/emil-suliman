@@ -84,8 +84,8 @@ export class TimelineHtml {
   }));
   /** place → its order in the story (for fading the places already told) */
   readonly placeIndex = Object.fromEntries(PLACES.map((p, i) => [p, i])) as Record<string, number>;
-  /** phones: the years' last two figures ('89, '13...: Emil 22 Oct) */
-  readonly years = YEARS.map((y, i) => ({ ...y, first: i === 0, label: this.phone && i > 0 ? y.label.slice(2) : y.label }));
+  /** the years in full (on phones written upright along the axis: timeline-html.scss) */
+  readonly years = YEARS.map((y, i) => ({ ...y, first: i === 0 }));
   readonly axis = AXIS;
   readonly graduation = GRADUATION;
   /**

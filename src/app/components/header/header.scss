@@ -1,5 +1,6 @@
 @use "sass:math";
 @use "../../_styles/motion" as *;
+@use '../../_styles/breakpoints' as bp;
 /* a row of the bar: the two colours left to right; where they meet drifts slowly to and fro,
    each row a little later than the one above, so the colour flows down the bar (12 fps steps,
    like the rest of the site; styles.scss registers --hmid) */
@@ -161,7 +162,7 @@ header {
             visibility: hidden;
         }
 
-        @media (max-width:1200px) {
+        @media (max-width: bp.$phone-max) {
             display: none;
         }
     }
@@ -189,12 +190,12 @@ header {
         }
 
         /* small screens have no nav links: the menu is always there */
-        @media (max-width: 1200px) {
+        @media (max-width: bp.$phone-max) {
             clip-path: inset(-2px -2px -2px 0);
         }
 
         /* desktop: the side menu takes over once the bar is gone, only the logo stays */
-        @media (min-width: 1200.02px) {
+        @media (min-width: bp.$desktop) {
             display: none;
         }
 
@@ -279,7 +280,7 @@ header {
 
 
 /* desktop: no menu button, so no menu from it either */
-@media (min-width: 1200.02px) {
+@media (min-width: bp.$desktop) {
     header .side-nav {
         display: none;
     }
@@ -341,7 +342,7 @@ header {
 
 /* ---------- phones (Emil 22 Oct): the logo and the menu 4 x 4 cells; the menu's three lines
    turn into a clean X (the middle one goes), in 3 frames at 12 fps ---------- */
-@media (max-width: 575.98px) {
+@media (max-width: bp.$phone-max) {
     header {
         /* the logo and the menu button two cells in, on the pages' left edge (Emil 22 Oct) */
         left: calc(var(--margin) + 2 * var(--dynamic-grid-size));

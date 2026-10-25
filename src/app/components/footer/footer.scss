@@ -1,3 +1,4 @@
+@use '../../_styles/breakpoints' as bp;
 footer {
   display: flex;
   flex-direction: column;
@@ -119,7 +120,7 @@ footer {
   }
 }
 
-@media (min-width:1200px) {
+@media (min-width: bp.$desktop) {
   footer {
     position: relative;
     /* at the bottom of the page the window rests on the grid's whole cells, but the window is
@@ -165,15 +166,8 @@ footer {
   }
 }
 
-@media (min-width:2200px) {
-  footer {
-    .whale-container {
-      right: calc(18 * var(--dynamic-grid-size));
-    }
-  }
-}
 /* phones: no whale game for now (Emil 22 Oct): the whale and its line go, the footer stays */
-@media (max-width: 575.98px) {
+@media (max-width: bp.$phone-max) {
   /* the whale swims here too, just the animation: no game, no hint (Emil 22 Oct) */
   footer .whale-container { cursor: default; }
   footer .whale-container .whale-hint { display: none; }

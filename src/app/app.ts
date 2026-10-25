@@ -4,6 +4,7 @@ import { filter } from 'rxjs';
 import { AnalyticsService } from './_services/analytics.service';
 import { AnalyticsEvent } from './_services/analytics-events';
 import { LanguageService } from './_services/language.service';
+import { PHONE_QUERY } from './_config/phone';
 
 
 @Component({
@@ -26,6 +27,13 @@ export class App {
         this.analytics.track(AnalyticsEvent.LanguageChange, { from: previous, to: lang });
       }
       previous = lang;
+    });
+
+    // the phone and desktop layouts are chosen once, on load (header, timeline, about…):
+    // a window resized across the switch (900px) loads the page again in its new layout
+    // (the admin page has one layout for all widths)
+    window.matchMedia?.(PHONE_QUERY).addEventListener?.('change', () => {
+      if (!location.pathname.startsWith('/admin')) location.reload();
     });
 
     // one pageview per route (the tracker itself skips /admin)

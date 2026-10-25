@@ -1,4 +1,5 @@
 @use "../../_styles/motion" as *;
+@use '../../_styles/breakpoints' as bp;
 
 /* ------------------------------------------------------------------
    About-me collage — HTML/CSS rebuild of about.webm, laid out on the page grid.
@@ -252,7 +253,7 @@ section.resting .sprite canvas { animation-name: none; will-change: auto; }
   --u: calc(var(--g) / 37.647);
   display: none;
 }
-@media (min-width: 1200px) {
+@media (min-width: bp.$desktop) {
   .top-bars { display: block; }
 }
 
@@ -364,7 +365,7 @@ section.resting .sprite canvas { animation-name: none; will-change: auto; }
 .stage { transform: translate(-1px, -1px); }
 
 /* desktop: compose everything on the grid like the design */
-@media (min-width: 1200px) {
+@media (min-width: bp.$desktop) {
   .about-layout {
     display: block;
     position: relative;
@@ -445,7 +446,7 @@ section.resting .sprite canvas { animation-name: none; will-change: auto; }
    text when tapped (Emil's sketch, 23 Oct).
    ================================================================ */
 .ph-photo, .ph-topics { display: none; }
-@media (max-width: 575.98px) {
+@media (max-width: bp.$phone-max) {
   #about { padding-top: 0; }
   .about-layout {
     display: grid;

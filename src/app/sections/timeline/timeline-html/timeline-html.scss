@@ -1,4 +1,5 @@
 @use "../../../_styles/motion" as *;
+@use '../../../_styles/breakpoints' as bp;
 
 /* fading a place back once it has been told: slow and smooth */
 $fade: .8s cubic-bezier(.45, 0, .55, 1);
@@ -76,9 +77,9 @@ $gone: .3s cubic-bezier(.4, 0, .6, 1);
   height: var(--g);
   line-height: var(--g);
   font-family: var(--font-title);
-  /* bigger than they were (.9), the size of the story's hint beside them, and the LCD
-     letters a little thicker (Emil 23 Oct) */
-  font-size: calc(1.1 * var(--g));
+  /* a cell, as the place names, the LCD letters a little thicker (Emil 23 / 25 Oct: at 1.1
+     the last figure was cut) */
+  font-size: var(--g);
   -webkit-text-stroke: .02em currentColor;
   white-space: nowrap;
 }
@@ -351,7 +352,7 @@ $gone: .3s cubic-bezier(.4, 0, .6, 1);
 /* only the place being told opens; on a wide screen a card already told takes the story back
    to its place (timeline.ts), on a phone it can't be clicked */
 .card.past, .bar.past { pointer-events: none; }
-@media (min-width: 1200px) {
+@media (min-width: bp.$desktop) {
   .card.past, .bar.past { pointer-events: auto; }
   .card.past:hover, .bar.past:hover { filter: opacity(.6); }
 }
@@ -452,7 +453,7 @@ $gone: .3s cubic-bezier(.4, 0, .6, 1);
 /* phones: the places told fade back in 12 fps steps (6 repaints, not a smooth 0.8 s of them),
    by their opacity, not a filter: an iPhone paints a filter again by hand each time the panel
    is repainted, opacity costs it next to nothing (Emil 22 / 23 Oct) */
-@media (max-width: 575.98px) {
+@media (max-width: bp.$phone-max) {
   .card, .heading, .seg, .node, .bar, .cap { --fade: .5s #{fps12(.5s, inout)}; }
   .card.past,
   .heading.past,
@@ -473,22 +474,36 @@ $gone: .3s cubic-bezier(.4, 0, .6, 1);
 
 /* phones (Emil 22 Oct): the axis on the map's right line, the bars with it and the cards three
    cells wider; the years as their last two figures right of the axis, in the page's margin */
-@media (max-width: 575.98px) {
+@media (max-width: bp.$phone-max) {
   .tl { --R: calc(100cqw - 22 * var(--g)); }
   /* the cards a cell longer, a cell clear of the first bars' column (Emil 22 Oct) */
   .card { width: calc(var(--R) + 15 * var(--g)); }
   .box { --box-w: calc(var(--R) + 10 * var(--g)); }
+  /* the years written along the axis, reading downwards, in full (Emil 25 Oct: across, even
+     two figures didn't fit beside it): as wide as one letter is tall, centred on their tick */
   .year {
-    left: calc(var(--R) + 22.2 * var(--g));
+    left: calc(var(--R) + 22.15 * var(--g));
+    top: calc(var(--y) * var(--g));
+    height: auto;
     font-size: calc(.9 * var(--g));   /* the phones' small LCD size (control, footer) */
-    letter-spacing: -.02em;
+    line-height: .85;   /* the box as wide as the figures: inside the story's window, whole */
+    writing-mode: vertical-rl;
+    transform: translateY(-50%);
   }
-  .year.first { left: calc(var(--R) + 22 * var(--g)); }
+  /* the first (the birth) stays across, above its square */
+  .year.first {
+    left: calc(var(--R) + 22 * var(--g));
+    top: calc((var(--y) - 1.6) * var(--g));
+    height: var(--g);
+    line-height: var(--g);
+    writing-mode: horizontal-tb;
+    transform: translateX(-50%);
+  }
 }
 
 /* wider screens (Emil 22 Oct): every frame's line alike (2px), only the axis and the lines
    under the countries' names stronger: 3px, still centred on their grid line */
-@media (min-width: 576px) {
+@media (min-width: bp.$desktop) {
   .axis { width: 3px; }
   .seg {
     height: 3px;

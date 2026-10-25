@@ -3,7 +3,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AnalyticsService } from '../../_services/analytics.service';
 import { Palette, ThemeService } from '../../_services/theme.service';
 import { COLLAGE_SPRITES as SPRITES, PHONE_SPRITES, RecolorSource, warmCollage } from '../../_services/recolor';
-import { isPhone } from '../../_config/phone';
+import { isDesktop, isPhone } from '../../_config/phone';
 
 
 type Topic = { key: 'urban' | 'arch' | 'story' | 'personal'; label: string; text: string };
@@ -180,7 +180,7 @@ export class About implements AfterViewInit, OnDestroy {
     this.fitting = true;
     try {
       if (this.fullText && text.innerHTML !== this.fullText) text.innerHTML = this.fullText;
-      if (!window.matchMedia?.('(min-width: 1200px)').matches) return;
+      if (!isDesktop()) return;
       const g = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--dynamic-grid-size')) || 21;
       const limit = panel.getBoundingClientRect().top + About.TEXT_END * g;
       const fits = () => text.getBoundingClientRect().bottom <= limit + .5;
