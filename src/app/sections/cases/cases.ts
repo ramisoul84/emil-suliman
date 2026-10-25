@@ -68,7 +68,7 @@ export class Cases implements AfterViewInit, OnDestroy {
   media(c: CaseItem): { src: string; video: boolean; main: boolean; poster?: string; pan?: number }[] {
     const out: { src: string; video: boolean; main: boolean; poster?: string; pan?: number }[] = [];
     if (c.phoneMedia) return c.phoneMedia.map((m, i) => ({ src: m.src, video: !!m.video, main: i === 0, poster: m.poster, pan: m.pan }));
-    if (c.video) out.push({ src: c.video, video: true, main: true, poster: c.poster });
+    if (c.video) out.push({ src: (this.phone && c.phoneVideo) || c.video, video: true, main: true, poster: c.poster });
     else if (c.image) out.push({ src: c.image.src, video: false, main: true });
     for (const p of c.pieces ?? []) out.push({ src: p.src, video: !!p.video, main: false, poster: p.poster });
     return out;
@@ -171,8 +171,12 @@ export class Cases implements AfterViewInit, OnDestroy {
       this.warmWait = () => cur.removeEventListener('canplaythrough', go);
       return;
     }
-    const i = Math.min(this.index(), n - 1);
-    const want = new Set([list[(i + 1) % n]?.video].filter((v): v is string => !!v));
+    const i = Math.min(this.index(), n - 1), next = list[(i + 1) % n];
+    // phones show their own media (the phone set, the lighter copy): the next case's first
+    // one when it is a video — never the desktop's slide video, which a phone doesn't show
+    const first = this.phone ? this.media(next)[0] : undefined;
+    const nextVideo = this.phone ? (first?.video ? first.src : undefined) : next?.video;
+    const want = new Set([nextVideo].filter((v): v is string => !!v));
     for (const [src, v] of this.warm) if (!want.has(src)) { v.removeAttribute('src'); v.load(); this.warm.delete(src); }
     for (const src of want) {
       if (this.warm.has(src) || src === this.video?.getAttribute('src')) continue;

@@ -62,6 +62,9 @@ export interface CaseItem {
   tags: CaseTag[];
   /** the slide's video (mp4) */
   video?: string;
+  /** phones: a lighter copy of the video for the small square (Emil 25 Oct: 720 / 960px wide
+      instead of the desktop's 1280 / 1920) — the desktop keeps `video` */
+  phoneVideo?: string;
   /** or a still: a render in the frame, washed out to white behind the text */
   image?: CaseStill;
   /** width of the text block in slide px (the deck's is 902 of 1920) */
@@ -248,10 +251,11 @@ export const ALL_CASES: CaseItem[] = [
     video: V + 'resvr.mp4', textWidth: 540, textBottom: 600,
     // phones: Emil's elements (22 Oct), one after the other in the square
     phoneMedia: [
-      { src: R + 'resvr-demo.mp4', video: true, poster: R + 'resvr-demo-poster.webp' },
-      { src: R + 'resvr-web.mp4', video: true, poster: R + 'resvr-web-poster.webp' },
-      { src: R + 'resvr-globe.mp4', video: true, poster: R + 'resvr-globe-poster.webp' },
-      { src: R + 'resvr-software.mp4', video: true, poster: R + 'resvr-software-poster.webp' },
+      // the phone copies (960px wide, Emil 25 Oct): half the size of the desktop's
+      { src: R + 'resvr-demo-phone.mp4', video: true, poster: R + 'resvr-demo-poster.webp' },
+      { src: R + 'resvr-web-phone.mp4', video: true, poster: R + 'resvr-web-poster.webp' },
+      { src: R + 'resvr-globe-phone.mp4', video: true, poster: R + 'resvr-globe-poster.webp' },
+      { src: R + 'resvr-software-phone.mp4', video: true, poster: R + 'resvr-software-poster.webp' },
       { src: R + 'resvr-ui.webp' },
     ],
   },
@@ -265,7 +269,7 @@ export const ALL_CASES: CaseItem[] = [
             'Waha, arabisch für „Oase“, ist ein Rastplatz nahe Palmyra. Die Kuppeln stammen von den Bienenkorbhäusern der Region, Wasser und Grün kühlen sie. Das Projekt fragt, wie Tourismus Syrien nach dem Krieg helfen kann.'),
     tags: ['architecture', 'visualisation', 'experience'],
     menu: { white: true },
-    video: 'assets/projects/waha/waha.mp4', poster: 'assets/projects/waha/waha-poster.webp', film: { fade: [208, 848], shift: 180 },
+    video: 'assets/projects/waha/waha.mp4', phoneVideo: 'assets/projects/waha/waha-phone.mp4', poster: 'assets/projects/waha/waha-poster.webp', film: { fade: [208, 848], shift: 180 },
     // TODO: the film's own YouTube link (a search for it until then)
     youtube: 'https://www.youtube.com/results?search_query=Waha+Emil+Suliman',
     logo: 'assets/projects/waha/waha-logo.webp',
@@ -331,7 +335,7 @@ export const ALL_CASES: CaseItem[] = [
             'Zwei gleiche Familienhäuser mit gemeinsamem Garten auf schmalem Grundstück. Kompakt und doch vollständig, mit drei Etagen und Dachterrasse. Gute Architektur gelingt auch auf kleinem Raum.'), tags: ['architecture', 'visualisation'],
     // the film's first minutes are dark aerials: the text kept narrower and on white
     menu: { white: true },
-    video: 'assets/projects/twin/twin.mp4', poster: 'assets/projects/twin/twin-poster.webp',
+    video: 'assets/projects/twin/twin.mp4', phoneVideo: 'assets/projects/twin/twin-phone.mp4', poster: 'assets/projects/twin/twin-poster.webp',
     film: { fade: [290, 990], shift: 180 }, textWidth: 700,
     // TODO: the film's own YouTube link (a search for its title until then)
     youtube: 'https://www.youtube.com/results?search_query=Low-cost+Residential+Building+Neuhofen-Germany+Emil+Suliman',
@@ -348,7 +352,7 @@ export const ALL_CASES: CaseItem[] = [
             'Ein Video-Lebenslauf, der architektonisches Denken in Motion Design übersetzt. Komposition, Abfolge und Storytelling erzählen meinen Werdegang lebendiger als Papier. Für Bewerbungen entstanden, zeigt er Prozess und Bandbreite.'), tags: ['branding', 'video'],
     // a dark film: the text kept narrower and on white
     menu: { white: true },
-    video: 'assets/projects/cv/video-cv.mp4', poster: 'assets/projects/cv/video-cv-poster.webp',
+    video: 'assets/projects/cv/video-cv.mp4', phoneVideo: 'assets/projects/cv/video-cv-phone.mp4', poster: 'assets/projects/cv/video-cv-poster.webp',
     film: { fade: [290, 990], shift: 180 }, textWidth: 700,
     // TODO: the film's own YouTube link (a search for it until then)
     youtube: 'https://www.youtube.com/results?search_query=Emil+Suliman+Video+CV',
