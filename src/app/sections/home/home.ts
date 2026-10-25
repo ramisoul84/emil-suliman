@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChild, computed, effect, inject, signal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild, computed, effect, inject, signal } from '@angular/core';
 import { GridService } from '../../_services/grid.service';
 import { gsap } from 'gsap';
 import { BlurService } from '../../_services/blur.service';

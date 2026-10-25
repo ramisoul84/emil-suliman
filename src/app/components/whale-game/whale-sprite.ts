@@ -1,4 +1,4 @@
-/* The footer whale (assets/images/whale.png) as cells: 24 frames (12 a second) of 25 x 16
+/* The footer whale (design-sources/whale.png, not deployed) as cells: 24 frames (12 a second) of 25 x 16
    cells, one hex digit per cell = its opacity in 16 steps. Generated from the picture;
    the picture's every other frame (it plays at 24 a second). */
 export const WHALE_W = 25;

@@ -839,7 +839,7 @@ export class Timeline implements OnInit, AfterViewInit, OnDestroy {
 
   /** phones: where the panel sits for a part (px, whole cells) — see above */
   private phoneShift(panel: HTMLElement, part: number): number {
-    const T = Timeline, g = this.cell(), last = STORY_STOPS.length - 1;
+    const g = this.cell(), last = STORY_STOPS.length - 1;
     if (part <= 1) return 0;
     // the window as far as it is on the screen (the page may be a part of a cell taller)
     const win = panel.parentElement as HTMLElement;

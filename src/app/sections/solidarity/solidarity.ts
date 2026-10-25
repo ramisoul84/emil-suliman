@@ -1,7 +1,6 @@
 import { FadeIn } from '../../_directives/fade-in.directive';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import { BlurService } from '../../_services/blur.service';
 import { AnalyticsService } from '../../_services/analytics.service';
 
@@ -20,7 +19,7 @@ export class Solidarity {
     { logo: "assets/logos/fridays.webp", link: "https://fridaysforfuture.de/spenden/", organization: 'fridays-for-future' },
   ]
 
-  constructor(private sanitizer: DomSanitizer, private blurService: BlurService, private analyticsService: AnalyticsService) {
+  constructor(private blurService: BlurService, private analyticsService: AnalyticsService) {
     this.blurService.blurState$.subscribe(data => this.isBlur = data);
   }
 
@@ -28,11 +27,6 @@ export class Solidarity {
     this.analyticsService.trackAction(organization)
     if (!link) return;
 
-    try {
-      const safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(link);
-      window.open(link, '_blank', 'noopener,noreferrer');
-    } catch (error) {
-      console.error('Invalid or unsafe URL:', link);
-    }
+    window.open(link, '_blank', 'noopener,noreferrer');
   }
 }

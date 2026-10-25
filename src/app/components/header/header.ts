@@ -12,7 +12,6 @@ import { isPhone } from '../../_config/phone';
 import { CommonModule } from '@angular/common';
 import { SHOW_SOLIDARITY } from '../../_config/sections';
 
-type Language = 'en' | 'de';
 
 /** the menu's box, px from the nav's left edge */
 interface Span { x0: number; x1: number; }

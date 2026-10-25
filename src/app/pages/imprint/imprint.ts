@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { GridService } from '../../_services/grid.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { LanguageService } from '../../_services/language.service';
