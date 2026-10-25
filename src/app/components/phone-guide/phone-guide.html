@@ -1,0 +1,49 @@
+<!-- phones, the landing's top right: what the page does (phone-guide.ts) -->
+<button #button type="button" class="guide-btn" (click)="open()" [style.opacity]="shown()"
+    [style.pointer-events]="shown() < 1 ? 'none' : null"
+    [attr.aria-label]="de ? 'So funktioniert die Seite' : 'How the page works'">i</button>
+
+<!-- moved onto <body> (phone-guide.ts) -->
+<div #layer class="guide" (click)="close()" role="dialog" aria-modal="true"
+    [attr.aria-label]="de ? 'So funktioniert die Seite' : 'How the page works'">
+    <button type="button" class="guide-i" [attr.aria-label]="de ? 'schließen' : 'close'">i</button>
+
+    <div class="stage" aria-live="polite">
+        <!-- 1: swipe to go to the next page -->
+        <div class="phone scene-1">
+            <span class="page">1</span>
+            <span class="page two">2</span>
+        </div>
+        <span class="trail"></span>
+        <div class="words words-1 scene-1 scene-2">
+            <p>{{ de ? 'wischen für die' : 'swipe to go to' }}<br>{{ de ? 'nächste seite' : 'next page' }}</p>
+        </div>
+
+        <!-- 2: press to expand the card -->
+        <div class="words words-2 scene-2">
+            <p>{{ de ? 'tippen, um die' : 'press to' }}<br>{{ de ? 'karte zu öffnen' : 'expand card' }}</p>
+        </div>
+        <div class="card scene-2">
+            <canvas #ring class="ring"></canvas>
+            <span class="plus"></span>
+            @for (b of [0, 1, 2, 3, 4, 5]; track b) { <span class="bar" [style.--k]="b"></span> }
+        </div>
+
+        <!-- 3: enjoy. The heart in half-cell pixels (from the video) -->
+        <svg class="heart scene-3" viewBox="0 0 14 12" shape-rendering="crispEdges" aria-hidden="true">
+            @for (p of heart; track $index) { <rect [attr.x]="p.x" [attr.y]="p.y" width="1" height="1" [class]="p.line ? 'heart-line' : 'heart-fill'" /> }
+        </svg>
+        <div class="words words-3 scene-3">
+            <p>{{ de ? 'viel spaß' : 'enjoy' }}</p>
+        </div>
+
+        <!-- the hand, solid: nothing shows through it. Drawn upright (fingertip at 0,0, in
+             tenths of a cell), turned to point up and left -->
+        <div class="hand">
+            <svg viewBox="-12 -2 74 118" aria-hidden="true">
+                <path class="hand-shape" d="M0 8A8 8 0 0 1 16 8V37.5A7.5 7.5 0 0 1 31 37.5V44.5A7 7 0 0 1 45 44.5V51A7 7 0 0 1 59 51V98Q59 113 44 113H14Q1 113 -3 99L-9 75Q-11 63 0 54Z" />
+                <path class="hand-line" d="M16 37.5V64M31 44.5V62M45 51V63" />
+            </svg>
+        </div>
+    </div>
+</div>

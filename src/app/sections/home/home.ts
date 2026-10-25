@@ -6,12 +6,13 @@ import { BlurService } from '../../_services/blur.service';
 import { Subject, takeUntil } from 'rxjs';
 import { Blob, BlobMask } from "../../components/blob/blob";
 import { Control } from "../../components/control/control";
+import { PhoneGuide } from '../../components/phone-guide/phone-guide';
 import { TutorialService } from '../../_services/tutorial.service';
 import { IntroService } from '../../_services/intro.service';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, Blob, Control],
+  imports: [CommonModule, Blob, Control, PhoneGuide],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
