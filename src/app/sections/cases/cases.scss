@@ -654,6 +654,9 @@
     background: none;
     margin-top: var(--g);
     height: calc(var(--ph-floor, 100svh) - 7 * var(--g));
+    /* the picture frame's height: the square's 23 cells — less on a screen with fewer rows
+       (a tablet: Emil 25 Oct), so the text above keeps its ~21 rows; still 23 cells wide */
+    --fh: min(calc(23 * var(--g)), calc(var(--ph-floor, 100svh) - 28 * var(--g)));
   }
   .stage.ph::after { display: none; }
   .stage.ph .case {
@@ -695,7 +698,7 @@
     left: var(--g);
     right: var(--g);
     top: calc(3.8 * var(--g));
-    bottom: calc(24.6 * var(--g));
+    bottom: calc(var(--fh) + 1.6 * var(--g));
     overflow: hidden;
     font-family: var(--font-deck);
     color: #000;
@@ -731,7 +734,7 @@
     left: var(--g);
     bottom: var(--g);
     width: calc(23 * var(--g));
-    height: calc(23 * var(--g));
+    height: var(--fh);
     background: #fff;
     overflow: hidden;
   }
@@ -749,7 +752,8 @@
      (Emil 23 Oct): as tall as the square, slid on the compositor */
   .ph-frame img.pan {
     inset: 0 auto 0 0;
-    width: calc(23 * var(--ar, 1) * var(--g));
+    /* as tall as the frame, at its own proportions — never narrower than the frame */
+    width: max(calc(23 * var(--g)), calc(var(--fh) * var(--ar, 1)));
     height: 100%;
     object-fit: cover;
     /* an even speed all the way, no easing in or out (Emil 23 Oct) */
@@ -815,5 +819,6 @@
 
 @keyframes ph-pan {
   from { transform: none; }
-  to { transform: translateX(calc((1 - var(--ar, 1)) * 23 * var(--g))); }
+  /* to its right edge: the frame's width less the picture's (none when it just fills it) */
+  to { transform: translateX(min(0px, calc(23 * var(--g) - var(--fh) * var(--ar, 1)))); }
 }
